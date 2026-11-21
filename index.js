@@ -130,9 +130,9 @@ async function startBot() {
         const text = args.slice(1).join(' ');
 
         if (command === 'ping') await reply('Pong! BULL X is alive! ⚡ Speed: Fast');
-        if (command === 'menu') await reply('🐂 *BULL X MENU V5*\n\n*A - GENERAL*\n.ping\n.menu\n.owner\n.alive\n.info\n.time\n.checkadmin\n\n*B - AUTO*\nJust say hi/hello/sasa\n\n*C - GROUP*\n.tagall\n.groupinfo\n.antilink on/off\n.kick @user\n.promote @user\n.demote @user\n\n*D - STICKER*\n.sticker\n\n*E - DOWNLOADER*\n.tiktok <link>\n\n*F - MUSIC*\n.play <song name>\n\n*G - AI*\n.ai <question>');
-        if (command === 'owner') await reply('👑 *BULL X OWNER*\n\nName: BULL X Owner\nNumber: +254112843071\nBot: BULL X V5');
-        if (command === 'info') await reply('🐂 *BULL X INFO*\n\nVersion: V5\nOwner: +254112843071');
+        if (command === 'menu') await reply('🐂 *BULL X MENU V6*\n\n*A - GENERAL*\n.ping\n.menu\n.owner\n.alive\n.info\n.time\n.checkadmin\n\n*B - AUTO*\nJust say hi/hello/sasa\n\n*C - GROUP*\n.tagall\n.groupinfo\n.antilink on/off\n.kick @user\n.promote @user\n.demote @user\n\n*D - STICKER*\n.sticker\n\n*E - DOWNLOADER*\n.tiktok <link>\n\n*F - MUSIC*\n.play <song name>\n\n*G - AI*\n.ai <question>');
+        if (command === 'owner') await reply('👑 *BULL X OWNER*\n\nName: BULL X Owner\nNumber: +254112843071\nBot: BULL X V6');
+        if (command === 'info') await reply('🐂 *BULL X INFO*\n\nVersion: V6\nOwner: +254112843071');
         if (command === 'time') {
             const now = new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' });
             await reply('🕒 *TIME*\n' + now);
@@ -187,7 +187,7 @@ async function startBot() {
             } catch (e) { await reply('TikTok download failed, try again later'); }
         }
 
-        // --- PLAY - V5 INVIOUS SEARCH ---
+        // --- PLAY - V6 6 DOWNLOAD APIS ---
         if (command === 'play') {
             if (!text) return reply('Send song name:\n.play Diamond Platnumz - Komasava');
             try {
@@ -207,32 +207,59 @@ async function startBot() {
                         if (v) { videoUrl = v.url || `https://youtube.com/watch?v=${v.videoId}`; title = v.title || text; }
                     } catch {}
                 }
-                if (!videoUrl) {
-                    try {
-                        const s = await fetch(`https://api.dreaded.site/api/yts?query=${encodeURIComponent(text)}`);
-                        const sd = await s.json();
-                        const v = sd.result?.[0] || sd.data?.[0];
-                        if (v) { videoUrl = v.url || `https://youtube.com/watch?v=${v.videoId}`; title = v.title || text; }
-                    } catch {}
-                }
-                if (!videoUrl) return reply('❌ Song not found, try full name: .play Diamond Platnumz Komasava');
+                if (!videoUrl) return reply('❌ Song not found, try full name');
+                await reply('✅ Found: ' + title + '\n⏳ Downloading audio... please wait 20 sec');
                 let audioUrl = null;
                 try {
-                    const r = await fetch(`https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(videoUrl)}`);
+                    const r = await fetch(`https://api.zenzxz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`);
                     const d = await r.json();
-                    audioUrl = d.data?.dl || d.data?.url || d.result?.download || d.download;
+                    audioUrl = d.result?.download || d.result?.url || d.download || d.url;
+                    if (audioUrl) console.log('PLAY OK via Zenxz');
                 } catch {}
+                if (!audioUrl) {
+                    try {
+                        const r = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(videoUrl)}`);
+                        const d = await r.json();
+                        audioUrl = d.result?.download || d.result?.url || d.download;
+                        if (audioUrl) console.log('PLAY OK via Vreden');
+                    } catch {}
+                }
+                if (!audioUrl) {
+                    try {
+                        const r = await fetch(`https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(videoUrl)}`);
+                        const d = await r.json();
+                        audioUrl = d.data?.dl || d.data?.url || d.result?.download || d.download;
+                        if (audioUrl) console.log('PLAY OK via Siputz');
+                    } catch {}
+                }
+                if (!audioUrl) {
+                    try {
+                        const r = await fetch(`https://api.dreaded.site/api/ytdl-v2?url=${encodeURIComponent(videoUrl)}`);
+                        const d = await r.json();
+                        audioUrl = d.result?.download || d.result?.url || d.download;
+                        if (audioUrl) console.log('PLAY OK via Dreaded V2');
+                    } catch {}
+                }
                 if (!audioUrl) {
                     try {
                         const r = await fetch(`https://api.dreaded.site/api/ytdl?url=${encodeURIComponent(videoUrl)}&format=mp3`);
                         const d = await r.json();
                         audioUrl = d.result?.download || d.download;
+                        if (audioUrl) console.log('PLAY OK via Dreaded V1');
                     } catch {}
                 }
-                if (!audioUrl) return reply('❌ Found song but download failed. Try again in 2 mins.');
+                if (!audioUrl) {
+                    try {
+                        const r = await fetch(`https://api.yanzbotz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`);
+                        const d = await r.json();
+                        audioUrl = d.result?.url || d.result?.download || d.download;
+                        if (audioUrl) console.log('PLAY OK via Yanz');
+                    } catch {}
+                }
+                if (!audioUrl) return reply('❌ All music servers are down right now. Try again in 10 mins - this happens when YouTube blocks them.');
                 await sock.sendMessage(from, { audio: { url: audioUrl }, mimetype: 'audio/mp4', fileName: title + '.mp3' }, { quoted: msg });
                 await reply(`🎵 *Now Playing:*\n${title}`);
-            } catch (e) { await reply('Play failed, try again later'); }
+            } catch (e) { console.log(e); await reply('Play failed, try again later'); }
         }
 
         // --- AI - V5 MULTIPLE APIS ---
