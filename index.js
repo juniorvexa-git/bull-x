@@ -44,7 +44,6 @@ const qrcode = require('qrcode-terminal');
 const sharp = require('sharp');
 const fs = require('fs');
 
-// --- STORAGE ---
 let antilinkGroups = {};
 try { antilinkGroups = JSON.parse(fs.readFileSync('antilink.json','utf8')); } catch {}
 const saveAntilink = () => fs.writeFileSync('antilink.json', JSON.stringify(antilinkGroups));
@@ -53,7 +52,6 @@ let antideleteGroups = {};
 try { antideleteGroups = JSON.parse(fs.readFileSync('antidelete.json','utf8')); } catch {}
 const saveAntidelete = () => fs.writeFileSync('antidelete.json', JSON.stringify(antideleteGroups));
 
-// Cache for deleted messages - stores last 200 messages
 let msgCache = new Map();
 
 async function startBot() {
@@ -76,6 +74,44 @@ async function startBot() {
         }
     });
 
+    // --- ANTI-DELETE V8 - CORRECT EVENT ---
+    sock.ev.on('messages.update', async (updates) => {
+        for (const update of updates) {
+            try {
+                if (!update.update || !update.update.isDeleted) continue;
+                const deletedId = update.key.id;
+                const deletedFrom = update.key.remoteJid;
+                const deleter = update.key.participant || update.key.remoteJid;
+                const cached = msgCache.get(deletedId);
+                if (!cached) continue;
+                if (!antideleteGroups[deletedFrom]) continue;
+                const deleterNum = deleter.split('@')[0].split(':')[0];
+                const originalSender = cached.sender.split('@')[0].split(':')[0];
+                const origMsg = cached.msg;
+                const origBody = origMsg.message.conversation || origMsg.message.extendedTextMessage?.text || origMsg.message.imageMessage?.caption || origMsg.message.videoMessage?.caption || '';
+                if (origBody) {
+                    await sock.sendMessage(deletedFrom, { text: `🚨 *ANTI-DELETE CAUGHT!* 🐂\n\n@${deleterNum} deleted a message from @${originalSender}!\n\n*Deleted Message:*\n${origBody}`, mentions: [deleter, cached.sender] });
+                } else if (origMsg.message.imageMessage) {
+                    try {
+                        const stream = await downloadContentFromMessage(origMsg.message.imageMessage, 'image');
+                        let buffer = Buffer.from([]);
+                        for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+                        await sock.sendMessage(deletedFrom, { image: buffer, caption: `🚨 *ANTI-DELETE CAUGHT!* 🐂\n\n@${deleterNum} deleted an image from @${originalSender}!`, mentions: [deleter, cached.sender] });
+                    } catch {}
+                } else if (origMsg.message.videoMessage) {
+                    try {
+                        const stream = await downloadContentFromMessage(origMsg.message.videoMessage, 'video');
+                        let buffer = Buffer.from([]);
+                        for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+                        await sock.sendMessage(deletedFrom, { video: buffer, caption: `🚨 *ANTI-DELETE CAUGHT!* 🐂\n\n@${deleterNum} deleted a video from @${originalSender}!`, mentions: [deleter, cached.sender] });
+                    } catch {}
+                } else {
+                    await sock.sendMessage(deletedFrom, { text: `🚨 *ANTI-DELETE CAUGHT!* 🐂\n\n@${deleterNum} deleted a message from @${originalSender}!`, mentions: [deleter, cached.sender] });
+                }
+            } catch (e) { console.log('Antidelete update error', e); }
+        }
+    });
+
     sock.ev.on('messages.upsert', async ({ messages }) => {
         const msg = messages[0];
         if (!msg.message) return;
@@ -87,59 +123,68 @@ async function startBot() {
         const isImage = !!msg.message.imageMessage;
         const isBot = msg.key.fromMe;
 
-        // --- ANTI-DELETE DETECT ---
-        // When someone deletes a message, WhatsApp sends a protocolMessage type 5 (REVOKE)
+        // --- ANTI-DELETE VIA PROTOCOL MESSAGE (BACKUP) ---
         if (msg.message.protocolMessage && (msg.message.protocolMessage.type === 5 || msg.message.protocolMessage.type === 'REVOKE')) {
             try {
                 const deletedId = msg.message.protocolMessage.key?.id;
                 const deletedFrom = msg.message.protocolMessage.key?.remoteJid || from;
                 const deleter = msg.key.participant || msg.key.remoteJid;
                 const cached = msgCache.get(deletedId);
-                // Only if antidelete is ON for this group, and we have the message, and it's not our own
-                if (cached && antideleteGroups[deletedFrom] && deleter !== sock.user.id) {
+                if (cached && antideleteGroups[deletedFrom]) {
                     const deleterNum = deleter.split('@')[0].split(':')[0];
                     const originalSender = cached.sender.split('@')[0].split(':')[0];
                     const origMsg = cached.msg;
                     const origBody = origMsg.message.conversation || origMsg.message.extendedTextMessage?.text || origMsg.message.imageMessage?.caption || origMsg.message.videoMessage?.caption || '';
-                    // If it was text
                     if (origBody) {
                         await sock.sendMessage(deletedFrom, { text: `🚨 *ANTI-DELETE CAUGHT!* 🐂\n\n@${deleterNum} deleted a message from @${originalSender}!\n\n*Deleted Message:*\n${origBody}`, mentions: [deleter, cached.sender] });
-                    }
-                    // If it was image
-                    else if (origMsg.message.imageMessage) {
+                    } else if (origMsg.message.imageMessage) {
                         try {
                             const stream = await downloadContentFromMessage(origMsg.message.imageMessage, 'image');
                             let buffer = Buffer.from([]);
                             for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
                             await sock.sendMessage(deletedFrom, { image: buffer, caption: `🚨 *ANTI-DELETE CAUGHT!* 🐂\n\n@${deleterNum} deleted an image from @${originalSender}!`, mentions: [deleter, cached.sender] });
                         } catch {}
-                    }
-                    // If it was video
-                    else if (origMsg.message.videoMessage) {
+                    } else if (origMsg.message.videoMessage) {
                         try {
                             const stream = await downloadContentFromMessage(origMsg.message.videoMessage, 'video');
                             let buffer = Buffer.from([]);
                             for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
                             await sock.sendMessage(deletedFrom, { video: buffer, caption: `🚨 *ANTI-DELETE CAUGHT!* 🐂\n\n@${deleterNum} deleted a video from @${originalSender}!`, mentions: [deleter, cached.sender] });
                         } catch {}
-                    }
-                    // If it was sticker / other
-                    else {
-                        await sock.sendMessage(deletedFrom, { text: `🚨 *ANTI-DELETE CAUGHT!* 🐂\n\n@${deleterNum} deleted a message from @${originalSender}! (sticker/audio/other)`, mentions: [deleter, cached.sender] });
+                    } else {
+                        await sock.sendMessage(deletedFrom, { text: `🚨 *ANTI-DELETE CAUGHT!* 🐂\n\n@${deleterNum} deleted a message from @${originalSender}!`, mentions: [deleter, cached.sender] });
                     }
                 }
-            } catch (e) { console.log('Antidelete error', e); }
+            } catch {}
             return;
         }
 
         // --- SAVE MESSAGE TO CACHE FOR ANTI-DELETE ---
-        // Save every message so we can recover it if deleted
         if (msg.key.id) {
             msgCache.set(msg.key.id, { msg, sender, from });
             if (msgCache.size > 200) {
                 const firstKey = msgCache.keys().next().value;
                 msgCache.delete(firstKey);
             }
+        }
+
+        // --- AUTO VIEW ONCE ---
+        let voMsg = msg.message.viewOnceMessageV2?.message || msg.message.viewOnceMessage?.message || msg.message.viewOnceMessageV2Extension?.message || msg.message.ephemeralMessage?.message?.viewOnceMessageV2?.message;
+        if (voMsg && (voMsg.imageMessage || voMsg.videoMessage)) {
+            try {
+                if (voMsg.imageMessage) {
+                    const stream = await downloadContentFromMessage(voMsg.imageMessage, 'image');
+                    let buffer = Buffer.from([]);
+                    for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+                    await sock.sendMessage(from, { image: buffer, caption: '👀 *VIEW ONCE AUTO-OPENED BY BULL X* 🐂\n\nFrom: @' + sender.split('@')[0], mentions: [sender] });
+                } else if (voMsg.videoMessage) {
+                    const stream = await downloadContentFromMessage(voMsg.videoMessage, 'video');
+                    let buffer = Buffer.from([]);
+                    for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+                    await sock.sendMessage(from, { video: buffer, caption: '👀 *VIEW ONCE AUTO-OPENED BY BULL X* 🐂\n\nFrom: @' + sender.split('@')[0], mentions: [sender] });
+                }
+            } catch {}
+            return;
         }
 
         if (isGroup && antilinkGroups[from] && !isBot) {
@@ -153,34 +198,32 @@ async function startBot() {
             }
         }
 
-        // --- .VV - VIEW ONCE BYPASS ---
+        // --- .VV MANUAL ---
         if (body.trim() === '.vv' || body.trim() === '.viewonce' || body.trim() === '.open') {
             try {
                 const quoted = msg.message.extendedTextMessage?.contextInfo?.quotedMessage;
                 if (!quoted) return reply('Reply to a View Once photo/video with *.vv*');
-                // View Once can be in different wrappers
-                let inner = quoted.viewOnceMessageV2?.message || quoted.viewOnceMessage?.message || quoted.viewOnceMessageV2Extension?.message || quoted;
-                let imgMsg = inner.imageMessage || inner.viewOnceMessageV2?.message?.imageMessage;
-                let vidMsg = inner.videoMessage || inner.viewOnceMessageV2?.message?.videoMessage;
-                // Also check direct
+                let inner = quoted.viewOnceMessageV2?.message || quoted.viewOnceMessage?.message || quoted.viewOnceMessageV2Extension?.message || quoted.ephemeralMessage?.message?.viewOnceMessageV2?.message || quoted;
+                let imgMsg = inner.imageMessage;
+                let vidMsg = inner.videoMessage;
                 if (!imgMsg && quoted.imageMessage) imgMsg = quoted.imageMessage;
                 if (!vidMsg && quoted.videoMessage) vidMsg = quoted.videoMessage;
                 if (imgMsg) {
                     const stream = await downloadContentFromMessage(imgMsg, 'image');
                     let buffer = Buffer.from([]);
                     for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
-                    await sock.sendMessage(from, { image: buffer, caption: '👀 *VIEW ONCE OPENED BY BULL X* 🐂\n\nThey thought you would see it once!' }, { quoted: msg });
+                    await sock.sendMessage(from, { image: buffer, caption: '👀 *VIEW ONCE OPENED BY BULL X* 🐂' }, { quoted: msg });
                     return;
                 }
                 if (vidMsg) {
                     const stream = await downloadContentFromMessage(vidMsg, 'video');
                     let buffer = Buffer.from([]);
                     for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
-                    await sock.sendMessage(from, { video: buffer, caption: '👀 *VIEW ONCE OPENED BY BULL X* 🐂\n\nThey thought you would see it once!' }, { quoted: msg });
+                    await sock.sendMessage(from, { video: buffer, caption: '👀 *VIEW ONCE OPENED BY BULL X* 🐂' }, { quoted: msg });
                     return;
                 }
-                return reply('That is not a View Once photo/video! Reply to a View Once message with *.vv*');
-            } catch (e) { console.log(e); await reply('Failed to open View Once - it may have already expired or been viewed!'); return; }
+                return reply('That is not a View Once photo/video! That photo was a NORMAL photo - not View Once. Ask sender to tap ① icon before sending.');
+            } catch (e) { await reply('Failed to open View Once - it may have already expired!'); return; }
         }
 
         if (body.startsWith('.sticker') || body.startsWith('.s')) {
@@ -223,9 +266,9 @@ async function startBot() {
         const text = args.slice(1).join(' ');
 
         if (command === 'ping') await reply('Pong! BULL X is alive! ⚡ Speed: Fast');
-        if (command === 'menu') await reply('🐂 *BULL X MENU V7*\n\n*A - GENERAL*\n.ping\n.menu\n.owner\n.alive\n.info\n.time\n.checkadmin\n\n*B - AUTO*\nJust say hi/hello/sasa\n\n*C - GROUP*\n.tagall\n.groupinfo\n.antilink on/off\n.antidelete on/off\n.kick @user\n.promote @user\n.demote @user\n\n*D - STICKER*\n.sticker\n\n*E - DOWNLOADER*\n.tiktok <link>\n\n*F - MUSIC*\n.play <song name>\n\n*G - AI*\n.ai <question>\n\n*H - SECRET* 👀\n.vv - Open View Once\n(Reply to View Once with .vv)');
-        if (command === 'owner') await reply('👑 *BULL X OWNER*\n\nName: BULL X Owner\nNumber: +254112843071\nBot: BULL X V7');
-        if (command === 'info') await reply('🐂 *BULL X INFO*\n\nVersion: V7\nOwner: +254112843071');
+        if (command === 'menu') await reply('🐂 *BULL X MENU V8*\n\n*A - GENERAL*\n.ping\n.menu\n.owner\n.alive\n.info\n.time\n.checkadmin\n\n*B - AUTO*\nJust say hi/hello/sasa\n\n*C - GROUP*\n.tagall\n.groupinfo\n.antilink on/off\n.antidelete on/off\n.kick @user\n.promote @user\n.demote @user\n\n*D - STICKER*\n.sticker\n\n*E - DOWNLOADER*\n.tiktok <link>\n\n*F - MUSIC*\n.play <song name>\n\n*G - AI*\n.ai <question>\n\n*H - SECRET* 👀\n.vv - Open View Once\n+ Auto View Once!');
+        if (command === 'owner') await reply('👑 *BULL X OWNER*\n\nName: BULL X Owner\nNumber: +254112843071\nBot: BULL X V8');
+        if (command === 'info') await reply('🐂 *BULL X INFO*\n\nVersion: V8\nOwner: +254112843071');
         if (command === 'time') {
             const now = new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' });
             await reply('🕒 *TIME*\n' + now);
@@ -244,16 +287,14 @@ async function startBot() {
             else await reply('Use: *.antidelete on* or *.antidelete off*');
         }
 
-        // --- CHECK ADMIN - LID FIXED ---
         if (command === 'checkadmin') {
             try {
                 const metadata = await sock.groupMetadata(from);
                 const clean = (id) => (id || '').split(':')[0].split('@')[0];
-                await reply(`🔍 *ADMIN CHECK*\n\nBot PN: ${clean(sock.user.id)}\nBot LID: ${clean(sock.user.lid || 'none')}\n\nYou are admin? Check group info - You show as Group Admin ✅\n\nMembers: ${metadata.participants.length}\nBULL X = Your account, so if You are admin, BULL X is admin!`);
+                await reply(`🔍 *ADMIN CHECK*\n\nBot PN: ${clean(sock.user.id)}\nBot LID: ${clean(sock.user.lid || 'none')}\n\nMembers: ${metadata.participants.length}\nBULL X = Your account, so if You are admin, BULL X is admin!`);
             } catch { await reply('Check failed'); }
         }
 
-        // --- TIKTOK ---
         if (command === 'tiktok') {
             const linkMatch = body.match(/https?:\/\/\S+/);
             const tiktokUrl = linkMatch ? linkMatch[0] : text;
@@ -286,7 +327,6 @@ async function startBot() {
             } catch (e) { await reply('TikTok download failed, try again later'); }
         }
 
-        // --- PLAY - V6 6 DOWNLOAD APIS ---
         if (command === 'play') {
             if (!text) return reply('Send song name:\n.play Diamond Platnumz - Komasava');
             try {
@@ -313,14 +353,12 @@ async function startBot() {
                     const r = await fetch(`https://api.zenzxz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`);
                     const d = await r.json();
                     audioUrl = d.result?.download || d.result?.url || d.download || d.url;
-                    if (audioUrl) console.log('PLAY OK via Zenxz');
                 } catch {}
                 if (!audioUrl) {
                     try {
                         const r = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(videoUrl)}`);
                         const d = await r.json();
                         audioUrl = d.result?.download || d.result?.url || d.download;
-                        if (audioUrl) console.log('PLAY OK via Vreden');
                     } catch {}
                 }
                 if (!audioUrl) {
@@ -328,7 +366,6 @@ async function startBot() {
                         const r = await fetch(`https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(videoUrl)}`);
                         const d = await r.json();
                         audioUrl = d.data?.dl || d.data?.url || d.result?.download || d.download;
-                        if (audioUrl) console.log('PLAY OK via Siputz');
                     } catch {}
                 }
                 if (!audioUrl) {
@@ -336,7 +373,6 @@ async function startBot() {
                         const r = await fetch(`https://api.dreaded.site/api/ytdl-v2?url=${encodeURIComponent(videoUrl)}`);
                         const d = await r.json();
                         audioUrl = d.result?.download || d.result?.url || d.download;
-                        if (audioUrl) console.log('PLAY OK via Dreaded V2');
                     } catch {}
                 }
                 if (!audioUrl) {
@@ -344,7 +380,6 @@ async function startBot() {
                         const r = await fetch(`https://api.dreaded.site/api/ytdl?url=${encodeURIComponent(videoUrl)}&format=mp3`);
                         const d = await r.json();
                         audioUrl = d.result?.download || d.download;
-                        if (audioUrl) console.log('PLAY OK via Dreaded V1');
                     } catch {}
                 }
                 if (!audioUrl) {
@@ -352,16 +387,14 @@ async function startBot() {
                         const r = await fetch(`https://api.yanzbotz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`);
                         const d = await r.json();
                         audioUrl = d.result?.url || d.result?.download || d.download;
-                        if (audioUrl) console.log('PLAY OK via Yanz');
                     } catch {}
                 }
-                if (!audioUrl) return reply('❌ All music servers are down right now. Try again in 10 mins - this happens when YouTube blocks them.');
+                if (!audioUrl) return reply('❌ All music servers are down right now. Try again in 10 mins.');
                 await sock.sendMessage(from, { audio: { url: audioUrl }, mimetype: 'audio/mp4', fileName: title + '.mp3' }, { quoted: msg });
                 await reply(`🎵 *Now Playing:*\n${title}`);
-            } catch (e) { console.log(e); await reply('Play failed, try again later'); }
+            } catch (e) { await reply('Play failed, try again later'); }
         }
 
-        // --- AI - V5 MULTIPLE APIS ---
         if (command === 'ai') {
             if (!text) return reply('Ask me anything:\n.ai Who is the best footballer?');
             try {
@@ -398,7 +431,6 @@ async function startBot() {
             } catch { await reply('AI is busy, try again'); }
         }
 
-        // --- KICK / PROMOTE / DEMOTE - LID FIXED ---
         if (command === 'kick' || command === 'promote' || command === 'demote') {
             if (!isGroup) return reply('Only in groups!');
             try {
@@ -436,10 +468,9 @@ async function startBot() {
                     await sock.groupParticipantsUpdate(from, [realTarget], 'demote');
                     await sock.sendMessage(from, { text: `⬇️ @${targetClean} demoted!`, mentions: [realTarget] }, { quoted: msg });
                 }
-            } catch (e) { console.log(e); await reply('Failed: ' + e.message); }
+            } catch (e) { await reply('Failed: ' + e.message); }
         }
 
-        // --- ALIVE WITH PHOTO ---
         if (command === 'alive') {
             try {
                 await sock.sendMessage(from, { 
