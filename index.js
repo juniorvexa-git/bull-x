@@ -130,9 +130,9 @@ async function startBot() {
         const text = args.slice(1).join(' ');
 
         if (command === 'ping') await reply('Pong! BULL X is alive! ⚡ Speed: Fast');
-        if (command === 'menu') await reply('🐂 *BULL X MENU V4*\n\n*A - GENERAL*\n.ping\n.menu\n.owner\n.alive\n.info\n.time\n.checkadmin\n\n*B - AUTO*\nJust say hi/hello/sasa\n\n*C - GROUP*\n.tagall\n.groupinfo\n.antilink on/off\n.kick @user\n.promote @user\n.demote @user\n\n*D - STICKER*\n.sticker\n\n*E - DOWNLOADER*\n.tiktok <link>\n\n*F - MUSIC*\n.play <song name>\n\n*G - AI*\n.ai <question>');
-        if (command === 'owner') await reply('👑 *BULL X OWNER*\n\nName: BULL X Owner\nNumber: +254112843071\nBot: BULL X V4');
-        if (command === 'info') await reply('🐂 *BULL X INFO*\n\nVersion: V4\nOwner: +254112843071');
+        if (command === 'menu') await reply('🐂 *BULL X MENU V5*\n\n*A - GENERAL*\n.ping\n.menu\n.owner\n.alive\n.info\n.time\n.checkadmin\n\n*B - AUTO*\nJust say hi/hello/sasa\n\n*C - GROUP*\n.tagall\n.groupinfo\n.antilink on/off\n.kick @user\n.promote @user\n.demote @user\n\n*D - STICKER*\n.sticker\n\n*E - DOWNLOADER*\n.tiktok <link>\n\n*F - MUSIC*\n.play <song name>\n\n*G - AI*\n.ai <question>');
+        if (command === 'owner') await reply('👑 *BULL X OWNER*\n\nName: BULL X Owner\nNumber: +254112843071\nBot: BULL X V5');
+        if (command === 'info') await reply('🐂 *BULL X INFO*\n\nVersion: V5\nOwner: +254112843071');
         if (command === 'time') {
             const now = new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' });
             await reply('🕒 *TIME*\n' + now);
@@ -145,16 +145,12 @@ async function startBot() {
             else await reply('Use: *.antilink on* or *.antilink off*');
         }
 
-        // --- CHECK ADMIN ---
+        // --- CHECK ADMIN - LID FIXED ---
         if (command === 'checkadmin') {
             try {
                 const metadata = await sock.groupMetadata(from);
-                const clean = (id) => id.split(':')[0].split('@')[0];
-                const myNum = clean(sock.user.id);
-                const senderNum = clean(sender);
-                const botInfo = metadata.participants.find(p => clean(p.id) === myNum);
-                const senderInfo = metadata.participants.find(p => clean(p.id) === senderNum);
-                await reply(`🔍 *ADMIN CHECK*\n\nBot number: ${myNum}\nBot status: ${botInfo?.admin || 'member'}\n\nYour number: ${senderNum}\nYour status: ${senderInfo?.admin || 'member'}\n\nTotal members: ${metadata.participants.length}`);
+                const clean = (id) => (id || '').split(':')[0].split('@')[0];
+                await reply(`🔍 *ADMIN CHECK*\n\nBot PN: ${clean(sock.user.id)}\nBot LID: ${clean(sock.user.lid || 'none')}\n\nYou are admin? Check group info - You show as Group Admin ✅\n\nMembers: ${metadata.participants.length}\nBULL X = Your account, so if You are admin, BULL X is admin!`);
             } catch { await reply('Check failed'); }
         }
 
@@ -191,7 +187,7 @@ async function startBot() {
             } catch (e) { await reply('TikTok download failed, try again later'); }
         }
 
-        // --- PLAY - FIXED WITH BACKUPS ---
+        // --- PLAY - V5 INVIOUS SEARCH ---
         if (command === 'play') {
             if (!text) return reply('Send song name:\n.play Diamond Platnumz - Komasava');
             try {
@@ -199,17 +195,32 @@ async function startBot() {
                 let videoUrl = null;
                 let title = text;
                 try {
-                    const s = await fetch(`https://api.dreaded.site/api/yts?query=${encodeURIComponent(text)}`);
+                    const s = await fetch(`https://inv.nadeko.net/api/v1/search?q=${encodeURIComponent(text)}&type=video`);
                     const sd = await s.json();
-                    const v = sd.result?.[0] || sd.data?.[0];
-                    if (v) { videoUrl = v.url || `https://youtube.com/watch?v=${v.videoId}`; title = v.title || text; }
+                    if (sd[0]?.videoId) { videoUrl = `https://youtube.com/watch?v=${sd[0].videoId}`; title = sd[0].title || text; }
                 } catch {}
-                if (!videoUrl) return reply('❌ Song not found, try another name');
+                if (!videoUrl) {
+                    try {
+                        const s = await fetch(`https://api.siputzx.my.id/api/s/youtube?query=${encodeURIComponent(text)}`);
+                        const sd = await s.json();
+                        const v = sd.data?.[0] || sd.result?.[0];
+                        if (v) { videoUrl = v.url || `https://youtube.com/watch?v=${v.videoId}`; title = v.title || text; }
+                    } catch {}
+                }
+                if (!videoUrl) {
+                    try {
+                        const s = await fetch(`https://api.dreaded.site/api/yts?query=${encodeURIComponent(text)}`);
+                        const sd = await s.json();
+                        const v = sd.result?.[0] || sd.data?.[0];
+                        if (v) { videoUrl = v.url || `https://youtube.com/watch?v=${v.videoId}`; title = v.title || text; }
+                    } catch {}
+                }
+                if (!videoUrl) return reply('❌ Song not found, try full name: .play Diamond Platnumz Komasava');
                 let audioUrl = null;
                 try {
                     const r = await fetch(`https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(videoUrl)}`);
                     const d = await r.json();
-                    audioUrl = d.data?.dl || d.data?.url || d.result?.download;
+                    audioUrl = d.data?.dl || d.data?.url || d.result?.download || d.download;
                 } catch {}
                 if (!audioUrl) {
                     try {
@@ -218,42 +229,42 @@ async function startBot() {
                         audioUrl = d.result?.download || d.download;
                     } catch {}
                 }
-                if (!audioUrl) {
-                    try {
-                        const r = await fetch(`https://api.yanzbotz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`);
-                        const d = await r.json();
-                        audioUrl = d.result?.url || d.result?.download;
-                    } catch {}
-                }
-                if (!audioUrl) return reply('❌ Music API down right now. Try again in 5 mins or try another song.');
+                if (!audioUrl) return reply('❌ Found song but download failed. Try again in 2 mins.');
                 await sock.sendMessage(from, { audio: { url: audioUrl }, mimetype: 'audio/mp4', fileName: title + '.mp3' }, { quoted: msg });
                 await reply(`🎵 *Now Playing:*\n${title}`);
             } catch (e) { await reply('Play failed, try again later'); }
         }
 
-        // --- AI - FIXED NO LIMIT ---
+        // --- AI - V5 MULTIPLE APIS ---
         if (command === 'ai') {
             if (!text) return reply('Ask me anything:\n.ai Who is the best footballer?');
             try {
                 await reply('🤖 Thinking...');
                 let answer = null;
                 try {
-                    const r = await fetch(`https://api.dreaded.site/api/chatgpt?query=${encodeURIComponent(text)}`);
+                    const r = await fetch(`https://api.nekolabs.my.id/ai/chatgpt?text=${encodeURIComponent(text)}`);
                     const d = await r.json();
-                    answer = d.result || d.response || d.answer;
+                    answer = d.result || d.response;
                 } catch {}
-                if (!answer || answer.includes('Free limit')) {
-                    try {
-                        const r = await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`);
-                        const t = await r.text();
-                        if (!t.includes('Free limit') && !t.includes('45 seconds')) answer = t;
-                    } catch {}
-                }
                 if (!answer) {
                     try {
                         const r = await fetch(`https://api.siputzx.my.id/api/ai/gpt-3?prompt=${encodeURIComponent(text)}`);
                         const d = await r.json();
-                        answer = d.data;
+                        answer = d.data || d.result;
+                    } catch {}
+                }
+                if (!answer) {
+                    try {
+                        const r = await fetch(`https://api.dreaded.site/api/chatgpt?query=${encodeURIComponent(text)}`);
+                        const d = await r.json();
+                        answer = d.result || d.response || d.answer;
+                    } catch {}
+                }
+                if (!answer) {
+                    try {
+                        const r = await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`);
+                        const t = await r.text();
+                        if (!t.includes('Free limit') && !t.includes('45 seconds') && t.length > 5) answer = t;
                     } catch {}
                 }
                 if (!answer) return reply('AI is busy, wait 1 min and try again!');
@@ -261,42 +272,45 @@ async function startBot() {
             } catch { await reply('AI is busy, try again'); }
         }
 
-        // --- KICK / PROMOTE / DEMOTE - FIXED ---
+        // --- KICK / PROMOTE / DEMOTE - LID FIXED ---
         if (command === 'kick' || command === 'promote' || command === 'demote') {
             if (!isGroup) return reply('Only in groups!');
             try {
                 const metadata = await sock.groupMetadata(from);
                 const participants = metadata.participants;
-                const clean = (id) => id.split(':')[0].split('@')[0];
+                const clean = (id) => (id || '').split(':')[0].split('@')[0];
                 const myNum = clean(sock.user.id);
+                const myLid = clean(sock.user.lid || '');
                 const senderNum = clean(sender);
-                const senderInfo = participants.find(p => clean(p.id) === senderNum);
-                const botInfo = participants.find(p => clean(p.id) === myNum);
+                const senderInfo = participants.find(p => clean(p.id) === senderNum || clean(p.lid || '') === senderNum);
+                const botInfo = participants.find(p => clean(p.id) === myNum || clean(p.lid || '') === myNum || clean(p.id) === myLid || clean(p.lid || '') === myLid || clean(p.id) === senderNum);
                 const isSenderAdmin = senderInfo?.admin === 'admin' || senderInfo?.admin === 'superadmin';
-                const isBotAdmin = botInfo?.admin === 'admin' || botInfo?.admin === 'superadmin';
-                if (!isSenderAdmin) return reply(`❌ You are not admin!\nYour number: ${senderNum}\nYour status: ${senderInfo?.admin || 'member'}`);
-                if (!isBotAdmin) return reply(`❌ BULL X is still NOT admin!\nMy number: ${myNum}\nMy status: ${botInfo?.admin || 'member'}\n\nGo to Group Info > Participants > Find my number ${myNum} > Make Admin`);
+                const isBotAdmin = botInfo?.admin === 'admin' || botInfo?.admin === 'superadmin' || isSenderAdmin;
+                if (!isSenderAdmin) return reply(`❌ You are not admin!`);
+                if (!isBotAdmin) return reply(`❌ BULL X is still NOT admin!`);
                 let target = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || msg.message.extendedTextMessage?.contextInfo?.participant;
                 if (!target && text) {
                     const num = text.replace(/[^0-9]/g, '');
                     if (num) target = num + '@s.whatsapp.net';
                 }
                 if (!target) return reply(`Reply to a message with .${command} OR tag:\n.${command} @person`);
-                if (clean(target) === myNum) return reply('I cannot do that to myself! 😅');
-                if (clean(target) === senderNum) return reply('You cannot do that to yourself!');
+                let realTarget = target;
+                const targetClean = clean(target);
+                const found = participants.find(p => clean(p.id) === targetClean || clean(p.lid || '') === targetClean);
+                if (found) realTarget = found.id;
                 if (command === 'kick') {
-                    await sock.groupParticipantsUpdate(from, [target], 'remove');
-                    await sock.sendMessage(from, { text: `👢 @${clean(target)} kicked by BULL X 🐂`, mentions: [target] }, { quoted: msg });
+                    await sock.groupParticipantsUpdate(from, [realTarget], 'remove');
+                    await sock.sendMessage(from, { text: `👢 @${targetClean} kicked by BULL X 🐂`, mentions: [realTarget] }, { quoted: msg });
                 }
                 if (command === 'promote') {
-                    await sock.groupParticipantsUpdate(from, [target], 'promote');
-                    await sock.sendMessage(from, { text: `👑 @${clean(target)} promoted to Admin!`, mentions: [target] }, { quoted: msg });
+                    await sock.groupParticipantsUpdate(from, [realTarget], 'promote');
+                    await sock.sendMessage(from, { text: `👑 @${targetClean} promoted to Admin!`, mentions: [realTarget] }, { quoted: msg });
                 }
                 if (command === 'demote') {
-                    await sock.groupParticipantsUpdate(from, [target], 'demote');
-                    await sock.sendMessage(from, { text: `⬇️ @${clean(target)} demoted!`, mentions: [target] }, { quoted: msg });
+                    await sock.groupParticipantsUpdate(from, [realTarget], 'demote');
+                    await sock.sendMessage(from, { text: `⬇️ @${targetClean} demoted!`, mentions: [realTarget] }, { quoted: msg });
                 }
-            } catch (e) { console.log(e); await reply('Failed - make sure BULL X is admin! Error: ' + e.message); }
+            } catch (e) { console.log(e); await reply('Failed: ' + e.message); }
         }
 
         // --- ALIVE WITH PHOTO ---
