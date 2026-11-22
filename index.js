@@ -1,4 +1,3 @@
-
 const express = require('express');
 const app = express();
 let lastQR = null;
@@ -37,14 +36,14 @@ const MOTIVATION = ["Wake up! Dreams won't chase themselves! 🔥","No one is co
 const FOOTBALL = ["⚽ Messi has 8 Ballon d'Ors! 🐐","⚽ Ronaldo has 900+ goals! 🔥","⚽ Gor Mahia is most successful in Kenya! 🇰🇪","⚽ Arsenal Invincibles 49 games unbeaten! 🏆"];
 const HOROSCOPE = { aries: "Aries ♈ Today is your lucky day! Take a risk, it will pay off! 🔥", taurus: "Taurus ♉ Money is coming! Stay patient! 💰", gemini: "Gemini ♊ Someone is thinking about you! 😍", cancer: "Cancer ♋ Family first today! ❤️", leo: "Leo ♌ You will shine today! Be confident! 👑", virgo: "Virgo ♍ Organize your life today! 📋", libra: "Libra ♎ Love is in the air! 💘", scorpio: "Scorpio ♏ Keep your secrets safe! 🤫", sagittarius: "Sagittarius ♐ Adventure awaits! ✈️", capricorn: "Capricorn ♑ Hard work pays today! 💪", aquarius: "Aquarius ♒ New idea = New money! 💡", pisces: "Pisces ♓ Trust your gut today! ✨" };
 const PREMIUM_MENU = `╔══════════════════════╗
-   🐂 *B U L L X V 1 8* 👑
+   🐂 *B U L L X V 1 9* 👑
    *ALL IN ONE MENU*
    📢 *JOIN:* https://whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h
 ╚══════════════════════╝
 
 👑 *OWNER* : Scanned Number (Auto)
 ⚡ *STATUS* : Online ✅
-💎 *VERSION* : V18 Fixed
+💎 *VERSION* : V19 DM AntiDelete
 📱 *PREFIX* : .
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
@@ -94,7 +93,7 @@ const PREMIUM_MENU = `╔══════════════════�
 ┃ ▸ .invite
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 👥 *GROUP*
+┃ 👥 *GROUP + DM*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .tagall
 ┃ ▸ .groupinfo
@@ -102,6 +101,8 @@ const PREMIUM_MENU = `╔══════════════════�
 ┃ ▸ .members
 ┃ ▸ .antilink on/off
 ┃ ▸ .antidelete on/off
+┃ ▸ .antidelete all (DM + Groups!)
+┃ ▸ .antidelete status
 ┃ ▸ .welcome on/off
 ┃ ▸ .goodbye on/off
 
@@ -265,7 +266,6 @@ const PREMIUM_MENU = `╔══════════════════�
   *ALL IN ONE MENU!* 👑
   📢 *Follow:* https://whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h
 ╚══════════════════════╝`;
-const MENU2 = PREMIUM_MENU;
 async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('session');
     const sock = makeWASocket({ logger: pino({ level: 'silent' }), printQRInTerminal: false, auth: state, browser: ['BULL X', 'Chrome', '1.0'] });
@@ -282,13 +282,13 @@ async function startBot() {
             if (action === 'remove' && settings.goodbye?.[id]) { for (let p of participants) await sock.sendMessage(id, { text: `👋 Goodbye @${p.split('@')[0]}! We will miss you! 😢`, mentions: [p] }); }
         } catch {}
     });
-    // ANTIDELETE V1 - messages.update
+    // ANTIDELETE V1 - messages.update - DM + GROUP + GLOBAL
     sock.ev.on('messages.update', async (updates) => {
         for (const update of updates) {
             try {
                 const isDeleted = update.update?.isDeleted || update.update?.messageStubType === 1 || update.key?.isDeleted;
                 if (!isDeleted) continue;
-                if (!settings.antidelete[update.key.remoteJid]) continue;
+                if (!settings.antidelete[update.key.remoteJid] && !settings.antidelete['GLOBAL']) continue;
                 const cached = msgCache.get(update.key.id);
                 if (!cached) { await sock.sendMessage(update.key.remoteJid, { text: `🚨 *ANTI-DELETE!* 🐂\n\nSomeone deleted a message but bot restarted / didn't cache it!` }); continue; }
                 const deleter = update.key.participant || update.key.remoteJid;
@@ -303,7 +303,7 @@ async function startBot() {
             } catch (e) { console.log('Antidelete V1 error:', e.message); }
         }
     });
-    // ANTIDELETE V2 - protocolMessage revoke (Delete for Everyone)
+    // ANTIDELETE V2 - protocolMessage revoke - DM + GROUP + GLOBAL
     sock.ev.on('messages.upsert', async ({ messages, type }) => {
         if (type !== 'notify') return;
         const m = messages[0]; if (!m.message) return;
@@ -312,7 +312,7 @@ async function startBot() {
             try {
                 const deletedId = proto.key.id;
                 const chatId = proto.key.remoteJid || m.key.remoteJid;
-                if (!settings.antidelete[chatId]) return;
+                if (!settings.antidelete[chatId] && !settings.antidelete['GLOBAL']) return;
                 const cached = msgCache.get(deletedId);
                 if (!cached) { await sock.sendMessage(chatId, { text: `🚨 *ANTI-DELETE!* 🐂\n\nSomeone deleted a message but bot restarted / didn't cache it!` }); return; }
                 const deleter = m.key.participant || m.key.remoteJid;
@@ -328,16 +328,14 @@ async function startBot() {
     });
     sock.ev.on('messages.upsert', async ({ messages }) => {
         const msg = messages[0]; if (!msg.message) return;
-        if (msg.message.protocolMessage) return; // Don't process revoke as normal message
+        if (msg.message.protocolMessage) return;
         const from = msg.key.remoteJid; const isGroup = from.endsWith('@g.us'); const sender = msg.key.participant || msg.key.remoteJid;
         const body = msg.message.conversation || msg.message.extendedTextMessage?.text || msg.message.imageMessage?.caption || msg.message.videoMessage?.caption || '';
-        // ===== OWNER SYSTEM =====
         const cleanNum = (id) => (id||'').split(':')[0].split('@')[0];
         const senderNum = cleanNum(sender);
         const ownerNum = cleanNum(OWNER_JID || OWNER_NUMBER);
         const isOwnerCommand = body.startsWith('.') && !body.includes('BULL X OFFICIAL CHANNEL') && !body.includes('whatsapp.com/channel');
         const isOwner = senderNum === ownerNum || msg.key.fromMe;
-        // Anti-loop: ignore bot's own non-command messages
         if (msg.key.fromMe && !isOwnerCommand) return;
         if (msg.key.id?.startsWith('BAE5') && !isOwnerCommand) return;
         const isBot = msg.key.fromMe && !isOwnerCommand;
@@ -359,15 +357,23 @@ async function startBot() {
         };
         const isImage = !!msg.message.imageMessage;
         if (msg.key.id) { msgCache.set(msg.key.id, { msg, sender, from }); if (msgCache.size > 1000) msgCache.delete(msgCache.keys().next().value); }
-        let voMsg = msg.message.viewOnceMessageV2?.message || msg.message.viewOnceMessage?.message || msg.message.ephemeralMessage?.message?.viewOnceMessageV2?.message;
-        if (voMsg && (voMsg.imageMessage || voMsg.videoMessage)) {
-            try { if (voMsg.imageMessage) { const s = await downloadContentFromMessage(voMsg.imageMessage, 'image'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { image: b, caption: '👀 *VIEW ONCE AUTO-OPENED* 🐂' }); } else { const s = await downloadContentFromMessage(voMsg.videoMessage, 'video'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { video: b, caption: '👀 *VIEW ONCE AUTO-OPENED* 🐂' }); } } catch {} return;
+        // AUTO VV - CATCH THE SECOND IT ARRIVES
+        let voMsg = msg.message.viewOnceMessageV2?.message || msg.message.viewOnceMessage?.message || msg.message.ephemeralMessage?.message?.viewOnceMessageV2?.message || msg.message.ephemeralMessage?.message?.viewOnceMessage?.message || msg.message.ephemeralMessage?.message || null;
+        if (voMsg?.viewOnceMessageV2) voMsg = voMsg.viewOnceMessageV2.message;
+        if (voMsg?.viewOnceMessage) voMsg = voMsg.viewOnceMessage.message;
+        if (voMsg && (voMsg.imageMessage || voMsg.videoMessage || voMsg.audioMessage)) {
+            console.log('👀 VIEW ONCE DETECTED from', sender);
+            try {
+                if (voMsg.imageMessage) { const s = await downloadContentFromMessage(voMsg.imageMessage, 'image'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { image: b, caption: '👀 *VIEW ONCE AUTO-OPENED!* 🐂\n\nSent by: @' + sender.split('@')[0] }, { mentions: [sender] }); }
+                else if (voMsg.videoMessage) { const s = await downloadContentFromMessage(voMsg.videoMessage, 'video'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { video: b, caption: '👀 *VIEW ONCE AUTO-OPENED!* 🐂' }); }
+                else if (voMsg.audioMessage) { const s = await downloadContentFromMessage(voMsg.audioMessage, 'audio'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { audio: b, mimetype: 'audio/mp4', ptt: true }); }
+            } catch (e) { console.log('Auto VV failed:', e.message); await sock.sendMessage(from, { text: '⚠️ *VIEW ONCE DETECTED but WhatsApp blocked it!*\n\nWhatsApp does NOT send View Once media to linked devices (bots).\n\nThis is a WhatsApp privacy limit, NOT a bot bug!' }); }
+            return;
         }
         if (isGroup && settings.antilink[from] && !isBot) {
             const hasLink = /(https?:\/\/|www\.|chat\.whatsapp\.com|t\.me\/|instagram\.com|youtube\.com|tiktok\.com)/i.test(body);
             if (hasLink && !body.includes('whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h')) { try { await sock.sendMessage(from, { delete: msg.key }); await sock.sendMessage(from, { text: `⚠️ @${sender.split('@')[0]} Links NOT allowed! Deleted by BULL X 🐂`, mentions: [sender] }); } catch {} return; }
         }
-        // ===== VV FIXED WITH CACHE =====
         if (body.trim() === '.vv' || body.trim() === '.viewonce' || body.trim() === '.vo') {
             try {
                 const ctx = msg.message.extendedTextMessage?.contextInfo;
@@ -422,7 +428,7 @@ async function startBot() {
             const metadata = await sock.groupMetadata(from); const participants = metadata.participants; const clean = (id) => (id||'').split(':')[0].split('@')[0];
             const myNum = clean(sock.user.id); const myLid = clean(sock.user.lid||''); const senderNum2 = clean(sender);
             const senderInfo = participants.find(p=>clean(p.id)===senderNum2||clean(p.lid||'')===senderNum2);
-            const botInfo = participants.find(p=>clean(p.id)===myNum||clean(p.lid||'')===myNum||clean(p.id)===myLid||clean(p.lid||'')===myLid||clean(p.id)===senderNum2);
+            const botInfo = participants.find(p=>clean(p.id)===myNum||clean(p.lid||'')===myNum||clean(p.id)===senderNum2);
             const isSenderAdmin = senderInfo?.admin==='admin'||senderInfo?.admin==='superadmin'; const isBotAdmin = botInfo?.admin==='admin'||botInfo?.admin==='superadmin'||isSenderAdmin;
             if (!isSenderAdmin) { await reply('❌ You are not admin!'); return null; }
             if (!isBotAdmin) { await reply('❌ BULL X is NOT admin!'); return null; }
@@ -438,7 +444,7 @@ async function startBot() {
         if (command === 'ping' || command === 'speed' || command === 'pong') {
             const start = Date.now(); const msgTime = Number(msg.messageTimestamp) * 1000; const latency = Math.max(1, Date.now() - msgTime); const uptimeMs = Date.now() - BOT_START; const upH = Math.floor(uptimeMs / 3600000); const upM = Math.floor((uptimeMs % 3600000) / 60000); const upS = Math.floor((uptimeMs % 60000) / 1000); const mem = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1); let speedLabel = latency < 200 ? '⚡ ULTRA FAST! God Mode!' : latency < 500 ? '🔥 SUPER FAST!' : latency < 1000 ? '✅ Fast' : '🐢 Slow - Check Render';
             const sent = await sock.sendMessage(from, { text: `🏓 *PINGING...*` }, { quoted: msg }); const roundTrip = Date.now() - start; try { await sock.sendMessage(from, { delete: sent.key }); } catch {}
-            return reply(`🏓 *PONG!* 🐂\n\n⚡ *Speed:* ${roundTrip}ms\n📡 *Latency:* ${latency}ms\n${speedLabel}\n\n⏱️ *Uptime:* ${upH}h ${upM}m ${upS}s\n💾 *RAM:* ${mem} MB\n🤖 *Bot:* BULL X V18\n👑 *Owner:* ${ownerNum}\n✅ *Status:* Online & Stable`);
+            return reply(`🏓 *PONG!* 🐂\n\n⚡ *Speed:* ${roundTrip}ms\n📡 *Latency:* ${latency}ms\n${speedLabel}\n\n⏱️ *Uptime:* ${upH}h ${upM}m ${upS}s\n💾 *RAM:* ${mem} MB\n🤖 *Bot:* BULL X V19\n👑 *Owner:* ${ownerNum}\n✅ *Status:* Online & Stable`);
         }
         if (command === 'img' || command === 'image' || command === 'imagine') { if (!text) return reply('Use: .img Cute cat in Kisii'); try { await reply('🎨 Generating image...'); const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(text)}?width=1024&height=1024&seed=${Math.floor(Math.random()*99999)}&nologo=true`; return sock.sendMessage(from, { image: { url }, caption: `🎨 *BULL X AI IMAGE*\n\nPrompt: ${text}` }, { quoted: msg }); } catch { return reply('Image failed, try again!'); } }
         if (command === 'tts' || command === 'say' || command === 'voice') { if (!text) return reply('Use: .tts Hello everyone'); try { const url = `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(text)}`; return sock.sendMessage(from, { audio: { url }, mimetype: 'audio/mp4', ptt: true }, { quoted: msg }); } catch { return reply('TTS failed'); } }
@@ -463,22 +469,22 @@ async function startBot() {
         if (command === 'morse') { if (!text) return reply('Use: .morse SOS'); const m = { a:'.-',b:'-...',c:'-.-.',d:'-..',e:'.',f:'..-.',g:'--.',h:'....',i:'..',j:'.---',k:'-.-',l:'.-..',m:'--',n:'-.',o:'---',p:'.--.',q:'--.-',r:'.-.',s:'...',t:'-',u:'..-',v:'...-',w:'.--',x:'-..-',y:'-.--',z:'--..',1:'.----',2:'..---',3:'...--',4:'....-',5:'.....',6:'-....',7:'--...',8:'---..',9:'----.',0:'-----',' ':'/' }; return reply(`📻 Morse:\n${text.toLowerCase().split('').map(c=>m[c]||c).join(' ')}`); }
         if (command === 'channel' || command === 'follow' || command === 'join') return reply(`📢 *${CHANNEL_NAME}*\n\n🔥 Join BULL X Channel for updates, new commands, giveaways & new features!\n\n🔗 ${CHANNEL_LINK}\n\nTap the link to follow! 👑🐂`);
         if (command === 'menu' || command === 'help' || command === 'menu2') return reply(PREMIUM_MENU);
-        if (command === 'owner') return reply(`👑 *BULL X OWNER*\nOwner Number: ${ownerNum}\nThis number scanned QR!\nBot: BULL X V18`);
-        if (command === 'info') return reply('🐂 *BULL X V18*\nVersion: V18 Fixed\nCommands: 220+\nOwner: Scanned Number (Auto)\nStatus: Online ✅');
+        if (command === 'owner') return reply(`👑 *BULL X OWNER*\nOwner Number: ${ownerNum}\nThis number scanned QR!\nBot: BULL X V19`);
+        if (command === 'info') return reply('🐂 *BULL X V19*\nVersion: V19 DM AntiDelete\nCommands: 220+\nOwner: Scanned Number (Auto)\nStatus: Online ✅');
         if (command === 'time') return reply('🕒 ' + new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' }));
         if (command === 'date') return reply('📅 ' + new Date().toLocaleDateString('en-KE', { timeZone: 'Africa/Nairobi', weekday:'long', year:'numeric', month:'long', day:'numeric' }));
         if (command === 'rules') return reply('📜 *GROUP RULES*\n1. No links\n2. No insults\n3. Respect admins\n4. No spam\n5. 3 Warns = Kick\n6. Have fun! 🐂');
         if (command === 'bull') return reply('🐂🔥 BULL X MODE ACTIVATED! 🔥🐂');
-        if (command === 'alive') return reply('🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 220+ Commands\n✅ V18 Fixed 👑');
+        if (command === 'alive') return reply('🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 220+ Commands\n✅ V19 DM AntiDelete 👑');
         if (command === 'checkadmin') { try { const m = await sock.groupMetadata(from); const clean = (id) => (id||'').split(':')[0].split('@')[0]; return reply(`🔍 Bot PN: ${clean(sock.user.id)}\nBot LID: ${clean(sock.user.lid||'none')}\nOwner: ${ownerNum}\nMembers: ${m.participants.length}`); } catch { return reply('Check failed'); } }
-        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V18`); }
+        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V19`); }
         if (command === 'afk') { settings.afk[sender] = text||'AFK'; saveSettings(); return reply(`😴 You are now AFK!\nReason: ${text||'AFK'}\nBot will tell anyone who tags you!`); }
         if (command === 'autotyping') { if (!await onlyOwner()) return; if (text==='on') { settings.autotyping=true; saveSettings(); return reply('✅ *AUTO-TYPING ON* ⌨️'); } if (text==='off') { settings.autotyping=false; saveSettings(); return reply('❌ Auto-Typing OFF'); } return reply('Use: .autotyping on/off'); }
         if (command === 'autorecording') { if (!await onlyOwner()) return; if (text==='on') { settings.autorecording=true; settings.autotyping=false; saveSettings(); return reply('✅ *AUTO-RECORDING ON* 🎙️'); } if (text==='off') { settings.autorecording=false; saveSettings(); return reply('❌ Auto-Recording OFF'); } return reply('Use: .autorecording on/off'); }
         if (command === 'autoviewstatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autoviewstatus=true; saveSettings(); return reply('✅ *AUTO-VIEW STATUS ON* 👀'); } if (text==='off') { settings.autoviewstatus=false; saveSettings(); return reply('❌ Auto-View Status OFF'); } return reply('Use: .autoviewstatus on/off'); }
         if (command === 'autolikestatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autolikestatus=true; saveSettings(); return reply('✅ *AUTO-LIKE STATUS ON* ❤️'); } if (text==='off') { settings.autolikestatus=false; saveSettings(); return reply('❌ Auto-Like Status OFF'); } return reply('Use: .autolikestatus on/off'); }
         if (command === 'autostatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autotyping=true; settings.autorecording=false; settings.autoviewstatus=true; settings.autolikestatus=true; saveSettings(); return reply('✅ *ALL AUTO ON!* 👑'); } if (text==='off') { settings.autotyping=false; settings.autorecording=false; settings.autoviewstatus=false; settings.autolikestatus=false; saveSettings(); return reply('❌ All Auto OFF'); } return reply('Use: .autostatus on/off'); }
-        if (command === 'settings') return reply(`⚙️ *SETTINGS*\n\n👑 Owner: ${ownerNum}\n⌨️ Typing: ${settings.autotyping?'✅ ON':'❌ OFF'}\n🎙️ Recording: ${settings.autorecording?'✅ ON':'❌ OFF'}\n👀 View Status: ${settings.autoviewstatus?'✅ ON':'❌ OFF'}\n❤️ Like Status: ${settings.autolikestatus?'✅ ON':'❌ OFF'}\n🔗 Anti-Link: ${settings.antilink[from]?'✅ ON':'❌ OFF'}\n🚨 Anti-Delete: ${settings.antidelete[from]?'✅ ON':'❌ OFF'}`);
+        if (command === 'settings') return reply(`⚙️ *SETTINGS*\n\n👑 Owner: ${ownerNum}\n⌨️ Typing: ${settings.autotyping?'✅ ON':'❌ OFF'}\n🎙️ Recording: ${settings.autorecording?'✅ ON':'❌ OFF'}\n👀 View Status: ${settings.autoviewstatus?'✅ ON':'❌ OFF'}\n❤️ Like Status: ${settings.autolikestatus?'✅ ON':'❌ OFF'}\n🔗 Anti-Link: ${settings.antilink[from]?'✅ ON':'❌ OFF'}\n🚨 Anti-Delete: ${settings.antidelete[from]||settings.antidelete['GLOBAL']?'✅ ON':'❌ OFF'}`);
         if (command === 'balance' || command === 'bal' || command === 'money') { const u = getBal(sender); return reply(`💰 *YOUR BALANCE*\n\nCoins: ${u.bal} 🪙\nRank: ${u.bal>5000?'Billionaire 🤑':u.bal>2000?'Rich 💰':'Hustler 💪'}`); }
         if (command === 'daily') { const u = getBal(sender); const now = Date.now(); if (now - u.lastDaily < 86400000) return reply(`⏳ You already claimed daily! Come back tomorrow! Balance: ${u.bal}`); u.lastDaily = now; u.bal += 500; saveSettings(); return reply(`🎁 *DAILY REWARD!*\n\n+500 coins! 🎉\nNew Balance: ${u.bal} 🪙`); }
         if (command === 'work') { const u = getBal(sender); const earn = Math.floor(Math.random()*400)+100; const jobs = ['Matatu Conductor 🚌','Farmer 🌾','Boda Boda 🏍️','Shopkeeper 🏪','Teacher 📚','DJ 🎧','Hustler 💪']; u.bal += earn; saveSettings(); return reply(`💼 *WORK*\n\nYou worked as ${pick(jobs)}!\nEarned: +${earn} coins!\nBalance: ${u.bal} 🪙`); }
@@ -565,7 +571,15 @@ async function startBot() {
         if (command === 'nairobi') return reply('🏙️ *NAIROBI*\nCapital of Kenya! Green City in the Sun ☀️🌳');
         if (command === 'kisii') return reply('🏔️ *KISII*\nLand of soapstone, bananas & hardworking people! 🍌💪');
         if (command === 'antilink') { if (!await onlyOwner()) return; if (!isGroup) return reply('Groups only!'); if (text==='on') { settings.antilink[from]=true; saveSettings(); return reply('✅ Anti-Link ON'); } if (text==='off') { delete settings.antilink[from]; saveSettings(); return reply('❌ Anti-Link OFF'); } return reply('Use: .antilink on/off'); }
-        if (command === 'antidelete') { if (!await onlyOwner()) return; if (!isGroup) return reply('Groups only!'); if (text==='on') { settings.antidelete[from]=true; saveSettings(); return reply('✅ Anti-Delete ON - I will catch deleted messages!'); } if (text==='off') { delete settings.antidelete[from]; saveSettings(); return reply('❌ Anti-Delete OFF'); } return reply('Use: .antidelete on/off'); }
+        if (command === 'antidelete') {
+            if (!await onlyOwner()) return;
+            if (text === 'all' || text === 'global' || text === 'on all') { settings.antidelete['GLOBAL'] = true; saveSettings(); return reply('✅ *ANTI-DELETE GLOBAL ON!* 🌍🐂\n\nNow works in:\n✅ ALL Groups\n✅ ALL DMs / Private Chats\n✅ Everywhere!\n\nAnyone deletes -> Bot resends!'); }
+            if (text === 'off all' || text === 'global off') { delete settings.antidelete['GLOBAL']; saveSettings(); return reply('❌ Anti-Delete GLOBAL OFF'); }
+            if (text === 'on') { settings.antidelete[from] = true; saveSettings(); return reply(`✅ *Anti-Delete ON!* 🐂\n\nChat: ${isGroup ? 'This Group' : 'This DM'}\n\nIf anyone deletes a message here, I will resend it!`); }
+            if (text === 'off') { delete settings.antidelete[from]; saveSettings(); return reply('❌ Anti-Delete OFF for this chat'); }
+            if (text === 'status' || text === 'check') { const isGlobal = !!settings.antidelete['GLOBAL']; const isHere = !!settings.antidelete[from]; return reply(`🚨 *ANTI-DELETE STATUS*\n\n🌍 Global: ${isGlobal ? '✅ ON' : '❌ OFF'}\n💬 This Chat: ${isHere ? '✅ ON' : '❌ OFF'}\n\nUse:\n.antidelete on = This chat only\n.antidelete all = EVERYWHERE!\n.antidelete off = Turn off here`); }
+            return reply('Use:\n.antidelete on = This chat\n.antidelete all = ALL DMs + Groups!\n.antidelete off = Turn off\n.antidelete status = Check');
+        }
         if (command === 'tagall') { if (!isGroup) return reply('Groups only!'); try { const m = await sock.groupMetadata(from); const parts = m.participants.map(p=>p.id); let t='🐂 *TAGALL*\n\n'; for(let p of parts) t+='@'+p.split('@')[0]+' '; return sock.sendMessage(from, { text: t, mentions: parts }, { quoted: msg }); } catch { return reply('Failed'); } }
         if (command === 'groupinfo') { if (!isGroup) return reply('Groups only!'); try { const m = await sock.groupMetadata(from); return reply(`👥 *GROUP INFO*\nName: ${m.subject}\nMembers: ${m.participants.length}`); } catch { return reply('Failed'); } }
         if (command === 'admins') { if (!isGroup) return reply('Groups only!'); try { const m = await sock.groupMetadata(from); const admins = m.participants.filter(p=>p.admin); let t='👑 *ADMINS*\n\n'; for(let a of admins) t+='@'+a.id.split('@')[0]+'\n'; return sock.sendMessage(from, { text: t, mentions: admins.map(a=>a.id) }, { quoted: msg }); } catch { return reply('Failed'); } }
