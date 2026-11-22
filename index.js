@@ -16,6 +16,8 @@ const sharp = require('sharp');
 const fs = require('fs');
 const CHANNEL_LINK = 'https://whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h';
 const CHANNEL_NAME = '🐂 BULL X OFFICIAL CHANNEL';
+const DEV_NAME = 'EZEKIA DEV';
+const DEV_NUMBER = '254112843071';
 const BOT_START = Date.now();
 let OWNER_JID = null;
 let OWNER_NUMBER = '254112843071';
@@ -35,13 +37,18 @@ const BIBLE = ["John 3:16 - For God so loved the world... ❤️","Philippians 4
 const MOTIVATION = ["Wake up! Dreams won't chase themselves! 🔥","No one is coming to save you. Save yourself! 💪","Today's pain is tomorrow's power! ⚡","Stop scrolling, start hustling! 📱➡️💰"];
 const FOOTBALL = ["⚽ Messi has 8 Ballon d'Ors! 🐐","⚽ Ronaldo has 900+ goals! 🔥","⚽ Gor Mahia is most successful in Kenya! 🇰🇪","⚽ Arsenal Invincibles 49 games unbeaten! 🏆"];
 const HOROSCOPE = { aries: "Aries ♈ Today is your lucky day! Take a risk, it will pay off! 🔥", taurus: "Taurus ♉ Money is coming! Stay patient! 💰", gemini: "Gemini ♊ Someone is thinking about you! 😍", cancer: "Cancer ♋ Family first today! ❤️", leo: "Leo ♌ You will shine today! Be confident! 👑", virgo: "Virgo ♍ Organize your life today! 📋", libra: "Libra ♎ Love is in the air! 💘", scorpio: "Scorpio ♏ Keep your secrets safe! 🤫", sagittarius: "Sagittarius ♐ Adventure awaits! ✈️", capricorn: "Capricorn ♑ Hard work pays today! 💪", aquarius: "Aquarius ♒ New idea = New money! 💡", pisces: "Pisces ♓ Trust your gut today! ✨" };
-const PREMIUM_MENU = `╔══════════════════════╗
-   🐂 *B U L L X V 2 1* 👑
+const getMenu = () => {
+  const scannedOwner = OWNER_NUMBER || 'Not Connected';
+  return `╔══════════════════════╗
+   🐂 *B U L L X V 2 2* 👑
    *ALL IN ONE MENU*
 ╚══════════════════════╝
-👑 *OWNER* : Scanned Number (Auto)
+👑 *OWNER* : +${scannedOwner} (Scanned QR)
+👨‍💻 *DEV* : *${DEV_NAME}* 🔥
+📞 *DEV NUMBER* : +${DEV_NUMBER}
+💬 *CONTACT DEV* : wa.me/${DEV_NUMBER}
 ⚡ *STATUS* : Online ✅
-💎 *VERSION* : V21 Each Command Separate
+💎 *VERSION* : V22 Dynamic Owner + Dev
 📱 *PREFIX* : .
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
@@ -260,7 +267,12 @@ const PREMIUM_MENU = `╔══════════════════�
 
 ╔══════════════════════╗
   *Total: 220+ Commands* 🔥
+  👨‍💻 *Dev: ${DEV_NAME}*
+  📞 *+${DEV_NUMBER}*
+  👑 *Owner: +${scannedOwner}*
 ╚══════════════════════╝`;
+};
+const PREMIUM_MENU = `Use .menu`;
 async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('session');
     const sock = makeWASocket({ logger: pino({ level: 'silent' }), printQRInTerminal: false, auth: state, browser: ['BULL X', 'Chrome', '1.0'] });
@@ -327,7 +339,7 @@ async function startBot() {
         const btnResponse = msg.message.buttonsResponseMessage?.selectedButtonId || msg.message.listResponseMessage?.title || msg.message.templateButtonReplyMessage?.selectedId;
         if (btnResponse) {
             if (btnResponse === 'follow_channel' || btnResponse.includes('FOLLOW')) { await sock.sendMessage(from, { text: `📢 *${CHANNEL_NAME}*\n\nTap here to Follow! 👇\n${CHANNEL_LINK}` }, { quoted: msg }); return; }
-            if (btnResponse === 'menu_btn' || btnResponse.includes('MENU')) { await sock.sendMessage(from, { text: PREMIUM_MENU }, { quoted: msg }); return; }
+            if (btnResponse === 'menu_btn' || btnResponse.includes('MENU')) { await sock.sendMessage(from, { text: getMenu() }, { quoted: msg }); return; }
             if (btnResponse === 'ping_btn' || btnResponse.includes('PING')) { await sock.sendMessage(from, { text: `🏓 *PONG!* 🐂\n✅ BULL X Online!` }, { quoted: msg }); return; }
         }
         const cleanNum = (id) => (id||'').split(':')[0].split('@')[0];
@@ -354,7 +366,7 @@ async function startBot() {
             try {
                 await sock.sendMessage(from, {
                     text: text,
-                    footer: '🐂 BULL X V21 | Tap below to Follow! 👑',
+                    footer: '🐂 BULL X V22 | Tap below to Follow! 👑',
                     buttons: [
                         { buttonId: 'follow_channel', buttonText: { displayText: '📢 FOLLOW CHANNEL' }, type: 1 },
                         { buttonId: 'menu_btn', buttonText: { displayText: '📋 MENU' }, type: 1 },
@@ -421,6 +433,7 @@ async function startBot() {
         }
         if (!body.startsWith('.')) {
             const low = body.toLowerCase().trim();
+            if (low === 'channel' || low === 'link' || low === 'follow' || low === 'mychannel' || low === 'bullx channel' || low === 'show channel') { await sock.sendMessage(from, { text: `📢 *${CHANNEL_NAME}*\n\n🔗 ${CHANNEL_LINK}\n\nTap to Follow! 🐂🔥` }, { quoted: msg }); return; }
             if (['hi','hello','hey','hii','sasa','niaje','mambo','poa'].includes(low)) await reply('Hey! 🐂 BULL X here! Type *.menu* 👑');
             if (low === 'bull' || low === 'bull x') await reply('BULL X MODE ACTIVATED! 🐂🔥');
             if (low.includes('i love you')) await reply('Aww I love you too! ❤️🐂');
@@ -454,7 +467,7 @@ async function startBot() {
         if (command === 'ping' || command === 'speed' || command === 'pong') {
             const start = Date.now(); const msgTime = Number(msg.messageTimestamp) * 1000; const latency = Math.max(1, Date.now() - msgTime); const uptimeMs = Date.now() - BOT_START; const upH = Math.floor(uptimeMs / 3600000); const upM = Math.floor((uptimeMs % 3600000) / 60000); const upS = Math.floor((uptimeMs % 60000) / 1000); const mem = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1); let speedLabel = latency < 200 ? '⚡ ULTRA FAST! God Mode!' : latency < 500 ? '🔥 SUPER FAST!' : latency < 1000 ? '✅ Fast' : '🐢 Slow - Check Render';
             const sent = await sock.sendMessage(from, { text: `🏓 *PINGING...*` }, { quoted: msg }); const roundTrip = Date.now() - start; try { await sock.sendMessage(from, { delete: sent.key }); } catch {}
-            return reply(`🏓 *PONG!* 🐂\n\n⚡ *Speed:* ${roundTrip}ms\n📡 *Latency:* ${latency}ms\n${speedLabel}\n\n⏱️ *Uptime:* ${upH}h ${upM}m ${upS}s\n💾 *RAM:* ${mem} MB\n🤖 *Bot:* BULL X V21\n👑 *Owner:* ${ownerNum}\n✅ *Status:* Online & Stable`);
+            return reply(`🏓 *PONG!* 🐂\n\n⚡ *Speed:* ${roundTrip}ms\n📡 *Latency:* ${latency}ms\n${speedLabel}\n\n⏱️ *Uptime:* ${upH}h ${upM}m ${upS}s\n💾 *RAM:* ${mem} MB\n🤖 *Bot:* BULL X V22\n👑 *Owner:* +${ownerNum}\n👨‍💻 *Dev:* ${DEV_NAME} +${DEV_NUMBER}\n✅ *Status:* Online & Stable`);
         }
         if (command === 'img' || command === 'image' || command === 'imagine') { if (!text) return reply('Use: .img Cute cat in Kisii'); try { await reply('🎨 Generating image...'); const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(text)}?width=1024&height=1024&seed=${Math.floor(Math.random()*99999)}&nologo=true`; return sock.sendMessage(from, { image: { url }, caption: `🎨 *BULL X AI IMAGE*\n\nPrompt: ${text}` }, { quoted: msg }); } catch { return reply('Image failed, try again!'); } }
         if (command === 'tts' || command === 'say' || command === 'voice') { if (!text) return reply('Use: .tts Hello everyone'); try { const url = `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(text)}`; return sock.sendMessage(from, { audio: { url }, mimetype: 'audio/mp4', ptt: true }, { quoted: msg }); } catch { return reply('TTS failed'); } }
@@ -477,24 +490,27 @@ async function startBot() {
         if (command === 'getpp' || command === 'pp') { try { const url = await sock.profilePictureUrl(targetUser, 'image'); return sock.sendMessage(from, { image: { url }, caption: `🖼️ Profile pic of @${targetName}` }, { quoted: msg }); } catch { return reply('No profile pic or private!'); } }
         if (command === 'binary') { if (!text) return reply('Use: .binary hello'); return reply(`💻 Binary:\n${text.split('').map(c=>c.charCodeAt(0).toString(2).padStart(8,'0')).join(' ')}`); }
         if (command === 'morse') { if (!text) return reply('Use: .morse SOS'); const m = { a:'.-',b:'-...',c:'-.-.',d:'-..',e:'.',f:'..-.',g:'--.',h:'....',i:'..',j:'.---',k:'-.-',l:'.-..',m:'--',n:'-.',o:'---',p:'.--.',q:'--.-',r:'.-.',s:'...',t:'-',u:'..-',v:'...-',w:'.--',x:'-..-',y:'-.--',z:'--..',1:'.----',2:'..---',3:'...--',4:'....-',5:'.....',6:'-....',7:'--...',8:'---..',9:'----.',0:'-----',' ':'/' }; return reply(`📻 Morse:\n${text.toLowerCase().split('').map(c=>m[c]||c).join(' ')}`); }
-        if (command === 'channel' || command === 'follow' || command === 'join') return reply(`📢 *${CHANNEL_NAME}*\n\n🔥 Join BULL X Channel for updates, new commands, giveaways & new features!\n\n🔗 ${CHANNEL_LINK}\n\nTap the link to follow! 👑🐂`);
-        if (command === 'menu' || command === 'help' || command === 'menu2') return reply(PREMIUM_MENU);
-        if (command === 'owner') return reply(`👑 *BULL X OWNER*\nOwner Number: ${ownerNum}\nThis number scanned QR!\nBot: BULL X V21`);
-        if (command === 'info') return reply('🐂 *BULL X V21*\nVersion: V21 Each Command Separate\nCommands: 220+\nOwner: Scanned Number (Auto)\nStatus: Online ✅');
+        if (command === 'channel' || command === 'follow' || command === 'join' || command === 'link' || command === 'mychannel' || command === 'mychanel' || command === 'bullx' || command === 'support' || command === 'subscribe' || command === 'updates') {
+            try { await sock.sendMessage(from, { text: `📢 *${CHANNEL_NAME}* 🐂👑\n\n🔥 *JOIN BULL X CHANNEL!*\n\n✅ New Commands First!\n✅ Giveaways!\n✅ Updates & Fixes!\n\n👇 *Tap the link below to Follow!* 👇`, footer: '🐂 BULL X V22 | Follow for More! 👑', buttons: [{ buttonId: 'follow_channel', buttonText: { displayText: '📢 FOLLOW CHANNEL' }, type: 1 }, { buttonId: 'menu_btn', buttonText: { displayText: '📋 MENU' }, type: 1 }], headerType: 1 }, { quoted: msg }); } catch {}
+            return sock.sendMessage(from, { text: `🔗 *YOUR CHANNEL LINK:*\n\n${CHANNEL_LINK}\n\n👆 Tap it to Follow! 🐂🔥` }, { quoted: msg });
+        }
+        if (command === 'menu' || command === 'help' || command === 'menu2') return reply(getMenu());
+        if (command === 'owner' || command === 'dev' || command === 'developer' || command === 'creator' || command === 'eze' || command === 'ezekia') return reply(`👨‍💻 *BULL X DEVELOPER* 👑🔥\n\n👤 *Name:* ${DEV_NAME}\n📞 *Dev Number:* +${DEV_NUMBER}\n💬 *WhatsApp:* wa.me/${DEV_NUMBER}\n🤖 *Bot:* BULL X V22\n👑 *Current Owner (Scanned QR):* +${ownerNum}\n\n📢 *Channel:* ${CHANNEL_LINK}\n\nContact Dev for:\n✅ Bot Setup\n✅ New Features\n✅ Support & Fixes!`);
+        if (command === 'info') return reply(`🐂 *BULL X V22*\n\n👨‍💻 *Dev:* ${DEV_NAME}\n📞 *Dev Number:* +${DEV_NUMBER}\n💬 *Contact:* wa.me/${DEV_NUMBER}\n👑 *Owner (Scanned):* +${ownerNum}\n\nVersion: V22 Dynamic Owner + Dev\nCommands: 220+\nStatus: Online ✅`);
         if (command === 'time') return reply('🕒 ' + new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' }));
         if (command === 'date') return reply('📅 ' + new Date().toLocaleDateString('en-KE', { timeZone: 'Africa/Nairobi', weekday:'long', year:'numeric', month:'long', day:'numeric' }));
         if (command === 'rules') return reply('📜 *GROUP RULES*\n1. No links\n2. No insults\n3. Respect admins\n4. No spam\n5. 3 Warns = Kick\n6. Have fun! 🐂');
         if (command === 'bull') return reply('🐂🔥 BULL X MODE ACTIVATED! 🔥🐂');
-        if (command === 'alive') return reply('🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 220+ Commands\n✅ V21 Each Command Separate 👑');
-        if (command === 'checkadmin') { try { const m = await sock.groupMetadata(from); const clean = (id) => (id||'').split(':')[0].split('@')[0]; return reply(`🔍 Bot PN: ${clean(sock.user.id)}\nBot LID: ${clean(sock.user.lid||'none')}\nOwner: ${ownerNum}\nMembers: ${m.participants.length}`); } catch { return reply('Check failed'); } }
-        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V21`); }
+        if (command === 'alive') return reply(`🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 220+ Commands\n✅ V22 Dynamic Owner + Dev 👑\n👨‍💻 Dev: ${DEV_NAME}\n👑 Owner: +${ownerNum}`);
+        if (command === 'checkadmin') { try { const m = await sock.groupMetadata(from); const clean = (id) => (id||'').split(':')[0].split('@')[0]; return reply(`🔍 Bot PN: ${clean(sock.user.id)}\nBot LID: ${clean(sock.user.lid||'none')}\nOwner: +${ownerNum}\nDev: ${DEV_NAME} +${DEV_NUMBER}\nMembers: ${m.participants.length}`); } catch { return reply('Check failed'); } }
+        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V22\n👨‍💻 Dev: ${DEV_NAME}`); }
         if (command === 'afk') { settings.afk[sender] = text||'AFK'; saveSettings(); return reply(`😴 You are now AFK!\nReason: ${text||'AFK'}\nBot will tell anyone who tags you!`); }
         if (command === 'autotyping') { if (!await onlyOwner()) return; if (text==='on') { settings.autotyping=true; saveSettings(); return reply('✅ *AUTO-TYPING ON* ⌨️'); } if (text==='off') { settings.autotyping=false; saveSettings(); return reply('❌ Auto-Typing OFF'); } return reply('Use: .autotyping on/off'); }
         if (command === 'autorecording') { if (!await onlyOwner()) return; if (text==='on') { settings.autorecording=true; settings.autotyping=false; saveSettings(); return reply('✅ *AUTO-RECORDING ON* 🎙️'); } if (text==='off') { settings.autorecording=false; saveSettings(); return reply('❌ Auto-Recording OFF'); } return reply('Use: .autorecording on/off'); }
         if (command === 'autoviewstatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autoviewstatus=true; saveSettings(); return reply('✅ *AUTO-VIEW STATUS ON* 👀'); } if (text==='off') { settings.autoviewstatus=false; saveSettings(); return reply('❌ Auto-View Status OFF'); } return reply('Use: .autoviewstatus on/off'); }
         if (command === 'autolikestatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autolikestatus=true; saveSettings(); return reply('✅ *AUTO-LIKE STATUS ON* ❤️'); } if (text==='off') { settings.autolikestatus=false; saveSettings(); return reply('❌ Auto-Like Status OFF'); } return reply('Use: .autolikestatus on/off'); }
         if (command === 'autostatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autotyping=true; settings.autorecording=false; settings.autoviewstatus=true; settings.autolikestatus=true; saveSettings(); return reply('✅ *ALL AUTO ON!* 👑'); } if (text==='off') { settings.autotyping=false; settings.autorecording=false; settings.autoviewstatus=false; settings.autolikestatus=false; saveSettings(); return reply('❌ All Auto OFF'); } return reply('Use: .autostatus on/off'); }
-        if (command === 'settings') return reply(`⚙️ *SETTINGS*\n\n👑 Owner: ${ownerNum}\n⌨️ Typing: ${settings.autotyping?'✅ ON':'❌ OFF'}\n🎙️ Recording: ${settings.autorecording?'✅ ON':'❌ OFF'}\n👀 View Status: ${settings.autoviewstatus?'✅ ON':'❌ OFF'}\n❤️ Like Status: ${settings.autolikestatus?'✅ ON':'❌ OFF'}\n🔗 Anti-Link: ${settings.antilink[from]?'✅ ON':'❌ OFF'}\n🚨 Anti-Delete: ${settings.antidelete[from]||settings.antidelete['GLOBAL']?'✅ ON':'❌ OFF'}`);
+        if (command === 'settings') return reply(`⚙️ *SETTINGS*\n\n👑 Owner (Scanned): +${ownerNum}\n👨‍💻 Dev: ${DEV_NAME} +${DEV_NUMBER}\n⌨️ Typing: ${settings.autotyping?'✅ ON':'❌ OFF'}\n🎙️ Recording: ${settings.autorecording?'✅ ON':'❌ OFF'}\n👀 View Status: ${settings.autoviewstatus?'✅ ON':'❌ OFF'}\n❤️ Like Status: ${settings.autolikestatus?'✅ ON':'❌ OFF'}\n🔗 Anti-Link: ${settings.antilink[from]?'✅ ON':'❌ OFF'}\n🚨 Anti-Delete: ${settings.antidelete[from]||settings.antidelete['GLOBAL']?'✅ ON':'❌ OFF'}`);
         if (command === 'balance' || command === 'bal' || command === 'money') { const u = getBal(sender); return reply(`💰 *YOUR BALANCE*\n\nCoins: ${u.bal} 🪙\nRank: ${u.bal>5000?'Billionaire 🤑':u.bal>2000?'Rich 💰':'Hustler 💪'}`); }
         if (command === 'daily') { const u = getBal(sender); const now = Date.now(); if (now - u.lastDaily < 86400000) return reply(`⏳ You already claimed daily! Come back tomorrow! Balance: ${u.bal}`); u.lastDaily = now; u.bal += 500; saveSettings(); return reply(`🎁 *DAILY REWARD!*\n\n+500 coins! 🎉\nNew Balance: ${u.bal} 🪙`); }
         if (command === 'work') { const u = getBal(sender); const earn = Math.floor(Math.random()*400)+100; const jobs = ['Matatu Conductor 🚌','Farmer 🌾','Boda Boda 🏍️','Shopkeeper 🏪','Teacher 📚','DJ 🎧','Hustler 💪']; u.bal += earn; saveSettings(); return reply(`💼 *WORK*\n\nYou worked as ${pick(jobs)}!\nEarned: +${earn} coins!\nBalance: ${u.bal} 🪙`); }
