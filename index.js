@@ -16,6 +16,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const CHANNEL_LINK = 'https://whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h';
 const CHANNEL_NAME = '🐂 BULL X OFFICIAL CHANNEL';
+const BOT_START = Date.now();
 let settings = { autotyping: false, autorecording: false, autoviewstatus: false, autolikestatus: false, antilink: {}, antidelete: {}, warnings: {}, economy: {}, afk: {}, todos: {}, welcome: {}, goodbye: {} };
 try { settings = { ...settings, ...JSON.parse(fs.readFileSync('settings.json','utf8')) }; } catch {}
 const saveSettings = () => fs.writeFileSync('settings.json', JSON.stringify(settings));
@@ -33,14 +34,14 @@ const MOTIVATION = ["Wake up! Dreams won't chase themselves! 🔥","No one is co
 const FOOTBALL = ["⚽ Messi has 8 Ballon d'Ors! 🐐","⚽ Ronaldo has 900+ goals! 🔥","⚽ Gor Mahia is most successful in Kenya! 🇰🇪","⚽ Arsenal Invincibles 49 games unbeaten! 🏆"];
 const HOROSCOPE = { aries: "Aries ♈ Today is your lucky day! Take a risk, it will pay off! 🔥", taurus: "Taurus ♉ Money is coming! Stay patient! 💰", gemini: "Gemini ♊ Someone is thinking about you! 😍", cancer: "Cancer ♋ Family first today! ❤️", leo: "Leo ♌ You will shine today! Be confident! 👑", virgo: "Virgo ♍ Organize your life today! 📋", libra: "Libra ♎ Love is in the air! 💘", scorpio: "Scorpio ♏ Keep your secrets safe! 🤫", sagittarius: "Sagittarius ♐ Adventure awaits! ✈️", capricorn: "Capricorn ♑ Hard work pays today! 💪", aquarius: "Aquarius ♒ New idea = New money! 💡", pisces: "Pisces ♓ Trust your gut today! ✨" };
 const PREMIUM_MENU = `╔══════════════════════╗
-   🐂 *B U L L X V 1 6* 👑
+   🐂 *B U L L X V 1 7* 👑
    *ALL IN ONE MENU*
    📢 *JOIN:* https://whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h
 ╚══════════════════════╝
 
 👑 *OWNER* : +254112843071
 ⚡ *STATUS* : Online ✅
-💎 *VERSION* : V16 Final
+💎 *VERSION* : V17 Speed
 📱 *PREFIX* : .
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
@@ -48,6 +49,7 @@ const PREMIUM_MENU = `╔══════════════════�
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .ping
 ┃ ▸ .menu
+┃ ▸ .speed
 ┃ ▸ .owner
 ┃ ▸ .alive
 ┃ ▸ .info
@@ -215,7 +217,7 @@ const PREMIUM_MENU = `╔══════════════════�
 ┃ ▸ .poem
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 🚀 *ADVANCED* 🆕
+┃ 🚀 *ADVANCED*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .img <prompt>
 ┃ ▸ .image <prompt>
@@ -284,7 +286,7 @@ async function startBot() {
                 if (!isDeleted) continue;
                 if (!settings.antidelete[update.key.remoteJid]) continue;
                 const cached = msgCache.get(update.key.id);
-                if (!cached) { await sock.sendMessage(update.key.remoteJid, { text: `🚨 *ANTI-DELETE!* 🐂\n\nSomeone deleted a message but I didn't cache it! (Bot restarted?)\n\nTip: Don't restart bot too much!` }); continue; }
+                if (!cached) { await sock.sendMessage(update.key.remoteJid, { text: `🚨 *ANTI-DELETE!* 🐂\n\nSomeone deleted a message but I didn't cache it! (Bot restarted?)` }); continue; }
                 const deleter = update.key.participant || update.key.remoteJid;
                 const m = cached.msg.message;
                 const origBody = m.conversation || m.extendedTextMessage?.text || m.imageMessage?.caption || m.videoMessage?.caption || '';
@@ -299,9 +301,20 @@ async function startBot() {
     });
     sock.ev.on('messages.upsert', async ({ messages }) => {
         const msg = messages[0]; if (!msg.message) return;
+        // ===== FIX: NEVER REPLY TO SELF - STOPS INFINITE LOOP =====
+        if (msg.key.fromMe) return;
+        if (msg.key.id?.startsWith('BAE5')) return;
+        try { if (sock.user && (msg.key.participant === sock.user.id || msg.key.participant === sock.user.lid || msg.key.remoteJid === sock.user.id)) return; } catch {}
         const from = msg.key.remoteJid; const isGroup = from.endsWith('@g.us'); const sender = msg.key.participant || msg.key.remoteJid;
         const body = msg.message.conversation || msg.message.extendedTextMessage?.text || msg.message.imageMessage?.caption || msg.message.videoMessage?.caption || '';
+        // Ignore bot's own footer / other bot messages to prevent loop
+        if (body.includes('BULL X OFFICIAL CHANNEL') && body.includes('whatsapp.com/channel')) {
+            // If it's OUR footer, ignore unless it starts with . (user command)
+            if (!body.startsWith('.')) return;
+        }
+        if (body.includes('Tag all @') && body.length > 500) return;
         const isBot = msg.key.fromMe;
+        if (isBot) return;
         if (from === 'status@broadcast') {
             try { if (settings.autoviewstatus) await sock.readMessages([msg.key]); if (settings.autolikestatus && !isBot) await sock.sendMessage('status@broadcast', { react: { text: pick(['❤️','🔥','😍','👍','😂','🙏']), key: msg.key } }); } catch {} return;
         }
@@ -394,7 +407,23 @@ async function startBot() {
             let realTarget = target; const tc = info.clean(target); const found = info.participants.find(p=>info.clean(p.id)===tc||info.clean(p.lid||'')===tc); if (found) realTarget = found.id;
             return { realTarget, tc };
         };
-        // ADVANCED V15
+        // ===== PING WITH REAL SPEED =====
+        if (command === 'ping' || command === 'speed' || command === 'pong') {
+            const start = Date.now();
+            const msgTime = Number(msg.messageTimestamp) * 1000;
+            const latency = Math.max(1, Date.now() - msgTime);
+            const uptimeMs = Date.now() - BOT_START;
+            const upH = Math.floor(uptimeMs / 3600000);
+            const upM = Math.floor((uptimeMs % 3600000) / 60000);
+            const upS = Math.floor((uptimeMs % 60000) / 1000);
+            const mem = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
+            let speedLabel = latency < 200 ? '⚡ ULTRA FAST! God Mode!' : latency < 500 ? '🔥 SUPER FAST!' : latency < 1000 ? '✅ Fast' : '🐢 Slow - Check Render';
+            // Send first message then measure round-trip
+            const sent = await sock.sendMessage(from, { text: `🏓 *PINGING...*` }, { quoted: msg });
+            const roundTrip = Date.now() - start;
+            try { await sock.sendMessage(from, { delete: sent.key }); } catch {}
+            return reply(`🏓 *PONG!* 🐂\n\n⚡ *Speed:* ${roundTrip}ms\n📡 *Latency:* ${latency}ms\n${speedLabel}\n\n⏱️ *Uptime:* ${upH}h ${upM}m ${upS}s\n💾 *RAM:* ${mem} MB\n🤖 *Bot:* BULL X V17\n👑 *Owner:* +254112843071\n✅ *Status:* Online & Stable`);
+        }
         if (command === 'img' || command === 'image' || command === 'imagine') { if (!text) return reply('Use: .img Cute cat in Kisii'); try { await reply('🎨 Generating image...'); const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(text)}?width=1024&height=1024&seed=${Math.floor(Math.random()*99999)}&nologo=true`; return sock.sendMessage(from, { image: { url }, caption: `🎨 *BULL X AI IMAGE*\n\nPrompt: ${text}` }, { quoted: msg }); } catch { return reply('Image failed, try again!'); } }
         if (command === 'tts' || command === 'say' || command === 'voice') { if (!text) return reply('Use: .tts Hello everyone'); try { const url = `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(text)}`; return sock.sendMessage(from, { audio: { url }, mimetype: 'audio/mp4', ptt: true }, { quoted: msg }); } catch { return reply('TTS failed'); } }
         if (command === 'screenshot' || command === 'ss' || command === 'webshot') { let link = body.match(/https?:\/\/\S+/)?.[0] || (text.startsWith('http') ? text : `https://${text}`); if (!text) return reply('Use: .screenshot google.com'); try { const url = `https://image.thum.io/get/width/1200/crop/800/noanimate/${link}`; return sock.sendMessage(from, { image: { url }, caption: `📸 *SCREENSHOT*\n${link}` }, { quoted: msg }); } catch { return reply('Screenshot failed'); } }
@@ -417,17 +446,16 @@ async function startBot() {
         if (command === 'binary') { if (!text) return reply('Use: .binary hello'); return reply(`💻 Binary:\n${text.split('').map(c=>c.charCodeAt(0).toString(2).padStart(8,'0')).join(' ')}`); }
         if (command === 'morse') { if (!text) return reply('Use: .morse SOS'); const m = { a:'.-',b:'-...',c:'-.-.',d:'-..',e:'.',f:'..-.',g:'--.',h:'....',i:'..',j:'.---',k:'-.-',l:'.-..',m:'--',n:'-.',o:'---',p:'.--.',q:'--.-',r:'.-.',s:'...',t:'-',u:'..-',v:'...-',w:'.--',x:'-..-',y:'-.--',z:'--..',1:'.----',2:'..---',3:'...--',4:'....-',5:'.....',6:'-....',7:'--...',8:'---..',9:'----.',0:'-----',' ':'/' }; return reply(`📻 Morse:\n${text.toLowerCase().split('').map(c=>m[c]||c).join(' ')}`); }
         if (command === 'channel' || command === 'follow' || command === 'join') return reply(`📢 *${CHANNEL_NAME}*\n\n🔥 Join BULL X Channel for updates, new commands, giveaways & new features!\n\n🔗 ${CHANNEL_LINK}\n\nTap the link to follow! 👑🐂`);
-        if (command === 'ping') return reply('⚡ *PONG!*\n\nBULL X is alive!\nSpeed: Ultra Fast 🚀\nStatus: Online ✅');
         if (command === 'menu' || command === 'help' || command === 'menu2') return reply(PREMIUM_MENU);
-        if (command === 'owner') return reply('👑 *BULL X OWNER*\nName: BULL X Owner\nNumber: +254112843071\nBot: BULL X V16 Final');
-        if (command === 'info') return reply('🐂 *BULL X V16*\nVersion: V16 Final\nCommands: 220+\nOwner: +254112843071\nStatus: Online ✅');
+        if (command === 'owner') return reply('👑 *BULL X OWNER*\nName: BULL X Owner\nNumber: +254112843071\nBot: BULL X V17 Speed');
+        if (command === 'info') return reply('🐂 *BULL X V17*\nVersion: V17 Speed\nCommands: 220+\nOwner: +254112843071\nStatus: Online ✅');
         if (command === 'time') return reply('🕒 ' + new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' }));
         if (command === 'date') return reply('📅 ' + new Date().toLocaleDateString('en-KE', { timeZone: 'Africa/Nairobi', weekday:'long', year:'numeric', month:'long', day:'numeric' }));
         if (command === 'rules') return reply('📜 *GROUP RULES*\n1. No links\n2. No insults\n3. Respect admins\n4. No spam\n5. 3 Warns = Kick\n6. Have fun! 🐂');
         if (command === 'bull') return reply('🐂🔥 BULL X MODE ACTIVATED! 🔥🐂');
-        if (command === 'alive') return reply('🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 220+ Commands\n✅ Final Edition 👑');
+        if (command === 'alive') return reply('🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 220+ Commands\n✅ Speed Edition 👑');
         if (command === 'checkadmin') { try { const m = await sock.groupMetadata(from); const clean = (id) => (id||'').split(':')[0].split('@')[0]; return reply(`🔍 Bot PN: ${clean(sock.user.id)}\nBot LID: ${clean(sock.user.lid||'none')}\nMembers: ${m.participants.length}`); } catch { return reply('Check failed'); } }
-        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V16`); }
+        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V17`); }
         if (command === 'afk') { settings.afk[sender] = text||'AFK'; saveSettings(); return reply(`😴 You are now AFK!\nReason: ${text||'AFK'}\nBot will tell anyone who tags you!`); }
         if (command === 'autotyping') { if (text==='on') { settings.autotyping=true; saveSettings(); return reply('✅ *AUTO-TYPING ON* ⌨️'); } if (text==='off') { settings.autotyping=false; saveSettings(); return reply('❌ Auto-Typing OFF'); } return reply('Use: .autotyping on/off'); }
         if (command === 'autorecording') { if (text==='on') { settings.autorecording=true; settings.autotyping=false; saveSettings(); return reply('✅ *AUTO-RECORDING ON* 🎙️'); } if (text==='off') { settings.autorecording=false; saveSettings(); return reply('❌ Auto-Recording OFF'); } return reply('Use: .autorecording on/off'); }
@@ -529,7 +557,7 @@ async function startBot() {
         if (command === 'invite') { if (!isGroup) return reply('Groups only!'); try { const code = await sock.groupInviteCode(from); return reply(`🔗 *GROUP LINK*\nhttps://chat.whatsapp.com/${code}`); } catch { return reply('Failed - bot must be admin'); } }
         if (command === 'kick' || command === 'promote' || command === 'demote') { const info = await checkAdmin(); if (!info) return; const t = await getTarget(info); if (!t) return; try { if (command==='kick') { await sock.groupParticipantsUpdate(from, [t.realTarget], 'remove'); return sock.sendMessage(from, { text: `👢 @${t.tc} kicked!`, mentions: [t.realTarget] }, { quoted: msg }); } if (command==='promote') { await sock.groupParticipantsUpdate(from, [t.realTarget], 'promote'); return sock.sendMessage(from, { text: `👑 @${t.tc} promoted!`, mentions: [t.realTarget] }, { quoted: msg }); } if (command==='demote') { await sock.groupParticipantsUpdate(from, [t.realTarget], 'demote'); return sock.sendMessage(from, { text: `⬇️ @${t.tc} demoted!`, mentions: [t.realTarget] }, { quoted: msg }); } } catch(e) { return reply('Failed: '+e.message); } }
         if (command === 'tiktok') { const linkMatch = body.match(/https?:\/\/\S+/); const tiktokUrl = linkMatch?linkMatch[0]:text; if (!tiktokUrl||!tiktokUrl.includes('tiktok')) return reply('Use: .tiktok https://vt.tiktok.com/xxx/'); try { await reply('⏳ Downloading TikTok...'); let videoUrl=null; let title='TikTok'; let finalUrl=tiktokUrl; try { const r=await fetch(tiktokUrl,{redirect:'follow'}); finalUrl=r.url||tiktokUrl; } catch {} try { const res=await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(finalUrl)}`); const d=await res.json(); if(d.data?.play){videoUrl=d.data.play; title=d.data.title||title;} } catch {} if(!videoUrl) return reply('❌ Try different video'); return sock.sendMessage(from, { video: { url: videoUrl }, caption: `🐂 *BULL X TikTok*\n${title}` }, { quoted: msg }); } catch { return reply('TikTok failed'); } }
-        if (command === 'igdl' || command === 'fbdl') { const link = body.match(/https?:\/\/\S+/)?.[0] || text; if (!link) return reply(`Use: .${command} <link>`); try { await reply('⏳ Downloading... Try .tiktok for TikTok, .play for music. This link type may need manual download.'); return reply(`🔗 Link received: ${link}\nUse .ai to get help downloading it!`); } catch { return reply('Download failed'); } }
+        if (command === 'igdl' || command === 'fbdl') { const link = body.match(/https?:\/\/\S+/)?.[0] || text; if (!link) return reply(`Use: .${command} <link>`); try { await reply('⏳ Downloading...'); return reply(`🔗 Link received: ${link}\nUse .ai to get help downloading it!`); } catch { return reply('Download failed'); } }
         if (command === 'play' || command === 'song') { if (!text) return reply('Use: .play Diamond Platnumz Komasava'); try { await reply('🎵 Searching: '+text); let videoUrl=null; let title=text; try { const s=await fetch(`https://inv.nadeko.net/api/v1/search?q=${encodeURIComponent(text)}&type=video`); const sd=await s.json(); if(sd[0]?.videoId){videoUrl=`https://youtube.com/watch?v=${sd[0].videoId}`; title=sd[0].title||text;} } catch {} if(!videoUrl){ try{ const s=await fetch(`https://api.siputzx.my.id/api/s/youtube?query=${encodeURIComponent(text)}`); const sd=await s.json(); const v=sd.data?.[0]||sd.result?.[0]; if(v){videoUrl=v.url||`https://youtube.com/watch?v=${v.videoId}`; title=v.title||text;} } catch {} } if(!videoUrl) return reply('❌ Not found'); await reply('✅ Found: '+title+'\n⏳ Downloading...'); let audioUrl=null; const tries = [`https://api.zenzxz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`,`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(videoUrl)}`,`https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(videoUrl)}`,`https://api.dreaded.site/api/ytdl-v2?url=${encodeURIComponent(videoUrl)}`,`https://api.dreaded.site/api/ytdl?url=${encodeURIComponent(videoUrl)}&format=mp3`,`https://api.yanzbotz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`]; for(let u of tries){ try{ const r=await fetch(u); const d=await r.json(); audioUrl=d.result?.download||d.result?.url||d.download||d.url||d.data?.dl||d.data?.url; if(audioUrl) break; } catch{} } if(!audioUrl) return reply('❌ Music servers down, try in 10 mins'); await sock.sendMessage(from, { audio: { url: audioUrl }, mimetype: 'audio/mp4', fileName: title+'.mp3' }, { quoted: msg }); return reply(`🎵 *Now Playing:*\n${title}`); } catch { return reply('Play failed'); } }
         if (command === 'ai' || command === 'ask' || command === 'gpt') { if (!text) return reply('Ask me: .ai Who is best footballer?'); try { await reply('🤖 Thinking...'); let answer=null; try { const r=await fetch(`https://api.nekolabs.my.id/ai/chatgpt?text=${encodeURIComponent(text)}`); const d=await r.json(); answer=d.result||d.response; } catch {} if(!answer){ try{ const r=await fetch(`https://api.siputzx.my.id/api/ai/gpt-3?prompt=${encodeURIComponent(text)}`); const d=await r.json(); answer=d.data||d.result; } catch{} } if(!answer){ try{ const r=await fetch(`https://api.dreaded.site/api/chatgpt?query=${encodeURIComponent(text)}`); const d=await r.json(); answer=d.result||d.response||d.answer; } catch{} } if(!answer){ try{ const r=await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`); const t=await r.text(); if(!t.includes('Free limit')&&t.length>5) answer=t; } catch{} } if(!answer) return reply('AI busy, try again!'); return reply(`🐂 *BULL X AI*\n\n${answer}`); } catch { return reply('AI busy'); } }
         if (command === 'story') return reply(`📖 *STORY*\n\nOnce upon a time in Kisii... ${text||'A young hustler'} woke up and decided today is the day! He worked hard, prayed, and became a legend! The end! 🐂🔥`);
