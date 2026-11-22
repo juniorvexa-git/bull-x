@@ -36,14 +36,12 @@ const MOTIVATION = ["Wake up! Dreams won't chase themselves! 🔥","No one is co
 const FOOTBALL = ["⚽ Messi has 8 Ballon d'Ors! 🐐","⚽ Ronaldo has 900+ goals! 🔥","⚽ Gor Mahia is most successful in Kenya! 🇰🇪","⚽ Arsenal Invincibles 49 games unbeaten! 🏆"];
 const HOROSCOPE = { aries: "Aries ♈ Today is your lucky day! Take a risk, it will pay off! 🔥", taurus: "Taurus ♉ Money is coming! Stay patient! 💰", gemini: "Gemini ♊ Someone is thinking about you! 😍", cancer: "Cancer ♋ Family first today! ❤️", leo: "Leo ♌ You will shine today! Be confident! 👑", virgo: "Virgo ♍ Organize your life today! 📋", libra: "Libra ♎ Love is in the air! 💘", scorpio: "Scorpio ♏ Keep your secrets safe! 🤫", sagittarius: "Sagittarius ♐ Adventure awaits! ✈️", capricorn: "Capricorn ♑ Hard work pays today! 💪", aquarius: "Aquarius ♒ New idea = New money! 💡", pisces: "Pisces ♓ Trust your gut today! ✨" };
 const PREMIUM_MENU = `╔══════════════════════╗
-   🐂 *B U L L X V 1 9* 👑
+   🐂 *B U L L X V 2 1* 👑
    *ALL IN ONE MENU*
-   📢 *JOIN:* https://whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h
 ╚══════════════════════╝
-
 👑 *OWNER* : Scanned Number (Auto)
 ⚡ *STATUS* : Online ✅
-💎 *VERSION* : V19 DM AntiDelete
+💎 *VERSION* : V21 Each Command Separate
 📱 *PREFIX* : .
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
@@ -60,35 +58,35 @@ const PREMIUM_MENU = `╔══════════════════�
 ┃ ▸ .rules
 ┃ ▸ .checkadmin
 ┃ ▸ .profile
-┃ ▸ .afk <reason>
+┃ ▸ .afk
 ┃ ▸ .channel
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 🤖 *AUTO VIP* ✨
+┃ 🤖 *AUTO VIP*
 ┗━━━━━━━━━━━━━━━━━━━━┛
-┃ ▸ .autotyping on/off
-┃ ▸ .autorecording on/off
-┃ ▸ .autoviewstatus on/off
-┃ ▸ .autolikestatus on/off
-┃ ▸ .autostatus on/off
+┃ ▸ .autotyping
+┃ ▸ .autorecording
+┃ ▸ .autoviewstatus
+┃ ▸ .autolikestatus
+┃ ▸ .autostatus
 ┃ ▸ .settings
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 👑 *POWERFUL ADMIN* 🔥
+┃ 👑 *ADMIN*
 ┗━━━━━━━━━━━━━━━━━━━━┛
-┃ ▸ .warn @user
-┃ ▸ .warnings @user
-┃ ▸ .resetwarn @user
+┃ ▸ .warn
+┃ ▸ .warnings
+┃ ▸ .resetwarn
 ┃ ▸ .lock
 ┃ ▸ .unlock
 ┃ ▸ .mute
 ┃ ▸ .unmute
-┃ ▸ .kick @user
-┃ ▸ .promote @user
-┃ ▸ .demote @user
-┃ ▸ .hidetag <msg>
-┃ ▸ .setname <name>
-┃ ▸ .setdesc <text>
+┃ ▸ .kick
+┃ ▸ .promote
+┃ ▸ .demote
+┃ ▸ .hidetag
+┃ ▸ .setname
+┃ ▸ .setdesc
 ┃ ▸ .revoke
 ┃ ▸ .invite
 
@@ -99,12 +97,10 @@ const PREMIUM_MENU = `╔══════════════════�
 ┃ ▸ .groupinfo
 ┃ ▸ .admins
 ┃ ▸ .members
-┃ ▸ .antilink on/off
-┃ ▸ .antidelete on/off
-┃ ▸ .antidelete all (DM + Groups!)
-┃ ▸ .antidelete status
-┃ ▸ .welcome on/off
-┃ ▸ .goodbye on/off
+┃ ▸ .antilink
+┃ ▸ .antidelete
+┃ ▸ .welcome
+┃ ▸ .goodbye
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
 ┃ 💰 *ECONOMY*
@@ -113,11 +109,11 @@ const PREMIUM_MENU = `╔══════════════════�
 ┃ ▸ .daily
 ┃ ▸ .work
 ┃ ▸ .beg
-┃ ▸ .gamble <amount>
-┃ ▸ .rob @user
-┃ ▸ .pay @user <amount>
+┃ ▸ .gamble
+┃ ▸ .rob
+┃ ▸ .pay
 ┃ ▸ .shop
-┃ ▸ .buy <item>
+┃ ▸ .buy
 ┃ ▸ .leaderboard
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
@@ -129,60 +125,60 @@ const PREMIUM_MENU = `╔══════════════════�
 ┃ ▸ .quote
 ┃ ▸ .quote2
 ┃ ▸ .meme
-┃ ▸ .roast @user
-┃ ▸ .compliment @user
-┃ ▸ .insult @user
-┃ ▸ .8ball <question>
+┃ ▸ .roast
+┃ ▸ .compliment
+┃ ▸ .insult
+┃ ▸ .8ball
 ┃ ▸ .dice
 ┃ ▸ .coin
 ┃ ▸ .truth
 ┃ ▸ .dare
 ┃ ▸ .riddle
-┃ ▸ .love @user
-┃ ▸ .ship <names>
-┃ ▸ .howgay @user
-┃ ▸ .howcool @user
-┃ ▸ .howrich @user
-┃ ▸ .howold @user
-┃ ▸ .smart @user
-┃ ▸ .beautiful @user
-┃ ▸ .simp @user
+┃ ▸ .love
+┃ ▸ .ship
+┃ ▸ .howgay
+┃ ▸ .howcool
+┃ ▸ .howrich
+┃ ▸ .howold
+┃ ▸ .smart
+┃ ▸ .beautiful
+┃ ▸ .simp
 ┃ ▸ .crush
-┃ ▸ .kiss @user
-┃ ▸ .hug @user
-┃ ▸ .slap @user
-┃ ▸ .kill @user
-┃ ▸ .congrats @user
-┃ ▸ .happybirthday @user
+┃ ▸ .kiss
+┃ ▸ .hug
+┃ ▸ .slap
+┃ ▸ .kill
+┃ ▸ .congrats
+┃ ▸ .happybirthday
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
 ┃ 🎲 *GAMES*
 ┗━━━━━━━━━━━━━━━━━━━━┛
-┃ ▸ .rps rock/paper/scissors
+┃ ▸ .rps
 ┃ ▸ .slot
 ┃ ▸ .lottery
-┃ ▸ .guess <number>
+┃ ▸ .guess
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
 ┃ 🛠️ *TOOLS*
 ┗━━━━━━━━━━━━━━━━━━━━┛
-┃ ▸ .calc <math>
-┃ ▸ .qr <text>
+┃ ▸ .calc
+┃ ▸ .qr
 ┃ ▸ .password
-┃ ▸ .weather <city>
-┃ ▸ .define <word>
-┃ ▸ .reverse <text>
-┃ ▸ .shout <text>
-┃ ▸ .age <year>
-┃ ▸ .horoscope <sign>
-┃ ▸ .lyrics <song>
-┃ ▸ .translate <text>
+┃ ▸ .weather
+┃ ▸ .define
+┃ ▸ .reverse
+┃ ▸ .shout
+┃ ▸ .age
+┃ ▸ .horoscope
+┃ ▸ .lyrics
+┃ ▸ .translate
 ┃ ▸ .kenya
 ┃ ▸ .nairobi
 ┃ ▸ .kisii
-┃ ▸ .binary <text>
-┃ ▸ .morse <text>
-┃ ▸ .fancy <text>
+┃ ▸ .binary
+┃ ▸ .morse
+┃ ▸ .fancy
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
 ┃ 🐱 *ANIMALS & ANIME*
@@ -203,17 +199,18 @@ const PREMIUM_MENU = `╔══════════════════�
 ┏━━━━━━━━━━━━━━━━━━━━┓
 ┃ 🎵 *MUSIC & VIDEO*
 ┗━━━━━━━━━━━━━━━━━━━━┛
-┃ ▸ .play <song>
-┃ ▸ .song <song>
-┃ ▸ .tiktok <link>
-┃ ▸ .igdl <link>
-┃ ▸ .fbdl <link>
+┃ ▸ .play
+┃ ▸ .song
+┃ ▸ .lyrics
+┃ ▸ .tiktok
+┃ ▸ .igdl
+┃ ▸ .fbdl
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
 ┃ 🧠 *AI & LIFE*
 ┗━━━━━━━━━━━━━━━━━━━━┛
-┃ ▸ .ai <question>
-┃ ▸ .ask <question>
+┃ ▸ .ai
+┃ ▸ .ask
 ┃ ▸ .bible
 ┃ ▸ .motivate
 ┃ ▸ .football
@@ -223,23 +220,23 @@ const PREMIUM_MENU = `╔══════════════════�
 ┏━━━━━━━━━━━━━━━━━━━━┓
 ┃ 🚀 *ADVANCED*
 ┗━━━━━━━━━━━━━━━━━━━━┛
-┃ ▸ .img <prompt>
-┃ ▸ .image <prompt>
-┃ ▸ .tts <text>
-┃ ▸ .screenshot <site>
-┃ ▸ .shortlink <link>
+┃ ▸ .img
+┃ ▸ .image
+┃ ▸ .tts
+┃ ▸ .screenshot
+┃ ▸ .shortlink
 ┃ ▸ .news
-┃ ▸ .crypto <coin>
-┃ ▸ .currency <amount> <from> <to>
-┃ ▸ .github <username>
+┃ ▸ .crypto
+┃ ▸ .currency
+┃ ▸ .github
 ┃ ▸ .wallpaper
-┃ ▸ .reminder <mins> <msg>
-┃ ▸ .todo <task>
+┃ ▸ .reminder
+┃ ▸ .todo
 ┃ ▸ .todos
 ┃ ▸ .cleartodo
-┃ ▸ .poll <Q> | <Opt1> | <Opt2>
-┃ ▸ .vcard <name>
-┃ ▸ .getpp @user
+┃ ▸ .poll
+┃ ▸ .vcard
+┃ ▸ .getpp
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
 ┃ 🎨 *STICKER*
@@ -250,7 +247,7 @@ const PREMIUM_MENU = `╔══════════════════�
 ┃ ▸ .vv
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 👋 *GREETINGS - Just type:*
+┃ 👋 *GREETINGS*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ hi
 ┃ ▸ hello
@@ -263,8 +260,6 @@ const PREMIUM_MENU = `╔══════════════════�
 
 ╔══════════════════════╗
   *Total: 220+ Commands* 🔥
-  *ALL IN ONE MENU!* 👑
-  📢 *Follow:* https://whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h
 ╚══════════════════════╝`;
 async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('session');
@@ -278,11 +273,10 @@ async function startBot() {
     });
     sock.ev.on('group-participants.update', async ({ id, participants, action }) => {
         try {
-            if (action === 'add' && settings.welcome?.[id]) { for (let p of participants) await sock.sendMessage(id, { text: `👋 Welcome @${p.split('@')[0]} to the group! 🎉\n\nPlease read rules: .rules\n\n📢 Follow: ${CHANNEL_LINK}`, mentions: [p] }); }
+            if (action === 'add' && settings.welcome?.[id]) { for (let p of participants) await sock.sendMessage(id, { text: `👋 Welcome @${p.split('@')[0]} to the group! 🎉\n\nPlease read rules: .rules`, mentions: [p] }); }
             if (action === 'remove' && settings.goodbye?.[id]) { for (let p of participants) await sock.sendMessage(id, { text: `👋 Goodbye @${p.split('@')[0]}! We will miss you! 😢`, mentions: [p] }); }
         } catch {}
     });
-    // ANTIDELETE V1 - messages.update - DM + GROUP + GLOBAL
     sock.ev.on('messages.update', async (updates) => {
         for (const update of updates) {
             try {
@@ -303,7 +297,6 @@ async function startBot() {
             } catch (e) { console.log('Antidelete V1 error:', e.message); }
         }
     });
-    // ANTIDELETE V2 - protocolMessage revoke - DM + GROUP + GLOBAL
     sock.ev.on('messages.upsert', async ({ messages, type }) => {
         if (type !== 'notify') return;
         const m = messages[0]; if (!m.message) return;
@@ -331,6 +324,12 @@ async function startBot() {
         if (msg.message.protocolMessage) return;
         const from = msg.key.remoteJid; const isGroup = from.endsWith('@g.us'); const sender = msg.key.participant || msg.key.remoteJid;
         const body = msg.message.conversation || msg.message.extendedTextMessage?.text || msg.message.imageMessage?.caption || msg.message.videoMessage?.caption || '';
+        const btnResponse = msg.message.buttonsResponseMessage?.selectedButtonId || msg.message.listResponseMessage?.title || msg.message.templateButtonReplyMessage?.selectedId;
+        if (btnResponse) {
+            if (btnResponse === 'follow_channel' || btnResponse.includes('FOLLOW')) { await sock.sendMessage(from, { text: `📢 *${CHANNEL_NAME}*\n\nTap here to Follow! 👇\n${CHANNEL_LINK}` }, { quoted: msg }); return; }
+            if (btnResponse === 'menu_btn' || btnResponse.includes('MENU')) { await sock.sendMessage(from, { text: PREMIUM_MENU }, { quoted: msg }); return; }
+            if (btnResponse === 'ping_btn' || btnResponse.includes('PING')) { await sock.sendMessage(from, { text: `🏓 *PONG!* 🐂\n✅ BULL X Online!` }, { quoted: msg }); return; }
+        }
         const cleanNum = (id) => (id||'').split(':')[0].split('@')[0];
         const senderNum = cleanNum(sender);
         const ownerNum = cleanNum(OWNER_JID || OWNER_NUMBER);
@@ -351,23 +350,34 @@ async function startBot() {
             try { if (settings.autorecording) await sock.sendPresenceUpdate('recording', from); else if (settings.autotyping) await sock.sendPresenceUpdate('composing', from); await new Promise(r => setTimeout(r, 1200)); await sock.sendPresenceUpdate('paused', from); } catch {}
         }
         const reply = async (text, opts) => {
-            const footer = `\n\n━━━━━━━━━━━━━━━\n📢 *Follow ${CHANNEL_NAME}*\n🔗 ${CHANNEL_LINK}\n━━━━━━━━━━━━━━━`;
-            const finalText = text.includes('whatsapp.com/channel') ? text : text + footer;
-            await sock.sendMessage(from, { text: finalText }, { quoted: msg, ...opts });
+            if (text.includes('whatsapp.com/channel')) { await sock.sendMessage(from, { text: text }, { quoted: msg, ...opts }); return; }
+            try {
+                await sock.sendMessage(from, {
+                    text: text,
+                    footer: '🐂 BULL X V21 | Tap below to Follow! 👑',
+                    buttons: [
+                        { buttonId: 'follow_channel', buttonText: { displayText: '📢 FOLLOW CHANNEL' }, type: 1 },
+                        { buttonId: 'menu_btn', buttonText: { displayText: '📋 MENU' }, type: 1 },
+                        { buttonId: 'ping_btn', buttonText: { displayText: '⚡ PING' }, type: 1 }
+                    ],
+                    headerType: 1
+                }, { quoted: msg, ...opts });
+            } catch (e) {
+                const footer = `\n\n━━━━━━━━━━━━━━━\n📢 *Follow ${CHANNEL_NAME}*\n🔗 ${CHANNEL_LINK}\n━━━━━━━━━━━━━━━`;
+                await sock.sendMessage(from, { text: text + footer }, { quoted: msg, ...opts });
+            }
         };
         const isImage = !!msg.message.imageMessage;
         if (msg.key.id) { msgCache.set(msg.key.id, { msg, sender, from }); if (msgCache.size > 1000) msgCache.delete(msgCache.keys().next().value); }
-        // AUTO VV - CATCH THE SECOND IT ARRIVES
         let voMsg = msg.message.viewOnceMessageV2?.message || msg.message.viewOnceMessage?.message || msg.message.ephemeralMessage?.message?.viewOnceMessageV2?.message || msg.message.ephemeralMessage?.message?.viewOnceMessage?.message || msg.message.ephemeralMessage?.message || null;
         if (voMsg?.viewOnceMessageV2) voMsg = voMsg.viewOnceMessageV2.message;
         if (voMsg?.viewOnceMessage) voMsg = voMsg.viewOnceMessage.message;
         if (voMsg && (voMsg.imageMessage || voMsg.videoMessage || voMsg.audioMessage)) {
-            console.log('👀 VIEW ONCE DETECTED from', sender);
             try {
                 if (voMsg.imageMessage) { const s = await downloadContentFromMessage(voMsg.imageMessage, 'image'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { image: b, caption: '👀 *VIEW ONCE AUTO-OPENED!* 🐂\n\nSent by: @' + sender.split('@')[0] }, { mentions: [sender] }); }
                 else if (voMsg.videoMessage) { const s = await downloadContentFromMessage(voMsg.videoMessage, 'video'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { video: b, caption: '👀 *VIEW ONCE AUTO-OPENED!* 🐂' }); }
                 else if (voMsg.audioMessage) { const s = await downloadContentFromMessage(voMsg.audioMessage, 'audio'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { audio: b, mimetype: 'audio/mp4', ptt: true }); }
-            } catch (e) { console.log('Auto VV failed:', e.message); await sock.sendMessage(from, { text: '⚠️ *VIEW ONCE DETECTED but WhatsApp blocked it!*\n\nWhatsApp does NOT send View Once media to linked devices (bots).\n\nThis is a WhatsApp privacy limit, NOT a bot bug!' }); }
+            } catch (e) { await sock.sendMessage(from, { text: '⚠️ *VIEW ONCE DETECTED but WhatsApp blocked it!*\n\nWhatsApp does NOT send View Once media to linked devices (bots).' }); }
             return;
         }
         if (isGroup && settings.antilink[from] && !isBot) {
@@ -381,14 +391,14 @@ async function startBot() {
                 let quoted = ctx?.quotedMessage; let inner = null;
                 if (quoted) { inner = quoted.viewOnceMessageV2?.message || quoted.viewOnceMessage?.message || quoted.ephemeralMessage?.message?.viewOnceMessageV2?.message || quoted.ephemeralMessage?.message?.viewOnceMessage?.message || quoted.ephemeralMessage?.message || quoted; if (inner?.viewOnceMessageV2) inner = inner.viewOnceMessageV2.message; if (inner?.viewOnceMessage) inner = inner.viewOnceMessage.message; if (inner?.ephemeralMessage) inner = inner.ephemeralMessage.message; }
                 if (!inner?.imageMessage && !inner?.videoMessage && !inner?.audioMessage && ctx?.stanzaId) { const cached = msgCache.get(ctx.stanzaId); if (cached) { const cm = cached.msg.message; inner = cm.viewOnceMessageV2?.message || cm.viewOnceMessage?.message || cm.ephemeralMessage?.message?.viewOnceMessageV2?.message || cm.ephemeralMessage?.message || cm; if (inner?.viewOnceMessageV2) inner = inner.viewOnceMessageV2.message; if (inner?.viewOnceMessage) inner = inner.viewOnceMessage.message; } }
-                if (!inner) return reply('❌ Could not find View Once!\n\nReasons:\n1. You already OPENED it (deleted!)\n2. You didn\'t REPLY to it\n3. Bot was restarted after it was sent');
+                if (!inner) return reply('❌ Could not find View Once!\n\nReasons:\n1. You already OPENED it\n2. You didn\'t REPLY to it\n3. Bot was restarted after it was sent');
                 let imgMsg = inner.imageMessage; let vidMsg = inner.videoMessage; let audMsg = inner.audioMessage || inner.voiceMessage;
                 if (imgMsg) { const s = await downloadContentFromMessage(imgMsg, 'image'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { image: b, caption: '👀 *VIEW ONCE OPENED!* 🐂' }, { quoted: msg }); return; }
                 if (vidMsg) { const s = await downloadContentFromMessage(vidMsg, 'video'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { video: b, caption: '👀 *VIEW ONCE OPENED!* 🐂' }, { quoted: msg }); return; }
                 if (audMsg) { const s = await downloadContentFromMessage(audMsg, 'audio'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { audio: b, mimetype: 'audio/mp4', ptt: true }, { quoted: msg }); return; }
                 if (quoted?.imageMessage) { const s = await downloadContentFromMessage(quoted.imageMessage, 'image'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { image: b, caption: '🖼️ Normal image (not View Once)' }, { quoted: msg }); return; }
-                return reply('❌ This is NOT a View Once!\n\nSender must send as View Once (Camera > Clock icon > Send)');
-            } catch (e) { console.log('VV error:', e.message); await reply('❌ Failed! View Once expired or already opened!\n\nYou MUST reply .vv BEFORE opening it!'); return; }
+                return reply('❌ This is NOT a View Once!');
+            } catch (e) { await reply('❌ Failed! View Once expired or already opened!'); return; }
         }
         if (body.startsWith('.sticker') || body === '.s') {
             try {
@@ -444,7 +454,7 @@ async function startBot() {
         if (command === 'ping' || command === 'speed' || command === 'pong') {
             const start = Date.now(); const msgTime = Number(msg.messageTimestamp) * 1000; const latency = Math.max(1, Date.now() - msgTime); const uptimeMs = Date.now() - BOT_START; const upH = Math.floor(uptimeMs / 3600000); const upM = Math.floor((uptimeMs % 3600000) / 60000); const upS = Math.floor((uptimeMs % 60000) / 1000); const mem = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1); let speedLabel = latency < 200 ? '⚡ ULTRA FAST! God Mode!' : latency < 500 ? '🔥 SUPER FAST!' : latency < 1000 ? '✅ Fast' : '🐢 Slow - Check Render';
             const sent = await sock.sendMessage(from, { text: `🏓 *PINGING...*` }, { quoted: msg }); const roundTrip = Date.now() - start; try { await sock.sendMessage(from, { delete: sent.key }); } catch {}
-            return reply(`🏓 *PONG!* 🐂\n\n⚡ *Speed:* ${roundTrip}ms\n📡 *Latency:* ${latency}ms\n${speedLabel}\n\n⏱️ *Uptime:* ${upH}h ${upM}m ${upS}s\n💾 *RAM:* ${mem} MB\n🤖 *Bot:* BULL X V19\n👑 *Owner:* ${ownerNum}\n✅ *Status:* Online & Stable`);
+            return reply(`🏓 *PONG!* 🐂\n\n⚡ *Speed:* ${roundTrip}ms\n📡 *Latency:* ${latency}ms\n${speedLabel}\n\n⏱️ *Uptime:* ${upH}h ${upM}m ${upS}s\n💾 *RAM:* ${mem} MB\n🤖 *Bot:* BULL X V21\n👑 *Owner:* ${ownerNum}\n✅ *Status:* Online & Stable`);
         }
         if (command === 'img' || command === 'image' || command === 'imagine') { if (!text) return reply('Use: .img Cute cat in Kisii'); try { await reply('🎨 Generating image...'); const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(text)}?width=1024&height=1024&seed=${Math.floor(Math.random()*99999)}&nologo=true`; return sock.sendMessage(from, { image: { url }, caption: `🎨 *BULL X AI IMAGE*\n\nPrompt: ${text}` }, { quoted: msg }); } catch { return reply('Image failed, try again!'); } }
         if (command === 'tts' || command === 'say' || command === 'voice') { if (!text) return reply('Use: .tts Hello everyone'); try { const url = `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(text)}`; return sock.sendMessage(from, { audio: { url }, mimetype: 'audio/mp4', ptt: true }, { quoted: msg }); } catch { return reply('TTS failed'); } }
@@ -469,15 +479,15 @@ async function startBot() {
         if (command === 'morse') { if (!text) return reply('Use: .morse SOS'); const m = { a:'.-',b:'-...',c:'-.-.',d:'-..',e:'.',f:'..-.',g:'--.',h:'....',i:'..',j:'.---',k:'-.-',l:'.-..',m:'--',n:'-.',o:'---',p:'.--.',q:'--.-',r:'.-.',s:'...',t:'-',u:'..-',v:'...-',w:'.--',x:'-..-',y:'-.--',z:'--..',1:'.----',2:'..---',3:'...--',4:'....-',5:'.....',6:'-....',7:'--...',8:'---..',9:'----.',0:'-----',' ':'/' }; return reply(`📻 Morse:\n${text.toLowerCase().split('').map(c=>m[c]||c).join(' ')}`); }
         if (command === 'channel' || command === 'follow' || command === 'join') return reply(`📢 *${CHANNEL_NAME}*\n\n🔥 Join BULL X Channel for updates, new commands, giveaways & new features!\n\n🔗 ${CHANNEL_LINK}\n\nTap the link to follow! 👑🐂`);
         if (command === 'menu' || command === 'help' || command === 'menu2') return reply(PREMIUM_MENU);
-        if (command === 'owner') return reply(`👑 *BULL X OWNER*\nOwner Number: ${ownerNum}\nThis number scanned QR!\nBot: BULL X V19`);
-        if (command === 'info') return reply('🐂 *BULL X V19*\nVersion: V19 DM AntiDelete\nCommands: 220+\nOwner: Scanned Number (Auto)\nStatus: Online ✅');
+        if (command === 'owner') return reply(`👑 *BULL X OWNER*\nOwner Number: ${ownerNum}\nThis number scanned QR!\nBot: BULL X V21`);
+        if (command === 'info') return reply('🐂 *BULL X V21*\nVersion: V21 Each Command Separate\nCommands: 220+\nOwner: Scanned Number (Auto)\nStatus: Online ✅');
         if (command === 'time') return reply('🕒 ' + new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' }));
         if (command === 'date') return reply('📅 ' + new Date().toLocaleDateString('en-KE', { timeZone: 'Africa/Nairobi', weekday:'long', year:'numeric', month:'long', day:'numeric' }));
         if (command === 'rules') return reply('📜 *GROUP RULES*\n1. No links\n2. No insults\n3. Respect admins\n4. No spam\n5. 3 Warns = Kick\n6. Have fun! 🐂');
         if (command === 'bull') return reply('🐂🔥 BULL X MODE ACTIVATED! 🔥🐂');
-        if (command === 'alive') return reply('🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 220+ Commands\n✅ V19 DM AntiDelete 👑');
+        if (command === 'alive') return reply('🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 220+ Commands\n✅ V21 Each Command Separate 👑');
         if (command === 'checkadmin') { try { const m = await sock.groupMetadata(from); const clean = (id) => (id||'').split(':')[0].split('@')[0]; return reply(`🔍 Bot PN: ${clean(sock.user.id)}\nBot LID: ${clean(sock.user.lid||'none')}\nOwner: ${ownerNum}\nMembers: ${m.participants.length}`); } catch { return reply('Check failed'); } }
-        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V19`); }
+        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V21`); }
         if (command === 'afk') { settings.afk[sender] = text||'AFK'; saveSettings(); return reply(`😴 You are now AFK!\nReason: ${text||'AFK'}\nBot will tell anyone who tags you!`); }
         if (command === 'autotyping') { if (!await onlyOwner()) return; if (text==='on') { settings.autotyping=true; saveSettings(); return reply('✅ *AUTO-TYPING ON* ⌨️'); } if (text==='off') { settings.autotyping=false; saveSettings(); return reply('❌ Auto-Typing OFF'); } return reply('Use: .autotyping on/off'); }
         if (command === 'autorecording') { if (!await onlyOwner()) return; if (text==='on') { settings.autorecording=true; settings.autotyping=false; saveSettings(); return reply('✅ *AUTO-RECORDING ON* 🎙️'); } if (text==='off') { settings.autorecording=false; saveSettings(); return reply('❌ Auto-Recording OFF'); } return reply('Use: .autorecording on/off'); }
@@ -508,7 +518,18 @@ async function startBot() {
         if (command === 'luffy') return reply('🏴‍☠️ *LUFFY*\n\nI will be King of the Pirates! Gear 5! 🔥');
         if (command === 'goku') return reply('🐉 *GOKU*\n\nKamehameha! Super Saiyan! 💪🔥');
         if (command === 'horoscope' || command === 'zodiac') { const sign = text.toLowerCase()||'leo'; return reply(`🔮 *HOROSCOPE - ${sign.toUpperCase()}*\n\n${HOROSCOPE[sign]||'Try: aries, taurus, gemini, cancer, leo, virgo, libra, scorpio, sagittarius, capricorn, aquarius, pisces'}`); }
-        if (command === 'lyrics') { if (!text) return reply('Use: .lyrics Komasava'); try { await reply('🎵 Searching lyrics...'); const r = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(text.split(' - ')[0]||'Diamond')}/${encodeURIComponent(text.split(' - ')[1]||text)}`); const d = await r.json(); if (d.lyrics) return reply(`🎵 *LYRICS: ${text}*\n\n${d.lyrics.slice(0,1500)}`); return reply(`🎵 Lyrics for "${text}" not found. Try .play ${text} instead!`); } catch { return reply('Lyrics not found, try .play'); } }
+        if (command === 'lyrics') {
+            if (!text) return reply('Use: .lyrics Komasava\n.lyrics Rush Ayra Starr\n.lyrics Single Again Harmonize');
+            try {
+                await reply('🎵 *Searching lyrics for:* ' + text);
+                let lyrics = null; let artist = ''; let track = text;
+                try { const r = await fetch(`https://lrclib.net/api/search?track_name=${encodeURIComponent(text)}`); const d = await r.json(); if (d && d[0]?.plainLyrics) { lyrics = d[0].plainLyrics; track = d[0].trackName; artist = d[0].artistName; } } catch {}
+                if (!lyrics) { try { const parts = text.split(' - '); const art = parts[0] || 'Diamond Platnumz'; const song = parts[1] || text; const r = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(art)}/${encodeURIComponent(song)}`); const d = await r.json(); if (d.lyrics) lyrics = d.lyrics; } catch {} }
+                if (!lyrics) { try { const r = await fetch(`https://api.lyrics.ovh/v1/Diamond%20Platnumz/${encodeURIComponent(text)}`); const d = await r.json(); if (d.lyrics) lyrics = d.lyrics; } catch {} }
+                if (!lyrics) return reply(`❌ *Lyrics not found for "${text}"!*\n\nTry:\n.lyrics ${text} - Diamond\n.lyrics Komasava\n\nOr use .ai for lyrics:\n.ai Write lyrics of ${text}`);
+                return reply(`🎵 *LYRICS - ${track} ${artist ? '- ' + artist : ''}*\n\n${lyrics.slice(0, 2000)}\n\n---\nUse .play ${text} to listen!`);
+            } catch (e) { return reply('Lyrics failed, try .ai lyrics of ' + text); }
+        }
         if (command === 'translate') { if (!text) return reply('Use: .translate Hello to Swahili'); return reply(`🌍 Use .ai for translation:\n.ai Translate "${text}" to Swahili`); }
         if (command === 'warn') { const info = await checkAdmin(); if (!info) return; const t = await getTarget(info); if (!t) return; if (!settings.warnings[from]) settings.warnings[from] = {}; settings.warnings[from][t.realTarget] = (settings.warnings[from][t.realTarget]||0)+1; saveSettings(); const count = settings.warnings[from][t.realTarget]; if (count >= 3) { settings.warnings[from][t.realTarget] = 0; saveSettings(); try { await sock.groupParticipantsUpdate(from, [t.realTarget], 'remove'); return sock.sendMessage(from, { text: `🚨 @${t.tc} got 3/3 WARNINGS! KICKED! 🐂`, mentions: [t.realTarget] }); } catch { return reply('Failed to kick'); } } return sock.sendMessage(from, { text: `⚠️ *WARNING ${count}/3*\n\n@${t.tc} warned!\nReason: ${text||'Breaking rules'}\n3 warns = Kick!`, mentions: [t.realTarget] }); }
         if (command === 'warnings') { const info = await checkAdmin(); if (!info) return; const t = await getTarget(info); if (!t) return; const count = (settings.warnings[from]||{})[t.realTarget]||0; return reply(`⚠️ *WARNINGS for @${t.tc}*\nWarnings: ${count}/3`); }
@@ -588,7 +609,52 @@ async function startBot() {
         if (command === 'kick' || command === 'promote' || command === 'demote') { const info = await checkAdmin(); if (!info) return; const t = await getTarget(info); if (!t) return; try { if (command==='kick') { await sock.groupParticipantsUpdate(from, [t.realTarget], 'remove'); return sock.sendMessage(from, { text: `👢 @${t.tc} kicked!`, mentions: [t.realTarget] }, { quoted: msg }); } if (command==='promote') { await sock.groupParticipantsUpdate(from, [t.realTarget], 'promote'); return sock.sendMessage(from, { text: `👑 @${t.tc} promoted!`, mentions: [t.realTarget] }, { quoted: msg }); } if (command==='demote') { await sock.groupParticipantsUpdate(from, [t.realTarget], 'demote'); return sock.sendMessage(from, { text: `⬇️ @${t.tc} demoted!`, mentions: [t.realTarget] }, { quoted: msg }); } } catch(e) { return reply('Failed: '+e.message); } }
         if (command === 'tiktok') { const linkMatch = body.match(/https?:\/\/\S+/); const tiktokUrl = linkMatch?linkMatch[0]:text; if (!tiktokUrl||!tiktokUrl.includes('tiktok')) return reply('Use: .tiktok https://vt.tiktok.com/xxx/'); try { await reply('⏳ Downloading TikTok...'); let videoUrl=null; let title='TikTok'; let finalUrl=tiktokUrl; try { const r=await fetch(tiktokUrl,{redirect:'follow'}); finalUrl=r.url||tiktokUrl; } catch {} try { const res=await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(finalUrl)}`); const d=await res.json(); if(d.data?.play){videoUrl=d.data.play; title=d.data.title||title;} } catch {} if(!videoUrl) return reply('❌ Try different video'); return sock.sendMessage(from, { video: { url: videoUrl }, caption: `🐂 *BULL X TikTok*\n${title}` }, { quoted: msg }); } catch { return reply('TikTok failed'); } }
         if (command === 'igdl' || command === 'fbdl') { const link = body.match(/https?:\/\/\S+/)?.[0] || text; if (!link) return reply(`Use: .${command} <link>`); try { await reply('⏳ Downloading...'); return reply(`🔗 Link received: ${link}\nUse .ai to get help downloading it!`); } catch { return reply('Download failed'); } }
-        if (command === 'play' || command === 'song') { if (!text) return reply('Use: .play Diamond Platnumz Komasava'); try { await reply('🎵 Searching: '+text); let videoUrl=null; let title=text; try { const s=await fetch(`https://inv.nadeko.net/api/v1/search?q=${encodeURIComponent(text)}&type=video`); const sd=await s.json(); if(sd[0]?.videoId){videoUrl=`https://youtube.com/watch?v=${sd[0].videoId}`; title=sd[0].title||text;} } catch {} if(!videoUrl){ try{ const s=await fetch(`https://api.siputzx.my.id/api/s/youtube?query=${encodeURIComponent(text)}`); const sd=await s.json(); const v=sd.data?.[0]||sd.result?.[0]; if(v){videoUrl=v.url||`https://youtube.com/watch?v=${v.videoId}`; title=v.title||text;} } catch {} } if(!videoUrl) return reply('❌ Not found'); await reply('✅ Found: '+title+'\n⏳ Downloading...'); let audioUrl=null; const tries = [`https://api.zenzxz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`,`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(videoUrl)}`,`https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(videoUrl)}`,`https://api.dreaded.site/api/ytdl-v2?url=${encodeURIComponent(videoUrl)}`,`https://api.dreaded.site/api/ytdl?url=${encodeURIComponent(videoUrl)}&format=mp3`,`https://api.yanzbotz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`]; for(let u of tries){ try{ const r=await fetch(u); const d=await r.json(); audioUrl=d.result?.download||d.result?.url||d.download||d.url||d.data?.dl||d.data?.url; if(audioUrl) break; } catch{} } if(!audioUrl) return reply('❌ Music servers down, try in 10 mins'); await sock.sendMessage(from, { audio: { url: audioUrl }, mimetype: 'audio/mp4', fileName: title+'.mp3' }, { quoted: msg }); return reply(`🎵 *Now Playing:*\n${title}`); } catch { return reply('Play failed'); } }
+        if (command === 'play' || command === 'song') {
+            if (!text) return reply('Use: .play Diamond Platnumz Komasava\n.play Harmonize Single Again\n.play Ayra Starr Rush');
+            try {
+                await reply('🎵 *Searching:* ' + text + '\n\n⏳ Please wait 10-20 sec...');
+                let videoId = null; let title = text; let thumb = null;
+                const searchApis = [
+                    `https://api.siputzx.my.id/api/s/youtube?query=${encodeURIComponent(text)}`,
+                    `https://api.dreaded.site/api/ytsearch?query=${encodeURIComponent(text)}`,
+                    `https://api.zenzxz.my.id/api/search/youtube?query=${encodeURIComponent(text)}`
+                ];
+                for (let url of searchApis) {
+                    try {
+                        const r = await fetch(url); const d = await r.json();
+                        const v = d.data?.[0] || d.result?.[0] || d.results?.[0] || d[0];
+                        if (v) { videoId = v.videoId || v.id || v.url?.split('v=')[1]?.split('&')[0]; title = v.title || title; thumb = v.thumbnail || v.image; if (videoId) break; }
+                    } catch {}
+                }
+                if (!videoId) return reply(`❌ *Not found via API!*\n\nTry this:\n🔗 https://www.youtube.com/results?search_query=${encodeURIComponent(text)}\n\nOr try different spelling:\n.play ${text} official audio`);
+                const videoUrl = `https://youtube.com/watch?v=${videoId}`;
+                await reply(`✅ *Found!*\n\n🎵 ${title}\n🔗 ${videoUrl}\n\n⏳ Downloading audio...`);
+                let audioUrl = null;
+                const dlApis = [
+                    `https://api.dreaded.site/api/ytdl?url=${encodeURIComponent(videoUrl)}&format=mp3`,
+                    `https://api.dreaded.site/api/ytdl-v2?url=${encodeURIComponent(videoUrl)}`,
+                    `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(videoUrl)}`,
+                    `https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(videoUrl)}`,
+                    `https://api.zenzxz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`,
+                    `https://api.yanzbotz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`
+                ];
+                for (let u of dlApis) {
+                    try {
+                        const r = await fetch(u, { signal: AbortSignal.timeout(20000) });
+                        const d = await r.json();
+                        audioUrl = d.result?.download || d.result?.url || d.download || d.url || d.data?.dl || d.data?.url || d.result?.audio || d.audio;
+                        if (audioUrl && audioUrl.startsWith('http')) { console.log('Play success via:', u); break; } else audioUrl = null;
+                    } catch (e) { console.log('Play API failed:', u); continue; }
+                }
+                if (!audioUrl) return reply(`❌ *Music servers are busy!*\n\n🎵 ${title}\n🔗 ${videoUrl}\n\nTry again in 2 mins or try:\n.play ${text} lyrics\n\nTip: Use .lyrics ${text} to see lyrics!`);
+                try {
+                    await sock.sendMessage(from, { audio: { url: audioUrl }, mimetype: 'audio/mp4', fileName: title + '.mp3' }, { quoted: msg });
+                    return reply(`🎵 *Now Playing!* 🐂\n\n🎤 ${title}\n🔗 ${videoUrl}`);
+                } catch (e) {
+                    return reply(`✅ *Found but audio too big!*\n\n🎵 ${title}\n🔗 Listen here:\n${videoUrl}\n\nDirect MP3:\n${audioUrl}`);
+                }
+            } catch (e) { console.log('Play error:', e.message); return reply('❌ Play failed! Try again with exact song name:\n.play Komasava Diamond'); }
+        }
         if (command === 'ai' || command === 'ask' || command === 'gpt') { if (!text) return reply('Ask me: .ai Who is best footballer?'); try { await reply('🤖 Thinking...'); let answer=null; try { const r=await fetch(`https://api.nekolabs.my.id/ai/chatgpt?text=${encodeURIComponent(text)}`); const d=await r.json(); answer=d.result||d.response; } catch {} if(!answer){ try{ const r=await fetch(`https://api.siputzx.my.id/api/ai/gpt-3?prompt=${encodeURIComponent(text)}`); const d=await r.json(); answer=d.data||d.result; } catch{} } if(!answer){ try{ const r=await fetch(`https://api.dreaded.site/api/chatgpt?query=${encodeURIComponent(text)}`); const d=await r.json(); answer=d.result||d.response||d.answer; } catch{} } if(!answer){ try{ const r=await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`); const t=await r.text(); if(!t.includes('Free limit')&&t.length>5) answer=t; } catch{} } if(!answer) return reply('AI busy, try again!'); return reply(`🐂 *BULL X AI*\n\n${answer}`); } catch { return reply('AI busy'); } }
         if (command === 'story') return reply(`📖 *STORY*\n\nOnce upon a time in Kisii... ${text||'A young hustler'} woke up and decided today is the day! He worked hard, prayed, and became a legend! The end! 🐂🔥`);
         if (command === 'poem') return reply(`📝 *POEM FOR ${text||'YOU'}*\n\nRoses are red,\nViolets are blue,\nBULL X is here,\nAnd so are you! ❤️🐂`);
