@@ -1,3 +1,4 @@
+
 const express = require('express');
 const app = express();
 let lastQR = null;
@@ -17,6 +18,8 @@ const fs = require('fs');
 const CHANNEL_LINK = 'https://whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h';
 const CHANNEL_NAME = '🐂 BULL X OFFICIAL CHANNEL';
 const BOT_START = Date.now();
+let OWNER_JID = null;
+let OWNER_NUMBER = '254112843071';
 let settings = { autotyping: false, autorecording: false, autoviewstatus: false, autolikestatus: false, antilink: {}, antidelete: {}, warnings: {}, economy: {}, afk: {}, todos: {}, welcome: {}, goodbye: {} };
 try { settings = { ...settings, ...JSON.parse(fs.readFileSync('settings.json','utf8')) }; } catch {}
 const saveSettings = () => fs.writeFileSync('settings.json', JSON.stringify(settings));
@@ -34,14 +37,14 @@ const MOTIVATION = ["Wake up! Dreams won't chase themselves! 🔥","No one is co
 const FOOTBALL = ["⚽ Messi has 8 Ballon d'Ors! 🐐","⚽ Ronaldo has 900+ goals! 🔥","⚽ Gor Mahia is most successful in Kenya! 🇰🇪","⚽ Arsenal Invincibles 49 games unbeaten! 🏆"];
 const HOROSCOPE = { aries: "Aries ♈ Today is your lucky day! Take a risk, it will pay off! 🔥", taurus: "Taurus ♉ Money is coming! Stay patient! 💰", gemini: "Gemini ♊ Someone is thinking about you! 😍", cancer: "Cancer ♋ Family first today! ❤️", leo: "Leo ♌ You will shine today! Be confident! 👑", virgo: "Virgo ♍ Organize your life today! 📋", libra: "Libra ♎ Love is in the air! 💘", scorpio: "Scorpio ♏ Keep your secrets safe! 🤫", sagittarius: "Sagittarius ♐ Adventure awaits! ✈️", capricorn: "Capricorn ♑ Hard work pays today! 💪", aquarius: "Aquarius ♒ New idea = New money! 💡", pisces: "Pisces ♓ Trust your gut today! ✨" };
 const PREMIUM_MENU = `╔══════════════════════╗
-   🐂 *B U L L X V 1 7* 👑
+   🐂 *B U L L X V 1 8* 👑
    *ALL IN ONE MENU*
    📢 *JOIN:* https://whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h
 ╚══════════════════════╝
 
-👑 *OWNER* : +254112843071
+👑 *OWNER* : Scanned Number (Auto)
 ⚡ *STATUS* : Online ✅
-💎 *VERSION* : V17 Speed
+💎 *VERSION* : V18 Fixed
 📱 *PREFIX* : .
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
@@ -271,7 +274,7 @@ async function startBot() {
         const { connection, lastDisconnect, qr } = update;
         if (qr) { lastQR = qr; qrcode.generate(qr, { small: true }); }
         if (connection === 'close') { const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut; if (shouldReconnect) startBot(); }
-        else if (connection === 'open') { console.log('BULL X ONLINE!'); lastQR = null; }
+        else if (connection === 'open') { console.log('BULL X ONLINE!'); lastQR = null; OWNER_JID = sock.user.id; OWNER_NUMBER = sock.user.id.split(':')[0].split('@')[0]; console.log('👑 OWNER SET TO:', OWNER_NUMBER); }
     });
     sock.ev.on('group-participants.update', async ({ id, participants, action }) => {
         try {
@@ -279,6 +282,7 @@ async function startBot() {
             if (action === 'remove' && settings.goodbye?.[id]) { for (let p of participants) await sock.sendMessage(id, { text: `👋 Goodbye @${p.split('@')[0]}! We will miss you! 😢`, mentions: [p] }); }
         } catch {}
     });
+    // ANTIDELETE V1 - messages.update
     sock.ev.on('messages.update', async (updates) => {
         for (const update of updates) {
             try {
@@ -286,7 +290,7 @@ async function startBot() {
                 if (!isDeleted) continue;
                 if (!settings.antidelete[update.key.remoteJid]) continue;
                 const cached = msgCache.get(update.key.id);
-                if (!cached) { await sock.sendMessage(update.key.remoteJid, { text: `🚨 *ANTI-DELETE!* 🐂\n\nSomeone deleted a message but I didn't cache it! (Bot restarted?)` }); continue; }
+                if (!cached) { await sock.sendMessage(update.key.remoteJid, { text: `🚨 *ANTI-DELETE!* 🐂\n\nSomeone deleted a message but bot restarted / didn't cache it!` }); continue; }
                 const deleter = update.key.participant || update.key.remoteJid;
                 const m = cached.msg.message;
                 const origBody = m.conversation || m.extendedTextMessage?.text || m.imageMessage?.caption || m.videoMessage?.caption || '';
@@ -296,24 +300,47 @@ async function startBot() {
                 if (m.stickerMessage) { try { const s = await downloadContentFromMessage(m.stickerMessage, 'sticker'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(update.key.remoteJid, { sticker: b }); } catch {} }
                 if (m.audioMessage || m.voiceMessage) { try { const am = m.audioMessage || m.voiceMessage; const s = await downloadContentFromMessage(am, 'audio'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(update.key.remoteJid, { audio: b, mimetype: 'audio/mp4', ptt: true }); } catch {} }
                 if (m.documentMessage) { try { const s = await downloadContentFromMessage(m.documentMessage, 'document'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(update.key.remoteJid, { document: b, fileName: m.documentMessage.fileName || 'deleted-file' }); } catch {} }
-            } catch (e) { console.log('Antidelete error:', e.message); }
+            } catch (e) { console.log('Antidelete V1 error:', e.message); }
+        }
+    });
+    // ANTIDELETE V2 - protocolMessage revoke (Delete for Everyone)
+    sock.ev.on('messages.upsert', async ({ messages, type }) => {
+        if (type !== 'notify') return;
+        const m = messages[0]; if (!m.message) return;
+        const proto = m.message.protocolMessage;
+        if (proto && proto.type === 0 && proto.key) {
+            try {
+                const deletedId = proto.key.id;
+                const chatId = proto.key.remoteJid || m.key.remoteJid;
+                if (!settings.antidelete[chatId]) return;
+                const cached = msgCache.get(deletedId);
+                if (!cached) { await sock.sendMessage(chatId, { text: `🚨 *ANTI-DELETE!* 🐂\n\nSomeone deleted a message but bot restarted / didn't cache it!` }); return; }
+                const deleter = m.key.participant || m.key.remoteJid;
+                const cm = cached.msg.message;
+                const origBody = cm.conversation || cm.extendedTextMessage?.text || cm.imageMessage?.caption || cm.videoMessage?.caption || '';
+                await sock.sendMessage(chatId, { text: `🚨 *ANTI-DELETE CAUGHT!* 🐂\n\n👤 Deleted by: @${deleter.split('@')[0]}\n📩 From: @${cached.sender.split('@')[0]}\n\n${origBody ? `💬 *Message:*\n${origBody}` : '📎 Media deleted - recovering...'}`, mentions: [deleter, cached.sender] });
+                if (cm.imageMessage) { try { const s = await downloadContentFromMessage(cm.imageMessage, 'image'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(chatId, { image: b, caption: '🖼️ *Deleted Image Recovered!* 🐂' }); } catch {} }
+                if (cm.videoMessage) { try { const s = await downloadContentFromMessage(cm.videoMessage, 'video'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(chatId, { video: b, caption: '🎥 *Deleted Video Recovered!* 🐂' }); } catch {} }
+                if (cm.stickerMessage) { try { const s = await downloadContentFromMessage(cm.stickerMessage, 'sticker'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(chatId, { sticker: b }); } catch {} }
+                if (cm.audioMessage) { try { const s = await downloadContentFromMessage(cm.audioMessage, 'audio'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(chatId, { audio: b, mimetype: 'audio/mp4', ptt: true }); } catch {} }
+            } catch (e) { console.log('Antidelete V2 error:', e.message); }
         }
     });
     sock.ev.on('messages.upsert', async ({ messages }) => {
         const msg = messages[0]; if (!msg.message) return;
-        // ===== FIX: NEVER REPLY TO SELF - STOPS INFINITE LOOP =====
-        if (msg.key.fromMe) return;
-        if (msg.key.id?.startsWith('BAE5')) return;
-        try { if (sock.user && (msg.key.participant === sock.user.id || msg.key.participant === sock.user.lid || msg.key.remoteJid === sock.user.id)) return; } catch {}
+        if (msg.message.protocolMessage) return; // Don't process revoke as normal message
         const from = msg.key.remoteJid; const isGroup = from.endsWith('@g.us'); const sender = msg.key.participant || msg.key.remoteJid;
         const body = msg.message.conversation || msg.message.extendedTextMessage?.text || msg.message.imageMessage?.caption || msg.message.videoMessage?.caption || '';
-        // Ignore bot's own footer / other bot messages to prevent loop
-        if (body.includes('BULL X OFFICIAL CHANNEL') && body.includes('whatsapp.com/channel')) {
-            // If it's OUR footer, ignore unless it starts with . (user command)
-            if (!body.startsWith('.')) return;
-        }
-        if (body.includes('Tag all @') && body.length > 500) return;
-        const isBot = msg.key.fromMe;
+        // ===== OWNER SYSTEM =====
+        const cleanNum = (id) => (id||'').split(':')[0].split('@')[0];
+        const senderNum = cleanNum(sender);
+        const ownerNum = cleanNum(OWNER_JID || OWNER_NUMBER);
+        const isOwnerCommand = body.startsWith('.') && !body.includes('BULL X OFFICIAL CHANNEL') && !body.includes('whatsapp.com/channel');
+        const isOwner = senderNum === ownerNum || msg.key.fromMe;
+        // Anti-loop: ignore bot's own non-command messages
+        if (msg.key.fromMe && !isOwnerCommand) return;
+        if (msg.key.id?.startsWith('BAE5') && !isOwnerCommand) return;
+        const isBot = msg.key.fromMe && !isOwnerCommand;
         if (isBot) return;
         if (from === 'status@broadcast') {
             try { if (settings.autoviewstatus) await sock.readMessages([msg.key]); if (settings.autolikestatus && !isBot) await sock.sendMessage('status@broadcast', { react: { text: pick(['❤️','🔥','😍','👍','😂','🙏']), key: msg.key } }); } catch {} return;
@@ -340,22 +367,22 @@ async function startBot() {
             const hasLink = /(https?:\/\/|www\.|chat\.whatsapp\.com|t\.me\/|instagram\.com|youtube\.com|tiktok\.com)/i.test(body);
             if (hasLink && !body.includes('whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h')) { try { await sock.sendMessage(from, { delete: msg.key }); await sock.sendMessage(from, { text: `⚠️ @${sender.split('@')[0]} Links NOT allowed! Deleted by BULL X 🐂`, mentions: [sender] }); } catch {} return; }
         }
+        // ===== VV FIXED WITH CACHE =====
         if (body.trim() === '.vv' || body.trim() === '.viewonce' || body.trim() === '.vo') {
             try {
                 const ctx = msg.message.extendedTextMessage?.contextInfo;
-                if (!ctx?.quotedMessage) return reply('❌ Reply to a View Once photo/video with .vv\n\nExample: Long-press View Once > Reply > Type .vv');
-                let quoted = ctx.quotedMessage;
-                let inner = quoted.viewOnceMessageV2?.message || quoted.viewOnceMessage?.message || quoted.ephemeralMessage?.message?.viewOnceMessageV2?.message || quoted.ephemeralMessage?.message?.viewOnceMessage?.message || quoted.ephemeralMessage?.message || quoted;
-                if (inner.viewOnceMessageV2) inner = inner.viewOnceMessageV2.message;
-                if (inner.viewOnceMessage) inner = inner.viewOnceMessage.message;
-                if (inner.ephemeralMessage) inner = inner.ephemeralMessage.message;
-                let imgMsg = inner.imageMessage; let vidMsg = inner.videoMessage; let audMsg = inner.audioMessage;
+                if (!ctx?.quotedMessage && !ctx?.stanzaId) return reply('❌ REPLY to View Once first!\n\nLong-press View Once > Reply > Type .vv\n\n⚠️ DON\'T OPEN IT BEFORE!');
+                let quoted = ctx?.quotedMessage; let inner = null;
+                if (quoted) { inner = quoted.viewOnceMessageV2?.message || quoted.viewOnceMessage?.message || quoted.ephemeralMessage?.message?.viewOnceMessageV2?.message || quoted.ephemeralMessage?.message?.viewOnceMessage?.message || quoted.ephemeralMessage?.message || quoted; if (inner?.viewOnceMessageV2) inner = inner.viewOnceMessageV2.message; if (inner?.viewOnceMessage) inner = inner.viewOnceMessage.message; if (inner?.ephemeralMessage) inner = inner.ephemeralMessage.message; }
+                if (!inner?.imageMessage && !inner?.videoMessage && !inner?.audioMessage && ctx?.stanzaId) { const cached = msgCache.get(ctx.stanzaId); if (cached) { const cm = cached.msg.message; inner = cm.viewOnceMessageV2?.message || cm.viewOnceMessage?.message || cm.ephemeralMessage?.message?.viewOnceMessageV2?.message || cm.ephemeralMessage?.message || cm; if (inner?.viewOnceMessageV2) inner = inner.viewOnceMessageV2.message; if (inner?.viewOnceMessage) inner = inner.viewOnceMessage.message; } }
+                if (!inner) return reply('❌ Could not find View Once!\n\nReasons:\n1. You already OPENED it (deleted!)\n2. You didn\'t REPLY to it\n3. Bot was restarted after it was sent');
+                let imgMsg = inner.imageMessage; let vidMsg = inner.videoMessage; let audMsg = inner.audioMessage || inner.voiceMessage;
                 if (imgMsg) { const s = await downloadContentFromMessage(imgMsg, 'image'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { image: b, caption: '👀 *VIEW ONCE OPENED!* 🐂' }, { quoted: msg }); return; }
                 if (vidMsg) { const s = await downloadContentFromMessage(vidMsg, 'video'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { video: b, caption: '👀 *VIEW ONCE OPENED!* 🐂' }, { quoted: msg }); return; }
                 if (audMsg) { const s = await downloadContentFromMessage(audMsg, 'audio'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { audio: b, mimetype: 'audio/mp4', ptt: true }, { quoted: msg }); return; }
-                if (quoted.imageMessage) { const s = await downloadContentFromMessage(quoted.imageMessage, 'image'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { image: b, caption: '🖼️ *That was a normal image, not View Once!*' }, { quoted: msg }); return; }
-                return reply('❌ Not a View Once! Reply BEFORE opening it!');
-            } catch { await reply('❌ Failed - View Once expired or already opened!'); return; }
+                if (quoted?.imageMessage) { const s = await downloadContentFromMessage(quoted.imageMessage, 'image'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(from, { image: b, caption: '🖼️ Normal image (not View Once)' }, { quoted: msg }); return; }
+                return reply('❌ This is NOT a View Once!\n\nSender must send as View Once (Camera > Clock icon > Send)');
+            } catch (e) { console.log('VV error:', e.message); await reply('❌ Failed! View Once expired or already opened!\n\nYou MUST reply .vv BEFORE opening it!'); return; }
         }
         if (body.startsWith('.sticker') || body === '.s') {
             try {
@@ -389,12 +416,13 @@ async function startBot() {
         const targetUser = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || msg.message.extendedTextMessage?.contextInfo?.participant || sender;
         const targetName = targetUser.split('@')[0].split(':')[0];
         const getBal = (id) => { if (!settings.economy[id]) settings.economy[id] = { bal: 1000, lastDaily: 0 }; return settings.economy[id]; };
+        const onlyOwner = async () => { if (!isOwner) { await reply('❌ *VIP ONLY!* 👑\n\nOnly the number that scanned QR can use this!\n\nYour number: ' + senderNum + '\nOwner number: ' + ownerNum); return false; } return true; };
         const checkAdmin = async () => {
             if (!isGroup) { await reply('Groups only!'); return null; }
             const metadata = await sock.groupMetadata(from); const participants = metadata.participants; const clean = (id) => (id||'').split(':')[0].split('@')[0];
-            const myNum = clean(sock.user.id); const myLid = clean(sock.user.lid||''); const senderNum = clean(sender);
-            const senderInfo = participants.find(p=>clean(p.id)===senderNum||clean(p.lid||'')===senderNum);
-            const botInfo = participants.find(p=>clean(p.id)===myNum||clean(p.lid||'')===myNum||clean(p.id)===myLid||clean(p.lid||'')===myLid||clean(p.id)===senderNum);
+            const myNum = clean(sock.user.id); const myLid = clean(sock.user.lid||''); const senderNum2 = clean(sender);
+            const senderInfo = participants.find(p=>clean(p.id)===senderNum2||clean(p.lid||'')===senderNum2);
+            const botInfo = participants.find(p=>clean(p.id)===myNum||clean(p.lid||'')===myNum||clean(p.id)===myLid||clean(p.lid||'')===myLid||clean(p.id)===senderNum2);
             const isSenderAdmin = senderInfo?.admin==='admin'||senderInfo?.admin==='superadmin'; const isBotAdmin = botInfo?.admin==='admin'||botInfo?.admin==='superadmin'||isSenderAdmin;
             if (!isSenderAdmin) { await reply('❌ You are not admin!'); return null; }
             if (!isBotAdmin) { await reply('❌ BULL X is NOT admin!'); return null; }
@@ -407,22 +435,10 @@ async function startBot() {
             let realTarget = target; const tc = info.clean(target); const found = info.participants.find(p=>info.clean(p.id)===tc||info.clean(p.lid||'')===tc); if (found) realTarget = found.id;
             return { realTarget, tc };
         };
-        // ===== PING WITH REAL SPEED =====
         if (command === 'ping' || command === 'speed' || command === 'pong') {
-            const start = Date.now();
-            const msgTime = Number(msg.messageTimestamp) * 1000;
-            const latency = Math.max(1, Date.now() - msgTime);
-            const uptimeMs = Date.now() - BOT_START;
-            const upH = Math.floor(uptimeMs / 3600000);
-            const upM = Math.floor((uptimeMs % 3600000) / 60000);
-            const upS = Math.floor((uptimeMs % 60000) / 1000);
-            const mem = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
-            let speedLabel = latency < 200 ? '⚡ ULTRA FAST! God Mode!' : latency < 500 ? '🔥 SUPER FAST!' : latency < 1000 ? '✅ Fast' : '🐢 Slow - Check Render';
-            // Send first message then measure round-trip
-            const sent = await sock.sendMessage(from, { text: `🏓 *PINGING...*` }, { quoted: msg });
-            const roundTrip = Date.now() - start;
-            try { await sock.sendMessage(from, { delete: sent.key }); } catch {}
-            return reply(`🏓 *PONG!* 🐂\n\n⚡ *Speed:* ${roundTrip}ms\n📡 *Latency:* ${latency}ms\n${speedLabel}\n\n⏱️ *Uptime:* ${upH}h ${upM}m ${upS}s\n💾 *RAM:* ${mem} MB\n🤖 *Bot:* BULL X V17\n👑 *Owner:* +254112843071\n✅ *Status:* Online & Stable`);
+            const start = Date.now(); const msgTime = Number(msg.messageTimestamp) * 1000; const latency = Math.max(1, Date.now() - msgTime); const uptimeMs = Date.now() - BOT_START; const upH = Math.floor(uptimeMs / 3600000); const upM = Math.floor((uptimeMs % 3600000) / 60000); const upS = Math.floor((uptimeMs % 60000) / 1000); const mem = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1); let speedLabel = latency < 200 ? '⚡ ULTRA FAST! God Mode!' : latency < 500 ? '🔥 SUPER FAST!' : latency < 1000 ? '✅ Fast' : '🐢 Slow - Check Render';
+            const sent = await sock.sendMessage(from, { text: `🏓 *PINGING...*` }, { quoted: msg }); const roundTrip = Date.now() - start; try { await sock.sendMessage(from, { delete: sent.key }); } catch {}
+            return reply(`🏓 *PONG!* 🐂\n\n⚡ *Speed:* ${roundTrip}ms\n📡 *Latency:* ${latency}ms\n${speedLabel}\n\n⏱️ *Uptime:* ${upH}h ${upM}m ${upS}s\n💾 *RAM:* ${mem} MB\n🤖 *Bot:* BULL X V18\n👑 *Owner:* ${ownerNum}\n✅ *Status:* Online & Stable`);
         }
         if (command === 'img' || command === 'image' || command === 'imagine') { if (!text) return reply('Use: .img Cute cat in Kisii'); try { await reply('🎨 Generating image...'); const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(text)}?width=1024&height=1024&seed=${Math.floor(Math.random()*99999)}&nologo=true`; return sock.sendMessage(from, { image: { url }, caption: `🎨 *BULL X AI IMAGE*\n\nPrompt: ${text}` }, { quoted: msg }); } catch { return reply('Image failed, try again!'); } }
         if (command === 'tts' || command === 'say' || command === 'voice') { if (!text) return reply('Use: .tts Hello everyone'); try { const url = `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(text)}`; return sock.sendMessage(from, { audio: { url }, mimetype: 'audio/mp4', ptt: true }, { quoted: msg }); } catch { return reply('TTS failed'); } }
@@ -439,30 +455,30 @@ async function startBot() {
         if (command === 'todos' || command === 'mytodos') { const list = (settings.todos?.[sender]||[]); if (!list.length) return reply('No todos! Use .todo Buy milk'); return reply(`📋 *YOUR TODOS*\n\n${list.map((t,i)=>`${i+1}. ${t}`).join('\n')}\n\nUse .cleartodo to clear`); }
         if (command === 'cleartodo') { if (settings.todos) settings.todos[sender]=[]; saveSettings(); return reply('🗑️ Todos cleared!'); }
         if (command === 'poll' || command === 'vote') { if (!text) return reply('Use: .poll Best team? | Gor | AFC | Tusker'); const parts = text.split('|').map(s=>s.trim()); if (parts.length < 3) return reply('Use: .poll Question | Option1 | Option2'); try { return sock.sendMessage(from, { poll: { name: parts[0], values: parts.slice(1), selectableCount: 1 } }, { quoted: msg }); } catch { return reply('Poll failed'); } }
-        if (command === 'welcome') { if (!isGroup) return reply('Groups only!'); if (text==='on') { if (!settings.welcome) settings.welcome={}; settings.welcome[from]=true; saveSettings(); return reply('✅ Welcome ON!'); } if (text==='off') { if (settings.welcome) delete settings.welcome[from]; saveSettings(); return reply('❌ Welcome OFF'); } return reply('Use: .welcome on/off'); }
-        if (command === 'goodbye' || command === 'bye') { if (!isGroup) return reply('Groups only!'); if (text==='on') { if (!settings.goodbye) settings.goodbye={}; settings.goodbye[from]=true; saveSettings(); return reply('✅ Goodbye ON!'); } if (text==='off') { if (settings.goodbye) delete settings.goodbye[from]; saveSettings(); return reply('❌ Goodbye OFF'); } return reply('Use: .goodbye on/off'); }
+        if (command === 'welcome') { if (!await onlyOwner()) return; if (!isGroup) return reply('Groups only!'); if (text==='on') { if (!settings.welcome) settings.welcome={}; settings.welcome[from]=true; saveSettings(); return reply('✅ Welcome ON!'); } if (text==='off') { if (settings.welcome) delete settings.welcome[from]; saveSettings(); return reply('❌ Welcome OFF'); } return reply('Use: .welcome on/off'); }
+        if (command === 'goodbye' || command === 'bye') { if (!await onlyOwner()) return; if (!isGroup) return reply('Groups only!'); if (text==='on') { if (!settings.goodbye) settings.goodbye={}; settings.goodbye[from]=true; saveSettings(); return reply('✅ Goodbye ON!'); } if (text==='off') { if (settings.goodbye) delete settings.goodbye[from]; saveSettings(); return reply('❌ Goodbye OFF'); } return reply('Use: .goodbye on/off'); }
         if (command === 'vcard' || command === 'contact' || command === 'save') { const name = text||`BULL X ${targetName}`; try { return sock.sendMessage(from, { contacts: { displayName: name, contacts: [{ vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL;TYPE=CELL:${targetUser.split('@')[0]}\nEND:VCARD` }] } }, { quoted: msg }); } catch { return reply('VCard failed'); } }
         if (command === 'getpp' || command === 'pp') { try { const url = await sock.profilePictureUrl(targetUser, 'image'); return sock.sendMessage(from, { image: { url }, caption: `🖼️ Profile pic of @${targetName}` }, { quoted: msg }); } catch { return reply('No profile pic or private!'); } }
         if (command === 'binary') { if (!text) return reply('Use: .binary hello'); return reply(`💻 Binary:\n${text.split('').map(c=>c.charCodeAt(0).toString(2).padStart(8,'0')).join(' ')}`); }
         if (command === 'morse') { if (!text) return reply('Use: .morse SOS'); const m = { a:'.-',b:'-...',c:'-.-.',d:'-..',e:'.',f:'..-.',g:'--.',h:'....',i:'..',j:'.---',k:'-.-',l:'.-..',m:'--',n:'-.',o:'---',p:'.--.',q:'--.-',r:'.-.',s:'...',t:'-',u:'..-',v:'...-',w:'.--',x:'-..-',y:'-.--',z:'--..',1:'.----',2:'..---',3:'...--',4:'....-',5:'.....',6:'-....',7:'--...',8:'---..',9:'----.',0:'-----',' ':'/' }; return reply(`📻 Morse:\n${text.toLowerCase().split('').map(c=>m[c]||c).join(' ')}`); }
         if (command === 'channel' || command === 'follow' || command === 'join') return reply(`📢 *${CHANNEL_NAME}*\n\n🔥 Join BULL X Channel for updates, new commands, giveaways & new features!\n\n🔗 ${CHANNEL_LINK}\n\nTap the link to follow! 👑🐂`);
         if (command === 'menu' || command === 'help' || command === 'menu2') return reply(PREMIUM_MENU);
-        if (command === 'owner') return reply('👑 *BULL X OWNER*\nName: BULL X Owner\nNumber: +254112843071\nBot: BULL X V17 Speed');
-        if (command === 'info') return reply('🐂 *BULL X V17*\nVersion: V17 Speed\nCommands: 220+\nOwner: +254112843071\nStatus: Online ✅');
+        if (command === 'owner') return reply(`👑 *BULL X OWNER*\nOwner Number: ${ownerNum}\nThis number scanned QR!\nBot: BULL X V18`);
+        if (command === 'info') return reply('🐂 *BULL X V18*\nVersion: V18 Fixed\nCommands: 220+\nOwner: Scanned Number (Auto)\nStatus: Online ✅');
         if (command === 'time') return reply('🕒 ' + new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' }));
         if (command === 'date') return reply('📅 ' + new Date().toLocaleDateString('en-KE', { timeZone: 'Africa/Nairobi', weekday:'long', year:'numeric', month:'long', day:'numeric' }));
         if (command === 'rules') return reply('📜 *GROUP RULES*\n1. No links\n2. No insults\n3. Respect admins\n4. No spam\n5. 3 Warns = Kick\n6. Have fun! 🐂');
         if (command === 'bull') return reply('🐂🔥 BULL X MODE ACTIVATED! 🔥🐂');
-        if (command === 'alive') return reply('🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 220+ Commands\n✅ Speed Edition 👑');
-        if (command === 'checkadmin') { try { const m = await sock.groupMetadata(from); const clean = (id) => (id||'').split(':')[0].split('@')[0]; return reply(`🔍 Bot PN: ${clean(sock.user.id)}\nBot LID: ${clean(sock.user.lid||'none')}\nMembers: ${m.participants.length}`); } catch { return reply('Check failed'); } }
-        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V17`); }
+        if (command === 'alive') return reply('🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 220+ Commands\n✅ V18 Fixed 👑');
+        if (command === 'checkadmin') { try { const m = await sock.groupMetadata(from); const clean = (id) => (id||'').split(':')[0].split('@')[0]; return reply(`🔍 Bot PN: ${clean(sock.user.id)}\nBot LID: ${clean(sock.user.lid||'none')}\nOwner: ${ownerNum}\nMembers: ${m.participants.length}`); } catch { return reply('Check failed'); } }
+        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V18`); }
         if (command === 'afk') { settings.afk[sender] = text||'AFK'; saveSettings(); return reply(`😴 You are now AFK!\nReason: ${text||'AFK'}\nBot will tell anyone who tags you!`); }
-        if (command === 'autotyping') { if (text==='on') { settings.autotyping=true; saveSettings(); return reply('✅ *AUTO-TYPING ON* ⌨️'); } if (text==='off') { settings.autotyping=false; saveSettings(); return reply('❌ Auto-Typing OFF'); } return reply('Use: .autotyping on/off'); }
-        if (command === 'autorecording') { if (text==='on') { settings.autorecording=true; settings.autotyping=false; saveSettings(); return reply('✅ *AUTO-RECORDING ON* 🎙️'); } if (text==='off') { settings.autorecording=false; saveSettings(); return reply('❌ Auto-Recording OFF'); } return reply('Use: .autorecording on/off'); }
-        if (command === 'autoviewstatus') { if (text==='on') { settings.autoviewstatus=true; saveSettings(); return reply('✅ *AUTO-VIEW STATUS ON* 👀'); } if (text==='off') { settings.autoviewstatus=false; saveSettings(); return reply('❌ Auto-View Status OFF'); } return reply('Use: .autoviewstatus on/off'); }
-        if (command === 'autolikestatus') { if (text==='on') { settings.autolikestatus=true; saveSettings(); return reply('✅ *AUTO-LIKE STATUS ON* ❤️'); } if (text==='off') { settings.autolikestatus=false; saveSettings(); return reply('❌ Auto-Like Status OFF'); } return reply('Use: .autolikestatus on/off'); }
-        if (command === 'autostatus') { if (text==='on') { settings.autotyping=true; settings.autorecording=false; settings.autoviewstatus=true; settings.autolikestatus=true; saveSettings(); return reply('✅ *ALL AUTO ON!* 👑'); } if (text==='off') { settings.autotyping=false; settings.autorecording=false; settings.autoviewstatus=false; settings.autolikestatus=false; saveSettings(); return reply('❌ All Auto OFF'); } return reply('Use: .autostatus on/off'); }
-        if (command === 'settings') return reply(`⚙️ *SETTINGS*\n\n⌨️ Typing: ${settings.autotyping?'✅ ON':'❌ OFF'}\n🎙️ Recording: ${settings.autorecording?'✅ ON':'❌ OFF'}\n👀 View Status: ${settings.autoviewstatus?'✅ ON':'❌ OFF'}\n❤️ Like Status: ${settings.autolikestatus?'✅ ON':'❌ OFF'}\n🔗 Anti-Link: ${settings.antilink[from]?'✅ ON':'❌ OFF'}\n🚨 Anti-Delete: ${settings.antidelete[from]?'✅ ON':'❌ OFF'}`);
+        if (command === 'autotyping') { if (!await onlyOwner()) return; if (text==='on') { settings.autotyping=true; saveSettings(); return reply('✅ *AUTO-TYPING ON* ⌨️'); } if (text==='off') { settings.autotyping=false; saveSettings(); return reply('❌ Auto-Typing OFF'); } return reply('Use: .autotyping on/off'); }
+        if (command === 'autorecording') { if (!await onlyOwner()) return; if (text==='on') { settings.autorecording=true; settings.autotyping=false; saveSettings(); return reply('✅ *AUTO-RECORDING ON* 🎙️'); } if (text==='off') { settings.autorecording=false; saveSettings(); return reply('❌ Auto-Recording OFF'); } return reply('Use: .autorecording on/off'); }
+        if (command === 'autoviewstatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autoviewstatus=true; saveSettings(); return reply('✅ *AUTO-VIEW STATUS ON* 👀'); } if (text==='off') { settings.autoviewstatus=false; saveSettings(); return reply('❌ Auto-View Status OFF'); } return reply('Use: .autoviewstatus on/off'); }
+        if (command === 'autolikestatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autolikestatus=true; saveSettings(); return reply('✅ *AUTO-LIKE STATUS ON* ❤️'); } if (text==='off') { settings.autolikestatus=false; saveSettings(); return reply('❌ Auto-Like Status OFF'); } return reply('Use: .autolikestatus on/off'); }
+        if (command === 'autostatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autotyping=true; settings.autorecording=false; settings.autoviewstatus=true; settings.autolikestatus=true; saveSettings(); return reply('✅ *ALL AUTO ON!* 👑'); } if (text==='off') { settings.autotyping=false; settings.autorecording=false; settings.autoviewstatus=false; settings.autolikestatus=false; saveSettings(); return reply('❌ All Auto OFF'); } return reply('Use: .autostatus on/off'); }
+        if (command === 'settings') return reply(`⚙️ *SETTINGS*\n\n👑 Owner: ${ownerNum}\n⌨️ Typing: ${settings.autotyping?'✅ ON':'❌ OFF'}\n🎙️ Recording: ${settings.autorecording?'✅ ON':'❌ OFF'}\n👀 View Status: ${settings.autoviewstatus?'✅ ON':'❌ OFF'}\n❤️ Like Status: ${settings.autolikestatus?'✅ ON':'❌ OFF'}\n🔗 Anti-Link: ${settings.antilink[from]?'✅ ON':'❌ OFF'}\n🚨 Anti-Delete: ${settings.antidelete[from]?'✅ ON':'❌ OFF'}`);
         if (command === 'balance' || command === 'bal' || command === 'money') { const u = getBal(sender); return reply(`💰 *YOUR BALANCE*\n\nCoins: ${u.bal} 🪙\nRank: ${u.bal>5000?'Billionaire 🤑':u.bal>2000?'Rich 💰':'Hustler 💪'}`); }
         if (command === 'daily') { const u = getBal(sender); const now = Date.now(); if (now - u.lastDaily < 86400000) return reply(`⏳ You already claimed daily! Come back tomorrow! Balance: ${u.bal}`); u.lastDaily = now; u.bal += 500; saveSettings(); return reply(`🎁 *DAILY REWARD!*\n\n+500 coins! 🎉\nNew Balance: ${u.bal} 🪙`); }
         if (command === 'work') { const u = getBal(sender); const earn = Math.floor(Math.random()*400)+100; const jobs = ['Matatu Conductor 🚌','Farmer 🌾','Boda Boda 🏍️','Shopkeeper 🏪','Teacher 📚','DJ 🎧','Hustler 💪']; u.bal += earn; saveSettings(); return reply(`💼 *WORK*\n\nYou worked as ${pick(jobs)}!\nEarned: +${earn} coins!\nBalance: ${u.bal} 🪙`); }
@@ -548,8 +564,8 @@ async function startBot() {
         if (command === 'kenya') return reply('🇰🇪 *KENYA*\nCapital: Nairobi\nFamous: Safaris, Runners, Ugali! 🐘🦁');
         if (command === 'nairobi') return reply('🏙️ *NAIROBI*\nCapital of Kenya! Green City in the Sun ☀️🌳');
         if (command === 'kisii') return reply('🏔️ *KISII*\nLand of soapstone, bananas & hardworking people! 🍌💪');
-        if (command === 'antilink') { if (!isGroup) return reply('Groups only!'); if (text==='on') { settings.antilink[from]=true; saveSettings(); return reply('✅ Anti-Link ON'); } if (text==='off') { delete settings.antilink[from]; saveSettings(); return reply('❌ Anti-Link OFF'); } return reply('Use: .antilink on/off'); }
-        if (command === 'antidelete') { if (!isGroup) return reply('Groups only!'); if (text==='on') { settings.antidelete[from]=true; saveSettings(); return reply('✅ Anti-Delete ON - I will catch deleted messages!'); } if (text==='off') { delete settings.antidelete[from]; saveSettings(); return reply('❌ Anti-Delete OFF'); } return reply('Use: .antidelete on/off'); }
+        if (command === 'antilink') { if (!await onlyOwner()) return; if (!isGroup) return reply('Groups only!'); if (text==='on') { settings.antilink[from]=true; saveSettings(); return reply('✅ Anti-Link ON'); } if (text==='off') { delete settings.antilink[from]; saveSettings(); return reply('❌ Anti-Link OFF'); } return reply('Use: .antilink on/off'); }
+        if (command === 'antidelete') { if (!await onlyOwner()) return; if (!isGroup) return reply('Groups only!'); if (text==='on') { settings.antidelete[from]=true; saveSettings(); return reply('✅ Anti-Delete ON - I will catch deleted messages!'); } if (text==='off') { delete settings.antidelete[from]; saveSettings(); return reply('❌ Anti-Delete OFF'); } return reply('Use: .antidelete on/off'); }
         if (command === 'tagall') { if (!isGroup) return reply('Groups only!'); try { const m = await sock.groupMetadata(from); const parts = m.participants.map(p=>p.id); let t='🐂 *TAGALL*\n\n'; for(let p of parts) t+='@'+p.split('@')[0]+' '; return sock.sendMessage(from, { text: t, mentions: parts }, { quoted: msg }); } catch { return reply('Failed'); } }
         if (command === 'groupinfo') { if (!isGroup) return reply('Groups only!'); try { const m = await sock.groupMetadata(from); return reply(`👥 *GROUP INFO*\nName: ${m.subject}\nMembers: ${m.participants.length}`); } catch { return reply('Failed'); } }
         if (command === 'admins') { if (!isGroup) return reply('Groups only!'); try { const m = await sock.groupMetadata(from); const admins = m.participants.filter(p=>p.admin); let t='👑 *ADMINS*\n\n'; for(let a of admins) t+='@'+a.id.split('@')[0]+'\n'; return sock.sendMessage(from, { text: t, mentions: admins.map(a=>a.id) }, { quoted: msg }); } catch { return reply('Failed'); } }
