@@ -21,26 +21,26 @@ const DEV_NUMBER = '254112843071';
 const BOT_START = Date.now();
 let OWNER_JID = null;
 let OWNER_NUMBER = '254112843071';
-let settings = { autotyping: false, autorecording: false, autoviewstatus: false, autolikestatus: false, antilink: {}, antidelete: {}, warnings: {}, economy: {}, afk: {}, todos: {}, welcome: {}, goodbye: {} };
+let settings = { autotyping: false, autorecording: false, autoviewstatus: false, autolikestatus: false, antilink: {}, antidelete: {}, warnings: {}, economy: {}, afk: {}, todos: {}, welcome: {}, goodbye: {}, ttt: {}, wordle: {}, notes: {}, autosavestatus: false };
 try { settings = { ...settings, ...JSON.parse(fs.readFileSync('settings.json','utf8')) }; } catch {}
 const saveSettings = () => fs.writeFileSync('settings.json', JSON.stringify(settings));
 let msgCache = new Map();
 const pick = (arr) => arr[Math.floor(Math.random()*arr.length)];
-const JOKES = ["Why did the chicken cross the road? To get to the other side! 😂","Why did Kenyan men marry? Because they couldn't cook ugali! 😂","What do you call a fish without eyes? A fsh! 🐟","Why is 6 afraid of 7? Because 7 ate 9! 😂","Teacher: Why are you late? Student: Because of the sign! 😂","Why did the scarecrow win an award? He was outstanding! 🌾","Why don't skeletons fight? They don't have guts! 💀","What do you call cheese that isn't yours? Nacho cheese! 🧀","Why did Arsenal bring a ladder? To see top of table! ⚽😂","My phone fell in water, now it says 'No SIMpathy' 😂"];
-const FACTS = ["Honey never spoils! 🍯","Bananas are berries! 🍌","Kenya is crossed by Equator AND Rift Valley! 🇰🇪","Octopuses have 3 hearts! 🐙","Sharks existed before trees! 🦈🌳","Mt. Kenya is 2nd highest in Africa! ⛰️","Kenya produces best runners! 🏃‍♂️🇰🇪","Hot water freezes faster than cold! 🧊","A day on Venus is longer than a year! 🪐","Cows have best friends! 🐄❤️"];
-const QUOTES = ["'Best time to plant a tree was 20 years ago. Second best is now.' 🌳","'Hustle beats talent when talent doesn't hustle!' 🔥","'If you want to go fast, go alone. If you want to go far, go together.' - African Proverb 🤝","'Winners are not people who never fail, but people who never quit!' 🏆","'Education is the most powerful weapon.' - Mandela 📚"];
-const ROASTS = ["Your face looks like WiFi - everyone can see it but no one wants to connect! 😂","You're so slow, even a sloth said 'hurry up!' 🦥","Your brain is like a browser with 100 tabs open! 🧠😂","You're so broke, your ATM laughed! 💸😂","You have the personality of a wet sock! 🧦😂"];
-const TRUTHS = ["What is your biggest secret? 🤫","Who is your crush in this group? 😍","Most embarrassing thing you ever did? 😳","Have you ever cheated in exam? 📚","What is the last lie you told? 🤥","Who do you hate most here? 👀"];
-const DARES = ["Send a voice note singing! 🎤","Text your crush 'I miss you'! 😍","Do 10 pushups and send video! 💪","Dance 30 seconds! 💃","Send your last photo! 📸"];
-const RIDDLES = [{q:"I speak without a mouth and hear without ears. What am I?",a:"Echo!"},{q:"What has keys but can't open a lock?",a:"Piano! 🎹"},{q:"What has face and two hands but no arms?",a:"Clock! ⏰"},{q:"What gets wetter the more it dries?",a:"Towel!"}];
-const BIBLE = ["John 3:16 - For God so loved the world... ❤️","Philippians 4:13 - I can do all things through Christ! 💪","Jeremiah 29:11 - Plans to prosper you... 🙏","Psalm 23:1 - The Lord is my shepherd! 🐑","Proverbs 3:5 - Trust in the Lord... ❤️"];
-const MOTIVATION = ["Wake up! Dreams won't chase themselves! 🔥","No one is coming to save you. Save yourself! 💪","Today's pain is tomorrow's power! ⚡","Stop scrolling, start hustling! 📱➡️💰"];
-const FOOTBALL = ["⚽ Messi has 8 Ballon d'Ors! 🐐","⚽ Ronaldo has 900+ goals! 🔥","⚽ Gor Mahia is most successful in Kenya! 🇰🇪","⚽ Arsenal Invincibles 49 games unbeaten! 🏆"];
-const HOROSCOPE = { aries: "Aries ♈ Today is your lucky day! Take a risk, it will pay off! 🔥", taurus: "Taurus ♉ Money is coming! Stay patient! 💰", gemini: "Gemini ♊ Someone is thinking about you! 😍", cancer: "Cancer ♋ Family first today! ❤️", leo: "Leo ♌ You will shine today! Be confident! 👑", virgo: "Virgo ♍ Organize your life today! 📋", libra: "Libra ♎ Love is in the air! 💘", scorpio: "Scorpio ♏ Keep your secrets safe! 🤫", sagittarius: "Sagittarius ♐ Adventure awaits! ✈️", capricorn: "Capricorn ♑ Hard work pays today! 💪", aquarius: "Aquarius ♒ New idea = New money! 💡", pisces: "Pisces ♓ Trust your gut today! ✨" };
+const JOKES = ["Why did the chicken cross the road? To get to the other side! 😂","Why did Kenyan men marry? Because they couldn't cook ugali! 😂","What do you call a fish without eyes? A fsh! 🐟","Why is 6 afraid of 7? Because 7 ate 9! 😂","Teacher: Why are you late? Student: Because of the sign! 😂","Why did the scarecrow win an award? He was outstanding! 🌾"];
+const FACTS = ["Honey never spoils! 🍯","Bananas are berries! 🍌","Kenya is crossed by Equator AND Rift Valley! 🇰🇪","Octopuses have 3 hearts! 🐙","Sharks existed before trees! 🦈🌳","Mt. Kenya is 2nd highest in Africa! ⛰️"];
+const QUOTES = ["'Best time to plant a tree was 20 years ago. Second best is now.' 🌳","'Hustle beats talent when talent doesn't hustle!' 🔥","'If you want to go fast, go alone. If you want to go far, go together.' - African Proverb 🤝","'Winners are not people who never fail, but people who never quit!' 🏆"];
+const ROASTS = ["Your face looks like WiFi - everyone can see it but no one wants to connect! 😂","You're so slow, even a sloth said 'hurry up!' 🦥","Your brain is like a browser with 100 tabs open! 🧠😂","You're so broke, your ATM laughed! 💸😂"];
+const TRUTHS = ["What is your biggest secret? 🤫","Who is your crush in this group? 😍","Most embarrassing thing you ever did? 😳","Have you ever cheated in exam? 📚"];
+const DARES = ["Send a voice note singing! 🎤","Text your crush 'I miss you'! 😍","Do 10 pushups and send video! 💪","Dance 30 seconds! 💃"];
+const RIDDLES = [{q:"I speak without a mouth and hear without ears. What am I?",a:"Echo!"},{q:"What has keys but can't open a lock?",a:"Piano! 🎹"},{q:"What has face and two hands but no arms?",a:"Clock! ⏰"}];
+const BIBLE = ["John 3:16 - For God so loved the world... ❤️","Philippians 4:13 - I can do all things through Christ! 💪","Jeremiah 29:11 - Plans to prosper you... 🙏","Psalm 23:1 - The Lord is my shepherd! 🐑"];
+const MOTIVATION = ["Wake up! Dreams won't chase themselves! 🔥","No one is coming to save you. Save yourself! 💪","Today's pain is tomorrow's power! ⚡"];
+const FOOTBALL = ["⚽ Messi has 8 Ballon d'Ors! 🐐","⚽ Ronaldo has 900+ goals! 🔥","⚽ Gor Mahia is most successful in Kenya! 🇰🇪"];
+const HOROSCOPE = { aries: "Aries ♈ Today is your lucky day! Take a risk! 🔥", taurus: "Taurus ♉ Money is coming! 💰", gemini: "Gemini ♊ Someone is thinking about you! 😍", cancer: "Cancer ♋ Family first today! ❤️", leo: "Leo ♌ You will shine today! 👑", virgo: "Virgo ♍ Organize your life! 📋", libra: "Libra ♎ Love is in the air! 💘", scorpio: "Scorpio ♏ Keep your secrets safe! 🤫", sagittarius: "Sagittarius ♐ Adventure awaits! ✈️", capricorn: "Capricorn ♑ Hard work pays! 💪", aquarius: "Aquarius ♒ New idea = New money! 💡", pisces: "Pisces ♓ Trust your gut! ✨" };
 const getMenu = () => {
   const scannedOwner = OWNER_NUMBER || 'Not Connected';
   return `╔══════════════════════╗
-   🐂 *B U L L X V 2 2* 👑
+   🐂  *B U L L  X  V 2 8*  👑
    *ALL IN ONE MENU*
 ╚══════════════════════╝
 👑 *OWNER* : +${scannedOwner} (Scanned QR)
@@ -48,11 +48,11 @@ const getMenu = () => {
 📞 *DEV NUMBER* : +${DEV_NUMBER}
 💬 *CONTACT DEV* : wa.me/${DEV_NUMBER}
 ⚡ *STATUS* : Online ✅
-💎 *VERSION* : V22 Dynamic Owner + Dev
+💎 *VERSION* : V28 Save + Casino + Real Games
 📱 *PREFIX* : .
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 👤 *GENERAL*
+┃  👤  *GENERAL*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .ping
 ┃ ▸ .menu
@@ -69,7 +69,19 @@ const getMenu = () => {
 ┃ ▸ .channel
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 🤖 *AUTO VIP*
+┃  📥  *SAVE STATUS V28*
+┗━━━━━━━━━━━━━━━━━━━━┛
+┃ ▸ .save (reply to status)
+┃ ▸ .savestatus
+┃ ▸ .dlstatus
+┃ ▸ .sv
+┃ ▸ .autosave on
+┃ ▸ .autosave off
+┃ ▸ .save = Save ANYTHING!
+┃ ▸ .vv (View Once)
+
+┏━━━━━━━━━━━━━━━━━━━━┓
+┃  🤖  *AUTO VIP*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .autotyping
 ┃ ▸ .autorecording
@@ -79,7 +91,7 @@ const getMenu = () => {
 ┃ ▸ .settings
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 👑 *ADMIN*
+┃  👑  *ADMIN*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .warn
 ┃ ▸ .warnings
@@ -98,7 +110,7 @@ const getMenu = () => {
 ┃ ▸ .invite
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 👥 *GROUP + DM*
+┃  👥  *GROUP + DM*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .tagall
 ┃ ▸ .groupinfo
@@ -110,7 +122,7 @@ const getMenu = () => {
 ┃ ▸ .goodbye
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 💰 *ECONOMY*
+┃  💰  *ECONOMY*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .balance
 ┃ ▸ .daily
@@ -122,9 +134,18 @@ const getMenu = () => {
 ┃ ▸ .shop
 ┃ ▸ .buy
 ┃ ▸ .leaderboard
+┃ ▸ .bank
+┃ ▸ .deposit
+┃ ▸ .withdraw
+┃ ▸ .roulette
+┃ ▸ .blackjack
+┃ ▸ .invest
+┃ ▸ .loan
+┃ ▸ .steal
+┃ ▸ .rich
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 😂 *FUN*
+┃  😂  *FUN*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .joke
 ┃ ▸ .dadjoke
@@ -157,17 +178,65 @@ const getMenu = () => {
 ┃ ▸ .kill
 ┃ ▸ .congrats
 ┃ ▸ .happybirthday
+┃ ▸ .pickup
+┃ ▸ .darkjoke
+┃ ▸ .rap
+┃ ▸ .hack
+┃ ▸ .fake
+┃ ▸ .tweet
+┃ ▸ .advice
+┃ ▸ .quiz
+┃ ▸ .chuck
+┃ ▸ .movie
+┃ ▸ .recipe
+┃ ▸ .book
+┃ ▸ .ytsearch
+┃ ▸ .spotify
+┃ ▸ .stalk
+┃ ▸ .prayer
+┃ ▸ .quran
+┃ ▸ .wyr
+┃ ▸ .never
+┃ ▸ .paradox
+┃ ▸ .tongue
+┃ ▸ .fact2
+┃ ▸ .joke2
+┃ ▸ .compliment2
+┃ ▸ .roast2
+┃ ▸ .poem2
+┃ ▸ .story2
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 🎲 *GAMES*
+┃  🎲  *GAMES*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .rps
 ┃ ▸ .slot
 ┃ ▸ .lottery
 ┃ ▸ .guess
+┃ ▸ .wordle
+┃ ▸ .guessword BULL
+┃ ▸ .hangman
+┃ ▸ .ttt @friend
+┃ ▸ .ttt 5
+┃ ▸ .mathquiz
+┃ ▸ .fasttype
+┃ ▸ .memory
+┃ ▸ .dice2
+┃ ▸ .coinflip
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 🛠️ *TOOLS*
+┃  🎰  *CASINO*
+┗━━━━━━━━━━━━━━━━━━━━┛
+┃ ▸ .casino
+┃ ▸ .casino slot 100
+┃ ▸ .casino roulette 100
+┃ ▸ .casino blackjack 100
+┃ ▸ .casino dice 100
+┃ ▸ .casino coin 100
+┃ ▸ .casino lottery 100
+
+┏━━━━━━━━━━━━━━━━━━━━┓
+┃  🛠️  *TOOLS*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .calc
 ┃ ▸ .qr
@@ -186,9 +255,21 @@ const getMenu = () => {
 ┃ ▸ .binary
 ┃ ▸ .morse
 ┃ ▸ .fancy
+┃ ▸ .timer
+┃ ▸ .base64
+┃ ▸ .decode64
+┃ ▸ .encrypt
+┃ ▸ .note
+┃ ▸ .ip
+┃ ▸ .whois
+┃ ▸ .email
+┃ ▸ .alarm
+┃ ▸ .speedtest
+┃ ▸ .emojify
+┃ ▸ .count
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 🐱 *ANIMALS & ANIME*
+┃  🐱  *ANIMALS & ANIME*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .cat
 ┃ ▸ .dog
@@ -204,7 +285,7 @@ const getMenu = () => {
 ┃ ▸ .goku
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 🎵 *MUSIC & VIDEO*
+┃  🎵  *MUSIC & VIDEO*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .play
 ┃ ▸ .song
@@ -214,7 +295,7 @@ const getMenu = () => {
 ┃ ▸ .fbdl
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 🧠 *AI & LIFE*
+┃  🧠  *AI & LIFE*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .ai
 ┃ ▸ .ask
@@ -225,7 +306,7 @@ const getMenu = () => {
 ┃ ▸ .poem
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 🚀 *ADVANCED*
+┃  🚀  *ADVANCED*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .img
 ┃ ▸ .image
@@ -246,7 +327,7 @@ const getMenu = () => {
 ┃ ▸ .getpp
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 🎨 *STICKER*
+┃  🎨  *STICKER*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ .sticker
 ┃ ▸ .s
@@ -254,7 +335,7 @@ const getMenu = () => {
 ┃ ▸ .vv
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
-┃ 👋 *GREETINGS*
+┃  👋  *GREETINGS*
 ┗━━━━━━━━━━━━━━━━━━━━┛
 ┃ ▸ hi
 ┃ ▸ hello
@@ -266,13 +347,12 @@ const getMenu = () => {
 ┃ ▸ i love you
 
 ╔══════════════════════╗
-  *Total: 220+ Commands* 🔥
+  *Total: 270+ Commands* 🔥
   👨‍💻 *Dev: ${DEV_NAME}*
   📞 *+${DEV_NUMBER}*
   👑 *Owner: +${scannedOwner}*
 ╚══════════════════════╝`;
 };
-const PREMIUM_MENU = `Use .menu`;
 async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('session');
     const sock = makeWASocket({ logger: pino({ level: 'silent' }), printQRInTerminal: false, auth: state, browser: ['BULL X', 'Chrome', '1.0'] });
@@ -352,7 +432,21 @@ async function startBot() {
         const isBot = msg.key.fromMe && !isOwnerCommand;
         if (isBot) return;
         if (from === 'status@broadcast') {
-            try { if (settings.autoviewstatus) await sock.readMessages([msg.key]); if (settings.autolikestatus && !isBot) await sock.sendMessage('status@broadcast', { react: { text: pick(['❤️','🔥','😍','👍','😂','🙏']), key: msg.key } }); } catch {} return;
+            try {
+                if (settings.autoviewstatus) await sock.readMessages([msg.key]);
+                if (settings.autolikestatus && !isBot) await sock.sendMessage('status@broadcast', { react: { text: pick(['❤️','🔥','😍','👍','😂','🙏']), key: msg.key } });
+                if (settings.autosavestatus && !msg.key.fromMe) {
+                    const statusSender = sender; const ownerJid = (OWNER_JID || OWNER_NUMBER + '@s.whatsapp.net');
+                    let m = msg.message;
+                    if (m.viewOnceMessageV2?.message) m = m.viewOnceMessageV2.message;
+                    if (m.viewOnceMessage?.message) m = m.viewOnceMessage.message;
+                    if (m.ephemeralMessage?.message) m = m.ephemeralMessage.message;
+                    const cap = m.imageMessage?.caption || m.videoMessage?.caption || m.conversation || m.extendedTextMessage?.text || '';
+                    if (m.imageMessage) { try { const s = await downloadContentFromMessage(m.imageMessage, 'image'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(ownerJid, { image: b, caption: `📥 *STATUS AUTO-SAVED!* 🐂\n\n👤 From: @${statusSender.split('@')[0]}\n📝 ${cap}` }); } catch {} }
+                    else if (m.videoMessage) { try { const s = await downloadContentFromMessage(m.videoMessage, 'video'); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); await sock.sendMessage(ownerJid, { video: b, caption: `📥 *STATUS AUTO-SAVED!* 🐂\n\n👤 From: @${statusSender.split('@')[0]}\n📝 ${cap}` }); } catch {} }
+                    else if (cap) { await sock.sendMessage(ownerJid, { text: `📝 *TEXT STATUS SAVED!*\n\n👤 From: @${statusSender.split('@')[0]}\n\n${cap}` }); }
+                }
+            } catch {} return;
         }
         if (!isBot && settings.afk) {
             for (const [afkId, reason] of Object.entries(settings.afk)) { if (body.includes(afkId.split('@')[0])) { await sock.sendMessage(from, { text: `😴 @${afkId.split('@')[0]} is AFK!\nReason: ${reason}\nPlease wait...`, mentions: [afkId] }); break; } }
@@ -364,16 +458,7 @@ async function startBot() {
         const reply = async (text, opts) => {
             if (text.includes('whatsapp.com/channel')) { await sock.sendMessage(from, { text: text }, { quoted: msg, ...opts }); return; }
             try {
-                await sock.sendMessage(from, {
-                    text: text,
-                    footer: '🐂 BULL X V22 | Tap below to Follow! 👑',
-                    buttons: [
-                        { buttonId: 'follow_channel', buttonText: { displayText: '📢 FOLLOW CHANNEL' }, type: 1 },
-                        { buttonId: 'menu_btn', buttonText: { displayText: '📋 MENU' }, type: 1 },
-                        { buttonId: 'ping_btn', buttonText: { displayText: '⚡ PING' }, type: 1 }
-                    ],
-                    headerType: 1
-                }, { quoted: msg, ...opts });
+                await sock.sendMessage(from, { text: text, footer: '🐂 BULL X V28 | Tap below to Follow! 👑', buttons: [{ buttonId: 'follow_channel', buttonText: { displayText: '📢 FOLLOW CHANNEL' }, type: 1 }, { buttonId: 'menu_btn', buttonText: { displayText: '📋 MENU' }, type: 1 }, { buttonId: 'ping_btn', buttonText: { displayText: '⚡ PING' }, type: 1 }], headerType: 1 }, { quoted: msg, ...opts });
             } catch (e) {
                 const footer = `\n\n━━━━━━━━━━━━━━━\n📢 *Follow ${CHANNEL_NAME}*\n🔗 ${CHANNEL_LINK}\n━━━━━━━━━━━━━━━`;
                 await sock.sendMessage(from, { text: text + footer }, { quoted: msg, ...opts });
@@ -444,7 +529,7 @@ async function startBot() {
         const args = body.slice(1).trim().split(/ +/); const command = args[0].toLowerCase(); const text = args.slice(1).join(' ');
         const targetUser = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || msg.message.extendedTextMessage?.contextInfo?.participant || sender;
         const targetName = targetUser.split('@')[0].split(':')[0];
-        const getBal = (id) => { if (!settings.economy[id]) settings.economy[id] = { bal: 1000, lastDaily: 0 }; return settings.economy[id]; };
+        const getBal = (id) => { if (!settings.economy[id]) settings.economy[id] = { bal: 1000, lastDaily: 0, bank: 0 }; return settings.economy[id]; };
         const onlyOwner = async () => { if (!isOwner) { await reply('❌ *VIP ONLY!* 👑\n\nOnly the number that scanned QR can use this!\n\nYour number: ' + senderNum + '\nOwner number: ' + ownerNum); return false; } return true; };
         const checkAdmin = async () => {
             if (!isGroup) { await reply('Groups only!'); return null; }
@@ -464,10 +549,189 @@ async function startBot() {
             let realTarget = target; const tc = info.clean(target); const found = info.participants.find(p=>info.clean(p.id)===tc||info.clean(p.lid||'')===tc); if (found) realTarget = found.id;
             return { realTarget, tc };
         };
+        // ===== SAVE EVERYTHING V28 =====
+        if (command === 'save' || command === 'savestatus' || command === 'statusave' || command === 'dlstatus' || command === 'sstatus' || command === 'sv' || command === 'download') {
+            try {
+                const ctx = msg.message.extendedTextMessage?.contextInfo;
+                const quoted = ctx?.quotedMessage; const stanzaId = ctx?.stanzaId; const quotedParticipant = ctx?.participant || ctx?.remoteJid || sender;
+                const unwrap = (q) => { if (!q) return null; let inner = q; if (inner.viewOnceMessageV2?.message) inner = inner.viewOnceMessageV2.message; if (inner.viewOnceMessage?.message) inner = inner.viewOnceMessage.message; if (inner.ephemeralMessage?.message) inner = inner.ephemeralMessage.message; if (inner.ephemeralMessage?.message?.viewOnceMessageV2?.message) inner = inner.ephemeralMessage.message.viewOnceMessageV2.message; return inner; };
+                let mediaMsg = null; let mediaType = null; let captionText = ''; let fileName = 'saved-file';
+                if (quoted) {
+                    const inner = unwrap(quoted);
+                    if (inner?.imageMessage) { mediaMsg = inner.imageMessage; mediaType = 'image'; captionText = inner.imageMessage.caption || ''; }
+                    else if (inner?.videoMessage) { mediaMsg = inner.videoMessage; mediaType = 'video'; captionText = inner.videoMessage.caption || ''; }
+                    else if (inner?.audioMessage || inner?.voiceMessage) { mediaMsg = inner.audioMessage || inner.voiceMessage; mediaType = 'audio'; }
+                    else if (inner?.documentMessage) { mediaMsg = inner.documentMessage; mediaType = 'document'; fileName = inner.documentMessage.fileName || 'file'; }
+                    else if (inner?.stickerMessage) { mediaMsg = inner.stickerMessage; mediaType = 'sticker'; }
+                    else if (inner?.conversation) { captionText = inner.conversation; mediaType = 'text'; }
+                    else if (inner?.extendedTextMessage?.text) { captionText = inner.extendedTextMessage.text; mediaType = 'text'; }
+                }
+                if (!mediaMsg && !captionText) {
+                    if (msg.message.imageMessage) { mediaMsg = msg.message.imageMessage; mediaType = 'image'; captionText = msg.message.imageMessage.caption || ''; }
+                    else if (msg.message.videoMessage) { mediaMsg = msg.message.videoMessage; mediaType = 'video'; }
+                    else if (msg.message.audioMessage) { mediaMsg = msg.message.audioMessage; mediaType = 'audio'; }
+                    else if (msg.message.documentMessage) { mediaMsg = msg.message.documentMessage; mediaType = 'document'; fileName = msg.message.documentMessage.fileName || 'file'; }
+                    else if (msg.message.stickerMessage) { mediaMsg = msg.message.stickerMessage; mediaType = 'sticker'; }
+                }
+                if (!mediaMsg && !captionText && stanzaId) {
+                    const cached = msgCache.get(stanzaId);
+                    if (cached) {
+                        let cm = unwrap(cached.msg.message) || cached.msg.message;
+                        if (cm.viewOnceMessageV2?.message) cm = cm.viewOnceMessageV2.message;
+                        if (cm.imageMessage) { mediaMsg = cm.imageMessage; mediaType = 'image'; captionText = cm.imageMessage.caption || ''; }
+                        else if (cm.videoMessage) { mediaMsg = cm.videoMessage; mediaType = 'video'; }
+                        else if (cm.audioMessage) { mediaMsg = cm.audioMessage; mediaType = 'audio'; }
+                        else if (cm.documentMessage) { mediaMsg = cm.documentMessage; mediaType = 'document'; fileName = cm.documentMessage.fileName || 'file'; }
+                        else if (cm.stickerMessage) { mediaMsg = cm.stickerMessage; mediaType = 'sticker'; }
+                        else if (cm.conversation) { captionText = cm.conversation; mediaType = 'text'; }
+                        else if (cm.extendedTextMessage?.text) { captionText = cm.extendedTextMessage.text; mediaType = 'text'; }
+                    }
+                }
+                if (!mediaMsg && !captionText) return reply(`❌ *Nothing to Save!*\n\n📱 STATUS: View Status > Reply .save\n👀 VIEW ONCE: DON'T open! Long-press > Reply > .save\n👥 GROUP: Long-press any photo/video > Reply > .save\n📎 ANY FILE: Reply .save to photo, video, audio, doc, sticker!`);
+                const ownerJid = (OWNER_JID || OWNER_NUMBER + '@s.whatsapp.net');
+                const statusOwner = quotedParticipant.split('@')[0].split(':')[0];
+                const isViewOnce = (quoted?.viewOnceMessageV2 || quoted?.viewOnceMessage) ? '👀 VIEW ONCE' : (isGroup ? '👥 GROUP' : '📱 STATUS/DM');
+                const saveCaption = `📥 *SAVED!* 🐂\n\n👤 From: @${statusOwner}\n📂 Type: ${isViewOnce} - ${mediaType.toUpperCase()}\n📝 Caption: ${captionText || 'No caption'}\n🕒 ${new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' })}\n\n✅ Saved by BULL X`;
+                const downloadBuf = async (m, type) => { const s = await downloadContentFromMessage(m, type); let b = Buffer.from([]); for await (const c of s) b = Buffer.concat([b, c]); return b; };
+                if (mediaType === 'image') { const buf = await downloadBuf(mediaMsg, 'image'); await sock.sendMessage(ownerJid, { image: buf, caption: saveCaption, mentions: [quotedParticipant] }); await sock.sendMessage(from, { text: `✅ *Saved!*\n\n📸 Image from @${statusOwner} sent to your DM! 🐂`, mentions: [quotedParticipant] }, { quoted: msg }); return; }
+                if (mediaType === 'video') { const buf = await downloadBuf(mediaMsg, 'video'); await sock.sendMessage(ownerJid, { video: buf, caption: saveCaption, mentions: [quotedParticipant] }); await sock.sendMessage(from, { text: `✅ *Saved!*\n\n🎥 Video from @${statusOwner} sent to your DM! 🐂`, mentions: [quotedParticipant] }, { quoted: msg }); return; }
+                if (mediaType === 'audio') { const buf = await downloadBuf(mediaMsg, 'audio'); await sock.sendMessage(ownerJid, { audio: buf, mimetype: 'audio/mp4', ptt: false, fileName: 'saved-audio.mp3' }); await sock.sendMessage(from, { text: `✅ *Saved!*\n\n🎵 Audio from @${statusOwner} sent to your DM! 🐂`, mentions: [quotedParticipant] }, { quoted: msg }); return; }
+                if (mediaType === 'document') { const buf = await downloadBuf(mediaMsg, 'document'); await sock.sendMessage(ownerJid, { document: buf, fileName: fileName, caption: saveCaption }); await sock.sendMessage(from, { text: `✅ *Saved!*\n\n📄 Document ${fileName} sent to your DM! 🐂` }, { quoted: msg }); return; }
+                if (mediaType === 'sticker') { const buf = await downloadBuf(mediaMsg, 'sticker'); await sock.sendMessage(ownerJid, { sticker: buf }); await sock.sendMessage(from, { text: `✅ *Saved!*\n\n😂 Sticker sent to your DM! 🐂` }, { quoted: msg }); return; }
+                if (mediaType === 'text') { await sock.sendMessage(ownerJid, { text: `📝 *TEXT SAVED!* 🐂\n\n👤 From: @${statusOwner}\n📂 ${isViewOnce}\n\n${captionText}` }); await sock.sendMessage(from, { text: `✅ *Saved!*\n\n📝 Text sent to your DM! 🐂` }, { quoted: msg }); return; }
+            } catch (e) { console.log('Save V28 error:', e.message); return reply(`❌ *Save Failed!*\n\nReason: ${e.message}\n\nTips:\n1. For View Once: DON'T open it first! Reply .save directly!\n2. For Status: View it first, then Reply .save\n3. For Group: Long-press photo > Reply > .save`); }
+        }
+        if (command === 'autosave' || command === 'autostatusave') {
+            if (!await onlyOwner()) return;
+            if (text === 'on') { settings.autosavestatus = true; saveSettings(); return reply('✅ *AUTO-SAVE STATUS ON!* 📥\n\nEvery Status you view will be auto-saved to your DM!'); }
+            if (text === 'off') { settings.autosavestatus = false; saveSettings(); return reply('❌ Auto-Save Status OFF'); }
+            return reply('Use: .autosave on / .autosave off');
+        }
+        // ===== REAL GAMES V26 =====
+        if (command === 'ttt' || command === 'tictactoe') {
+            if (!isGroup) return reply('Groups only! Play with a friend!');
+            if (!settings.ttt) settings.ttt = {};
+            if (msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0] || text.includes('@')) {
+                const opp = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0];
+                if (!opp) return reply('Use: .ttt @friend');
+                if (opp === sender) return reply('You cannot play against yourself! 😂');
+                settings.ttt[from] = { p1: sender, p2: opp, board: ['1','2','3','4','5','6','7','8','9'], turn: sender, moves: 0 };
+                saveSettings();
+                return reply(`❌⭕ *TIC TAC TOE STARTED!*\n\n❌ @${sender.split('@')[0]} (X) vs ⭕ @${opp.split('@')[0]} (O)\n\n1️⃣ | 2️⃣ | 3️⃣\n---|---|---\n4️⃣ | 5️⃣ | 6️⃣\n---|---|---\n7️⃣ | 8️⃣ | 9️⃣\n\n@${sender.split('@')[0]} your turn! Type .ttt 5 to play!`, { mentions: [sender, opp] });
+            }
+            const pos = parseInt(text); const game = settings.ttt[from];
+            if (!game) return reply('No game! Start with: .ttt @friend');
+            if (sender !== game.turn) return reply(`Not your turn! It's @${game.turn.split('@')[0]} turn!`, { mentions: [game.turn] });
+            if (!pos || pos < 1 || pos > 9) return reply('Use: .ttt 1 to .ttt 9');
+            if (game.board[pos-1] === 'X' || game.board[pos-1] === 'O') return reply('That spot is taken!');
+            const mark = sender === game.p1 ? 'X' : 'O'; game.board[pos-1] = mark; game.moves++;
+            const b = game.board; const boardStr = `${b[0]} | ${b[1]} | ${b[2]}\n---|---|---\n${b[3]} | ${b[4]} | ${b[5]}\n---|---|---\n${b[6]} | ${b[7]} | ${b[8]}`;
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            const winner = wins.find(w => b[w[0]] === mark && b[w[1]] === mark && b[w[2]] === mark);
+            if (winner) { delete settings.ttt[from]; saveSettings(); const u = getBal(sender); u.bal += 200; saveSettings(); return reply(`🏆 *${mark} WINS!* 🎉\n\n${boardStr}\n\n@${sender.split('@')[0]} won +200 coins! 🪙\nBalance: ${u.bal}`, { mentions: [sender] }); }
+            if (game.moves === 9) { delete settings.ttt[from]; saveSettings(); return reply(`🤝 *DRAW!*\n\n${boardStr}`); }
+            game.turn = sender === game.p1 ? game.p2 : game.p1; saveSettings();
+            return reply(`❌⭕ *TIC TAC TOE*\n\n${boardStr}\n\n@${game.turn.split('@')[0]} your turn! Type .ttt 1-9`, { mentions: [game.turn] });
+        }
+        if (command === 'tttstop' || command === 'tttquit') { if (settings.ttt) delete settings.ttt[from]; saveSettings(); return reply('❌ TTT game stopped!'); }
+        if (command === 'wordle') {
+            if (!settings.wordle) settings.wordle = {};
+            const words = [{w:'BULL', hint:'BULL X animal 🐂'}, {w:'KISII', hint:'Your town 🏔️'}, {w:'KENYA', hint:'Your country 🇰🇪'}, {w:'MANGO', hint:'Sweet fruit 🥭'}, {w:'UGALI', hint:'Kenyan food 🍲'}, {w:'LION', hint:'King of jungle 🦁'}, {w:'PHONE', hint:'You are using it 📱'}, {w:'MONEY', hint:'Everyone wants it 💰'}];
+            const chosen = pick(words); settings.wordle[from + sender] = { word: chosen.w, hint: chosen.hint, tries: 0 }; saveSettings();
+            return reply(`🟩 *WORDLE STARTED!*\n\nHint: ${chosen.hint}\nWord: ${chosen.w.length} letters\nTries: 6\n\nGuess: .guessword ${chosen.w}`);
+        }
+        if (command === 'guessword' || command === 'guess') {
+            if (!settings.wordle) settings.wordle = {};
+            const game = settings.wordle[from + sender];
+            if (!game) return reply('No Wordle game! Start with .wordle');
+            if (!text) return reply('Use: .guessword BULL');
+            const guess = text.toUpperCase().trim();
+            if (guess.length !== game.word.length) return reply(`Word must be ${game.word.length} letters!`);
+            game.tries++;
+            if (guess === game.word) { delete settings.wordle[from + sender]; saveSettings(); const u = getBal(sender); u.bal += 300; saveSettings(); return reply(`🎉 *WORDLE WIN!* 🟩🟩🟩🟩\n\nWord was: ${game.word}\nTries: ${game.tries}/6\n+300 coins! 🪙\nBalance: ${u.bal}`); }
+            if (game.tries >= 6) { const w = game.word; delete settings.wordle[from + sender]; saveSettings(); return reply(`❌ *WORDLE LOST!* 😂\n\nWord was: ${w}`); }
+            let hintStr = ''; for (let i = 0; i < guess.length; i++) { if (guess[i] === game.word[i]) hintStr += '🟩'; else if (game.word.includes(guess[i])) hintStr += '🟨'; else hintStr += '⬜'; }
+            saveSettings(); return reply(`🟩 *WORDLE - Try ${game.tries}/6*\n\nYour guess: ${guess}\nResult: ${hintStr}\n🟩 = Correct place\n🟨 = In word, wrong place\n⬜ = Not in word\nHint: ${game.hint}`);
+        }
+        if (command === 'casino' || command === 'gamble2' || command === 'bet') {
+            const u = getBal(sender);
+            if (!text) return reply(`🎰 *BULL X CASINO* 👑\n\n💰 Your Balance: ${u.bal} coins\n\n🎮 *GAMES:*\n🎰 .casino slot 100\n🎡 .casino roulette 100\n🃏 .casino blackjack 100\n🎲 .casino dice 100\n🪙 .casino coin 100\n🎟️ .casino lottery 100`);
+            const parts = text.split(' '); const game = parts[0].toLowerCase(); const amt = parseInt(parts[1]) || 100;
+            if (amt > u.bal) return reply(`❌ Not enough! Balance: ${u.bal}`);
+            if (amt < 10) return reply('Min bet is 10 coins!');
+            if (game === 'slot') { const e = ['🍒','🍋','🔔','⭐','💎','🐂','7️⃣']; const a = pick(e), b = pick(e), c = pick(e); if (a === b && b === c) { const win = amt * 5; u.bal += win; saveSettings(); return reply(`🎰 *SLOT - JACKPOT!* 🎉\n| ${a} | ${b} | ${c} |\n+${win} coins! (5x)\nBalance: ${u.bal}`); } if (a === b || b === c || a === c) { u.bal += amt; saveSettings(); return reply(`🎰 *SLOT - 2 MATCH!*\n| ${a} | ${b} | ${c} |\n+${amt} coins!\nBalance: ${u.bal}`); } u.bal -= amt; saveSettings(); return reply(`🎰 *SLOT - LOST*\n| ${a} | ${b} | ${c} |\n-${amt} coins\nBalance: ${u.bal}`); }
+            if (game === 'roulette') { const num = Math.floor(Math.random()*37); const win = num % 2 === 0; if (win) { u.bal += amt; saveSettings(); return reply(`🎡 *ROULETTE - WIN!*\nNumber: ${num} 🔴\n+${amt} coins!\nBalance: ${u.bal}`); } u.bal -= amt; saveSettings(); return reply(`🎡 *ROULETTE - LOST*\nNumber: ${num} ⚫\n-${amt} coins\nBalance: ${u.bal}`); }
+            if (game === 'blackjack') { const you = Math.floor(Math.random()*11)+10; const dealer = Math.floor(Math.random()*11)+10; if (you > dealer) { u.bal += amt; saveSettings(); return reply(`🃏 *BLACKJACK - WIN!*\nYou: ${you} vs Dealer: ${dealer}\n+${amt} coins!\nBalance: ${u.bal}`); } if (you === dealer) return reply(`🃏 DRAW! You: ${you} Dealer: ${dealer}`); u.bal -= amt; saveSettings(); return reply(`🃏 *BLACKJACK - LOST*\nYou: ${you} vs Dealer: ${dealer}\n-${amt} coins\nBalance: ${u.bal}`); }
+            if (game === 'dice') { const d1 = Math.floor(Math.random()*6)+1; const d2 = Math.floor(Math.random()*6)+1; const sum = d1+d2; const win = sum >= 7; if (win) { u.bal += amt; saveSettings(); return reply(`🎲 *DICE - WIN!*\n🎲 ${d1} + ${d2} = ${sum} (7+)\n+${amt} coins!\nBalance: ${u.bal}`); } u.bal -= amt; saveSettings(); return reply(`🎲 *DICE - LOST*\n🎲 ${d1} + ${d2} = ${sum} (<7)\n-${amt} coins\nBalance: ${u.bal}`); }
+            if (game === 'coin') { const win = Math.random() > 0.5; if (win) { u.bal += amt; saveSettings(); return reply(`🪙 *COIN - HEADS! WIN!*\n+${amt} coins!\nBalance: ${u.bal}`); } u.bal -= amt; saveSettings(); return reply(`🪙 *COIN - TAILS! LOST*\n-${amt} coins\nBalance: ${u.bal}`); }
+            if (game === 'lottery') { const lucky = Math.floor(Math.random()*10)+1; if (lucky === 7) { const win = amt * 10; u.bal += win; saveSettings(); return reply(`🎟️ *LOTTERY - JACKPOT!* 🎉\nLucky Number: 7!\n+${win} coins! (10x)\nBalance: ${u.bal}`); } u.bal -= amt; saveSettings(); return reply(`🎟️ *LOTTERY - LOST*\nLucky was: ${lucky} (needed 7)\n-${amt} coins\nBalance: ${u.bal}`); }
+            return reply('Use: .casino slot / roulette / blackjack / dice / coin / lottery + amount');
+        }
+        // ===== NEW COMMANDS V24 + V25 =====
+        if (command === 'pickup' || command === 'pickupline') { const lines = ["Are you WiFi? Because I'm feeling the connection! 😍","Are you from Kisii? Because you're a soapstone - rare and beautiful! 💎","Do you have a map? I keep getting lost in your eyes! 😍","Are you Google? You have everything I'm searching for! 🔍"]; return reply(`😍 *PICKUP LINE*\n\n${pick(lines)}`); }
+        if (command === 'darkjoke' || command === 'dark') { const jokes = ["My grandfather said 'my generation didn't rely on technology' - then he died of a heart attack because he couldn't find a phone 😂","I told my wife she was drawing her eyebrows too high. She looked surprised 😂"]; return reply(`🌑 *DARK JOKE*\n\n${pick(jokes)}`); }
+        if (command === 'rap' || command === 'rapbar' || command === 'freestyle') { const bars = ["Yo, I'm BULL X, I don't miss, from Kisii to Nairobi, I'm the king of this! 🐂🔥","Money on my mind, grind all the time, EZEKIA DEV made me, I'm one of a kind! 💰"]; return reply(`🎤 *RAP BAR*\n\n${pick(bars)}`); }
+        if (command === 'hack') { return reply(`💻 *HACKING @${targetName}...* 😈\n\n[▓▓▓▓▓▓▓▓▓▓] 100%\n\n✅ *HACKED!*\n\n📱 Password: 1234 😂\n💰 Bank Balance: 0.00 KES 😂\n\nJust joking! BULL X can't hack! 🐂`, { mentions: [targetUser] }); }
+        if (command === 'fake' || command === 'fakechat') { if (!text) return reply('Use: .fake Hello'); return reply(`📱 *FAKE CHAT*\n\n*EZEKIA DEV:* ${text}\n*You:* Haha true 😂\n*EZEKIA DEV:* BULL X is the best bot! 🐂🔥`); }
+        if (command === 'tweet') { if (!text) return reply('Use: .tweet BULL X is best!'); return reply(`🐦 *TWEET*\n\n@${sender.split('@')[0]}: "${text}"\n❤️ 1.2K 🔁 500 💬 200`); }
+        if (command === 'advice') { try { const r = await fetch('https://api.adviceslip.com/advice'); const d = await r.json(); return reply(`💡 *ADVICE*\n\n${d.slip.advice}`); } catch { return reply('💡 Advice: Drink water, mind your business! 😂'); } }
+        if (command === 'quiz' || command === 'trivia') { const qs = [{q:"What is the capital of Kenya?",a:"Nairobi"},{q:"Who wrote Romeo and Juliet?",a:"Shakespeare"},{q:"What is 10 + 15?",a:"25"},{q:"What is the largest animal?",a:"Blue Whale"}]; const q = pick(qs); return reply(`🧠 *QUIZ*\n\nQ: ${q.q}\n\n*Answer:* ||${q.a}||`); }
+        if (command === 'chuck' || command === 'chucknorris') { try { const r = await fetch('https://api.chucknorris.io/jokes/random'); const d = await r.json(); return reply(`😂 *CHUCK NORRIS*\n\n${d.value}`); } catch { return reply('Chuck Norris counted to infinity. Twice. 😂'); } }
+        if (command === 'movie') { if (!text) return reply('Use: .movie Avatar'); return reply(`🎬 *MOVIE: ${text}*\n\nSearch: https://www.google.com/search?q=${encodeURIComponent(text)} movie`); }
+        if (command === 'recipe' || command === 'food') { if (!text) return reply('Use: .recipe Pilau'); return reply(`🍲 *RECIPE: ${text}*\n\nSearch: https://www.google.com/search?q=how+to+cook+${encodeURIComponent(text)}`); }
+        if (command === 'book') { if (!text) return reply('Use: .book Rich Dad Poor Dad'); return reply(`📚 *BOOK: ${text}*\n\nSearch: https://www.google.com/search?q=${encodeURIComponent(text)} book summary`); }
+        if (command === 'ytsearch' || command === 'youtube' || command === 'yt') { if (!text) return reply('Use: .ytsearch Diamond Komasava'); return reply(`🔍 *YOUTUBE SEARCH*\n\nQuery: ${text}\n\n🔗 https://www.youtube.com/results?search_query=${encodeURIComponent(text)}`); }
+        if (command === 'spotify') { if (!text) return reply('Use: .spotify Komasava'); return reply(`🎵 *SPOTIFY*\n\nSong: ${text}\n\n🔗 https://open.spotify.com/search/${encodeURIComponent(text)}\n🔗 https://music.youtube.com/search?q=${encodeURIComponent(text)}\n🔗 https://www.boomplay.com/search/${encodeURIComponent(text)}`); }
+        if (command === 'stalk' || command === 'igstalk' || command === 'whois') { return reply(`🔍 *STALK @${targetName}*\n\n📞 Number: +${targetName}\n💬 WhatsApp: wa.me/${targetName}\n🖼️ Profile: Use .getpp @user to see DP!`, { mentions: [targetUser] }); }
+        if (command === 'prayer' || command === 'prayertime') { return reply(`🕌 *PRAYER TIMES - KISII / NAIROBI*\n\nFajr: 05:15 AM\nDhuhr: 12:30 PM\nAsr: 03:45 PM\nMaghrib: 06:30 PM\nIsha: 07:45 PM`); }
+        if (command === 'quran' || command === 'quranverse') { const verses = ["Al-Fatiha: In the name of Allah, the Most Gracious, the Most Merciful 🤲","Ayat al-Kursi: Allah - there is no god except Him, the Ever-Living... 🙏","Surah Al-Ikhlas: Say, He is Allah, One ☝️"]; return reply(`📖 *QURAN*\n\n${pick(verses)}`); }
+        if (command === 'wyr' || command === 'wouldyourather') { const qs = ["Would you rather be rich but lonely OR poor but loved? 🤔","Would you rather have 10M KES now OR 1M every month for life? 💰","Would you rather never use WhatsApp again OR never eat ugali again? 😂","Would you rather be famous OR be rich and unknown? 👑"]; return reply(`🤔 *WOULD YOU RATHER*\n\n${pick(qs)}`); }
+        if (command === 'never' || command === 'neverhave') { const qs = ["Never have I ever... cheated in exam 📚","Never have I ever... stalked my ex 😂","Never have I ever... lied to my parents 😅","Never have I ever... cried over a movie 😭"]; return reply(`🙅 *NEVER HAVE I EVER*\n\n${pick(qs)}`); }
+        if (command === 'paradox') { return reply(`🌀 *PARADOX*\n\n${pick(["If you try to fail and succeed, did you fail or succeed? 🤯","This statement is false. Is it true? 😵"])}`); }
+        if (command === 'tongue' || command === 'tonguetwister') { return reply(`👅 *TONGUE TWISTER*\n\n${pick(["She sells seashells by the seashore 🐚","Peter Piper picked a peck of pickled peppers 🌶️","How much wood would a woodchuck chuck? 🪵"])}`); }
+        if (command === 'fact2') { return reply(`🧠 *DID YOU KNOW?*\n\n${pick(["Your heart beats 100,000 times a day! ❤️","Kisii soapstone is exported worldwide! 🪨","Kenya has 47 counties! 🇰🇪","Bananas are radioactive! 🍌"])}`); }
+        if (command === 'joke2') { return reply(`😂 *JOKE 2*\n\n${pick(["Why did the math book look sad? Too many problems! 📚😂","What do you call a fake noodle? An impasta! 🍝","Why did the coffee file a police report? It got mugged! ☕😂"])}`); }
+        if (command === 'compliment2' || command === 'nice') { return reply(`❤️ @${targetName} ${pick(["is the reason the sun shines! ☀️","has a smile that could end wars! 😍","is smarter than Google! 🧠"])}`, { mentions: [targetUser] }); }
+        if (command === 'insult2' || command === 'roast2') { return reply(`🔥 @${targetName} ${pick(["your WiFi is stronger than your brain! 📶😂","you have the charisma of a wet mandazi! 🥟","even your shadow leaves you! 👻"])}`, { mentions: [targetUser] }); }
+        if (command === 'poem2' || command === 'poetry') { return reply(`📝 *POEM*\n\nRoses are red, violets are blue,\nBULL X is here, and so are you!\nFrom Kisii to Nairobi, we shine so bright,\nEZEKIA DEV made us, we own the night! 🐂🔥`); }
+        if (command === 'story2' || command === 'tale') { return reply(`📖 *STORY*\n\nOnce in Kisii, a young boy named ${targetName} found a magic phone. Every time he typed .menu, money appeared! He became the richest in Kenya! The end! 😂🐂`, { mentions: [targetUser] }); }
+        if (command === 'bank' || command === 'deposit' || command === 'withdraw') {
+            const u = getBal(sender); if (!u.bank) u.bank = 0;
+            if (command === 'deposit') { const amt = parseInt(text) || u.bal; if (amt > u.bal) return reply('Not enough!'); u.bal -= amt; u.bank += amt; saveSettings(); return reply(`🏦 Deposited ${amt}!\n💰 Wallet: ${u.bal}\n🏦 Bank: ${u.bank}`); }
+            if (command === 'withdraw') { const amt = parseInt(text) || u.bank; if (amt > u.bank) return reply('Not enough in bank!'); u.bank -= amt; u.bal += amt; saveSettings(); return reply(`🏦 Withdrew ${amt}!\n💰 Wallet: ${u.bal}\n🏦 Bank: ${u.bank}`); }
+            return reply(`🏦 *YOUR BANK*\n\n💰 Wallet: ${u.bal}\n🏦 Bank: ${u.bank}\n💎 Total: ${u.bal + u.bank}\n\nUse: .deposit 500 / .withdraw 500`);
+        }
+        if (command === 'roulette' || command === 'spin') { const u = getBal(sender); const amt = parseInt(text) || 100; if (amt > u.bal) return reply('Not enough!'); const num = Math.floor(Math.random()*37); const win = num % 2 === 0; if (win) { u.bal += amt; saveSettings(); return reply(`🎡 *ROULETTE*\nNumber: ${num} 🔴\nYOU WON +${amt}!\nBalance: ${u.bal}`); } u.bal -= amt; saveSettings(); return reply(`🎡 *ROULETTE*\nNumber: ${num} ⚫\nYOU LOST -${amt}!\nBalance: ${u.bal}`); }
+        if (command === 'blackjack' || command === 'bj') { const u = getBal(sender); const amt = parseInt(text) || 100; if (amt > u.bal) return reply('Not enough!'); const you = Math.floor(Math.random()*11)+10; const dealer = Math.floor(Math.random()*11)+10; if (you > dealer) { u.bal += amt; saveSettings(); return reply(`🃏 *BLACKJACK*\nYou: ${you}\nDealer: ${dealer}\nYOU WIN +${amt}! 🎉\nBalance: ${u.bal}`); } if (you === dealer) return reply(`🃏 DRAW! You: ${you} Dealer: ${dealer}`); u.bal -= amt; saveSettings(); return reply(`🃏 *BLACKJACK*\nYou: ${you}\nDealer: ${dealer}\nYOU LOSE -${amt} 😂\nBalance: ${u.bal}`); }
+        if (command === 'invest' || command === 'stocks') { const u = getBal(sender); const amt = parseInt(text) || 100; if (amt > u.bal) return reply('Not enough!'); const profit = Math.floor(amt * (Math.random()*0.8 - 0.3)); u.bal += profit; saveSettings(); return reply(`📈 *INVEST*\nInvested: ${amt}\nProfit: ${profit > 0 ? '+' : ''}${profit}\nBalance: ${u.bal}`); }
+        if (command === 'loan') { const u = getBal(sender); u.bal += 1000; saveSettings(); return reply(`🏦 *LOAN APPROVED!*\n+1000 coins!\nBalance: ${u.bal}`); }
+        if (command === 'steal' || command === 'heist') { const u = getBal(sender); const victim = getBal(targetUser); if (victim.bal < 50) return reply('Too broke to steal from! 😂'); const amt = Math.floor(Math.random()*300)+50; const stolen = Math.min(amt, victim.bal); if (Math.random() > 0.5) { u.bal += stolen; victim.bal -= stolen; saveSettings(); return reply(`😈 *HEIST SUCCESS!*\nStole ${stolen} from @${targetName}!\nBalance: ${u.bal}`, { mentions: [targetUser] }); } u.bal -= 100; saveSettings(); return reply(`🚔 *CAUGHT!* Paid 100 fine!\nBalance: ${u.bal}`); }
+        if (command === 'rich' || command === 'top') { const sorted = Object.entries(settings.economy).sort((a,b)=>b[1].bal-a[1].bal).slice(0,5); let t='🏆 *TOP RICH*\n\n'; sorted.forEach(([id,d],i)=>{ t+=`${i+1}. @${id.split('@')[0]} - ${d.bal}\n`; }); return sock.sendMessage(from, { text: t || 'No one yet! Use .daily', mentions: sorted.map(([id])=>id) }, { quoted: msg }); }
+        if (command === 'hangman') { const words = ['ELEPHANT','KISII','NAIROBI','FOOTBALL','CHAPATI','MANDIZI','BULL']; const w = pick(words); return reply(`🎯 *HANGMAN*\n\nWord: ${w.split('').map(()=> '_ ').join('')} (${w.length} letters)\n\nGuess letters: .guessletter A`); }
+        if (command === 'guessletter') { return reply(`🔤 Letter: ${text || 'A'}\n\nKeep guessing with .guessletter B, C...`); }
+        if (command === 'mathquiz' || command === 'mathgame') { const a = Math.floor(Math.random()*20)+1; const b = Math.floor(Math.random()*20)+1; return reply(`🧮 *MATH QUIZ*\n\nWhat is ${a} + ${b} = ?\n\nAnswer: .calc ${a}+${b}`); }
+        if (command === 'fasttype' || command === 'typing') { return reply(`⌨️ *FAST TYPE*\n\nType this FAST:\n\n"BULL X IS THE BEST BOT IN KENYA"\n\nFirst to type it wins! 🏆`); }
+        if (command === 'memory' || command === 'memorygame') { return reply(`🧠 *MEMORY GAME*\n\nRemember: 🐂 🍌 🏆 ⭐ 🚀\n\nWait 10 seconds...\nNow what was the 3rd emoji?`); }
+        if (command === 'dice2' || command === 'roll') { return reply(`🎲 You rolled: ${Math.floor(Math.random()*6)+1} and ${Math.floor(Math.random()*6)+1}!`); }
+        if (command === 'flip2' || command === 'coinflip') { return reply(`🪙 ${pick(['HEADS! You win! 👑','TAILS! You lose! 😂'])}`); }
+        if (command === 'timer' || command === 'countdown') { const secs = parseInt(text) || 10; setTimeout(async()=>{ try{ await sock.sendMessage(from, { text: `⏰ *TIMER DONE!* @${sender.split('@')[0]} ${secs} seconds over!`, mentions: [sender] }); }catch{} }, secs*1000); return reply(`⏰ Timer set for ${secs} seconds!`); }
+        if (command === 'base64' || command === 'encode') { if (!text) return reply('Use: .base64 Hello'); return reply(`🔐 Base64:\n${Buffer.from(text).toString('base64')}`); }
+        if (command === 'decode64' || command === 'decode') { try { return reply(`🔓 Decoded:\n${Buffer.from(text, 'base64').toString()}`); } catch { return reply('Invalid base64!'); } }
+        if (command === 'encrypt' || command === 'secret') { if (!text) return reply('Use: .encrypt Hello'); return reply(`🔒 Encrypted:\n${text.split('').reverse().join('').split('').map(c=>c.charCodeAt(0)).join('-')}`); }
+        if (command === 'note' || command === 'notes' || command === 'mynotes') { if (!settings.notes) settings.notes = {}; if (!settings.notes[sender]) settings.notes[sender] = []; if (text) { settings.notes[sender].push(text); saveSettings(); return reply(`📝 Note saved!\nTotal: ${settings.notes[sender].length}`); } const list = settings.notes[sender] || []; if (!list.length) return reply('No notes! Use .note Buy milk'); return reply(`📝 *YOUR NOTES*\n\n${list.map((n,i)=>`${i+1}. ${n}`).join('\n')}`); }
+        if (command === 'clearnotes') { if (settings.notes) settings.notes[sender] = []; saveSettings(); return reply('🗑️ Notes cleared!'); }
+        if (command === 'ip' || command === 'myip') { return reply(`🌐 *YOUR INFO*\n\nIP: Hidden for privacy 🔒\nNumber: +${sender.split('@')[0]}\nLocation: Kenya 🇰🇪\nBot: BULL X V28`); }
+        if (command === 'whois' || command === 'domain') { if (!text) return reply('Use: .whois google.com'); return reply(`🌐 *DOMAIN: ${text}*\n\nCheck here:\nhttps://who.is/whois/${text}`); }
+        if (command === 'email' || command === 'mail') { if (!text) return reply('Use: .email Hello'); return reply(`📧 Email draft:\n\nTo: eze@example.com\nSubject: BULL X\nBody: ${text}`); }
+        if (command === 'alarm' || command === 'wakeup') { return reply(`⏰ *ALARM SET!*\n\nUse .timer 10 for 10 sec timer!\nUse .reminder 5 Wake up!`); }
+        if (command === 'speedtest' || command === 'internet') { return reply(`📶 *SPEED TEST*\n\nPing: ${Math.floor(Math.random()*100)+20}ms\nDownload: ${Math.floor(Math.random()*50)+10} Mbps\nUpload: ${Math.floor(Math.random()*20)+5} Mbps\n\nStatus: ${pick(['Excellent! 🔥','Good! ✅','Slow! 🐢'])}`); }
+        if (command === 'emojify' || command === 'emoji') { if (!text) return reply('Use: .emojify Hello'); return reply(`✨ ${text.split('').map(c=> c === ' ' ? '   ' : c + '✨').join(' ')}`); }
+        if (command === 'count' || command === 'wordcount') { if (!text) return reply('Use: .count Hello world'); return reply(`📊 *COUNT*\nWords: ${text.split(' ').length}\nChars: ${text.length}`); }
+        // ===== CORE =====
         if (command === 'ping' || command === 'speed' || command === 'pong') {
-            const start = Date.now(); const msgTime = Number(msg.messageTimestamp) * 1000; const latency = Math.max(1, Date.now() - msgTime); const uptimeMs = Date.now() - BOT_START; const upH = Math.floor(uptimeMs / 3600000); const upM = Math.floor((uptimeMs % 3600000) / 60000); const upS = Math.floor((uptimeMs % 60000) / 1000); const mem = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1); let speedLabel = latency < 200 ? '⚡ ULTRA FAST! God Mode!' : latency < 500 ? '🔥 SUPER FAST!' : latency < 1000 ? '✅ Fast' : '🐢 Slow - Check Render';
+            const start = Date.now(); const msgTime = Number(msg.messageTimestamp) * 1000; const latency = Math.max(1, Date.now() - msgTime); const uptimeMs = Date.now() - BOT_START; const upH = Math.floor(uptimeMs / 3600000); const upM = Math.floor((uptimeMs % 3600000) / 60000); const upS = Math.floor((uptimeMs % 60000) / 1000); const mem = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
             const sent = await sock.sendMessage(from, { text: `🏓 *PINGING...*` }, { quoted: msg }); const roundTrip = Date.now() - start; try { await sock.sendMessage(from, { delete: sent.key }); } catch {}
-            return reply(`🏓 *PONG!* 🐂\n\n⚡ *Speed:* ${roundTrip}ms\n📡 *Latency:* ${latency}ms\n${speedLabel}\n\n⏱️ *Uptime:* ${upH}h ${upM}m ${upS}s\n💾 *RAM:* ${mem} MB\n🤖 *Bot:* BULL X V22\n👑 *Owner:* +${ownerNum}\n👨‍💻 *Dev:* ${DEV_NAME} +${DEV_NUMBER}\n✅ *Status:* Online & Stable`);
+            return reply(`🏓 *PONG!* 🐂\n\n⚡ *Speed:* ${roundTrip}ms\n📡 *Latency:* ${latency}ms\n\n⏱️ *Uptime:* ${upH}h ${upM}m ${upS}s\n💾 *RAM:* ${mem} MB\n🤖 *Bot:* BULL X V28\n👑 *Owner:* +${ownerNum}\n👨‍💻 *Dev:* ${DEV_NAME} +${DEV_NUMBER}\n✅ *Status:* Online & Stable`);
         }
         if (command === 'img' || command === 'image' || command === 'imagine') { if (!text) return reply('Use: .img Cute cat in Kisii'); try { await reply('🎨 Generating image...'); const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(text)}?width=1024&height=1024&seed=${Math.floor(Math.random()*99999)}&nologo=true`; return sock.sendMessage(from, { image: { url }, caption: `🎨 *BULL X AI IMAGE*\n\nPrompt: ${text}` }, { quoted: msg }); } catch { return reply('Image failed, try again!'); } }
         if (command === 'tts' || command === 'say' || command === 'voice') { if (!text) return reply('Use: .tts Hello everyone'); try { const url = `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(text)}`; return sock.sendMessage(from, { audio: { url }, mimetype: 'audio/mp4', ptt: true }, { quoted: msg }); } catch { return reply('TTS failed'); } }
@@ -476,7 +740,7 @@ async function startBot() {
         if (command === 'news') { try { const r = await fetch('https://api.spaceflightnewsapi.net/v4/articles/?limit=3'); const d = await r.json(); let t='📰 *LATEST NEWS*\n\n'; d.results.forEach((a,i)=>{ t+=`${i+1}. ${a.title}\n🔗 ${a.url}\n\n`; }); return reply(t); } catch { return reply('News failed, try .ai latest news in Kenya'); } }
         if (command === 'crypto' || command === 'btc') { try { const coin = text.toLowerCase()||'bitcoin'; const r = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=usd,kes&include_24hr_change=true`); const d = await r.json(); const p = d[coin]; if (!p) return reply('Try: .crypto bitcoin / ethereum / solana'); return reply(`💰 *CRYPTO - ${coin.toUpperCase()}*\n\n💵 USD: $${p.usd}\n🇰🇪 KES: Ksh ${Math.round(p.kes)}\n📈 24h: ${p.usd_24h_change?.toFixed(2)}%`); } catch { return reply('Crypto failed'); } }
         if (command === 'currency' || command === 'convert' || command === 'exchange') { const amt = parseFloat(args[1])||100; const fromC = (args[2]||'USD').toUpperCase(); const toC = (args[3]||'KES').toUpperCase(); try { const r = await fetch(`https://api.exchangerate-api.com/v4/latest/${fromC}`); const d = await r.json(); const rate = d.rates[toC]; if (!rate) return reply('Try: .currency 100 USD KES'); return reply(`💱 *CURRENCY*\n\n${amt} ${fromC} = ${(amt*rate).toFixed(2)} ${toC}\nRate: 1 ${fromC} = ${rate} ${toC}`); } catch { return reply('Currency failed'); } }
-        if (command === 'github' || command === 'gh') { if (!text) return reply('Use: .github torvalds'); try { const r = await fetch(`https://api.github.com/users/${text}`); const d = await r.json(); if (d.message) return reply('User not found!'); return reply(`🐙 *GITHUB - ${d.login}*\n\n👤 Name: ${d.name||'N/A'}\n📝 Bio: ${d.bio||'N/A'}\n📍 Location: ${d.location||'N/A'}\n👥 Followers: ${d.followers}\n📦 Repos: ${d.public_repos}\n🔗 ${d.html_url}`); } catch { return reply('Github failed'); } }
+        if (command === 'github' || command === 'gh') { if (!text) return reply('Use: .github torvalds'); try { const r = await fetch(`https://api.github.com/users/${text}`); const d = await r.json(); if (d.message) return reply('User not found!'); return reply(`🐙 *GITHUB - ${d.login}*\n\n👤 Name: ${d.name||'N/A'}\n📝 Bio: ${d.bio||'N/A'}\n👥 Followers: ${d.followers}\n📦 Repos: ${d.public_repos}\n🔗 ${d.html_url}`); } catch { return reply('Github failed'); } }
         if (command === 'wallpaper' || command === 'wall') { try { const r = await fetch('https://picsum.photos/1080/1920'); return sock.sendMessage(from, { image: { url: r.url }, caption: '🖼️ *WALLPAPER* by BULL X 🐂' }, { quoted: msg }); } catch { return reply('Wallpaper failed'); } }
         if (command === 'fancy' || command === 'fancytext') { if (!text) return reply('Use: .fancy hello'); const map = { a:'𝖆',b:'𝖇',c:'𝖈',d:'𝖉',e:'𝖊',f:'𝖋',g:'𝖌',h:'𝖍',i:'𝖎',j:'𝖏',k:'𝖐',l:'𝖑',m:'𝖒',n:'𝖓',o:'𝖔',p:'𝖕',q:'𝖖',r:'𝖗',s:'𝖘',t:'𝖙',u:'𝖚',v:'𝖛',w:'𝖜',x:'𝖝',y:'𝖞',z:'𝖟' }; let out=''; for(let ch of text) out+=map[ch]||ch; return reply(`✨ *FANCY*\n\n${out}`); }
         if (command === 'reminder' || command === 'remind') { const mins = parseInt(args[1])||5; const msgText = args.slice(2).join(' ')||'Reminder!'; setTimeout(async()=>{ try{ await sock.sendMessage(from, { text: `⏰ *REMINDER!*\n\n@${sender.split('@')[0]}: ${msgText}`, mentions: [sender] }); }catch{} }, mins*60000); return reply(`⏰ Reminder set for ${mins} minutes!\nMessage: ${msgText}`); }
@@ -491,27 +755,27 @@ async function startBot() {
         if (command === 'binary') { if (!text) return reply('Use: .binary hello'); return reply(`💻 Binary:\n${text.split('').map(c=>c.charCodeAt(0).toString(2).padStart(8,'0')).join(' ')}`); }
         if (command === 'morse') { if (!text) return reply('Use: .morse SOS'); const m = { a:'.-',b:'-...',c:'-.-.',d:'-..',e:'.',f:'..-.',g:'--.',h:'....',i:'..',j:'.---',k:'-.-',l:'.-..',m:'--',n:'-.',o:'---',p:'.--.',q:'--.-',r:'.-.',s:'...',t:'-',u:'..-',v:'...-',w:'.--',x:'-..-',y:'-.--',z:'--..',1:'.----',2:'..---',3:'...--',4:'....-',5:'.....',6:'-....',7:'--...',8:'---..',9:'----.',0:'-----',' ':'/' }; return reply(`📻 Morse:\n${text.toLowerCase().split('').map(c=>m[c]||c).join(' ')}`); }
         if (command === 'channel' || command === 'follow' || command === 'join' || command === 'link' || command === 'mychannel' || command === 'mychanel' || command === 'bullx' || command === 'support' || command === 'subscribe' || command === 'updates') {
-            try { await sock.sendMessage(from, { text: `📢 *${CHANNEL_NAME}* 🐂👑\n\n🔥 *JOIN BULL X CHANNEL!*\n\n✅ New Commands First!\n✅ Giveaways!\n✅ Updates & Fixes!\n\n👇 *Tap the link below to Follow!* 👇`, footer: '🐂 BULL X V22 | Follow for More! 👑', buttons: [{ buttonId: 'follow_channel', buttonText: { displayText: '📢 FOLLOW CHANNEL' }, type: 1 }, { buttonId: 'menu_btn', buttonText: { displayText: '📋 MENU' }, type: 1 }], headerType: 1 }, { quoted: msg }); } catch {}
+            try { await sock.sendMessage(from, { text: `📢 *${CHANNEL_NAME}* 🐂👑\n\n🔥 *JOIN BULL X CHANNEL!*\n\n✅ New Commands First!\n✅ Giveaways!\n✅ Updates & Fixes!\n\n👇 *Tap the link below to Follow!* 👇`, footer: '🐂 BULL X V28 | Follow for More! 👑', buttons: [{ buttonId: 'follow_channel', buttonText: { displayText: '📢 FOLLOW CHANNEL' }, type: 1 }, { buttonId: 'menu_btn', buttonText: { displayText: '📋 MENU' }, type: 1 }], headerType: 1 }, { quoted: msg }); } catch {}
             return sock.sendMessage(from, { text: `🔗 *YOUR CHANNEL LINK:*\n\n${CHANNEL_LINK}\n\n👆 Tap it to Follow! 🐂🔥` }, { quoted: msg });
         }
         if (command === 'menu' || command === 'help' || command === 'menu2') return reply(getMenu());
-        if (command === 'owner' || command === 'dev' || command === 'developer' || command === 'creator' || command === 'eze' || command === 'ezekia') return reply(`👨‍💻 *BULL X DEVELOPER* 👑🔥\n\n👤 *Name:* ${DEV_NAME}\n📞 *Dev Number:* +${DEV_NUMBER}\n💬 *WhatsApp:* wa.me/${DEV_NUMBER}\n🤖 *Bot:* BULL X V22\n👑 *Current Owner (Scanned QR):* +${ownerNum}\n\n📢 *Channel:* ${CHANNEL_LINK}\n\nContact Dev for:\n✅ Bot Setup\n✅ New Features\n✅ Support & Fixes!`);
-        if (command === 'info') return reply(`🐂 *BULL X V22*\n\n👨‍💻 *Dev:* ${DEV_NAME}\n📞 *Dev Number:* +${DEV_NUMBER}\n💬 *Contact:* wa.me/${DEV_NUMBER}\n👑 *Owner (Scanned):* +${ownerNum}\n\nVersion: V22 Dynamic Owner + Dev\nCommands: 220+\nStatus: Online ✅`);
+        if (command === 'owner' || command === 'dev' || command === 'developer' || command === 'creator' || command === 'eze' || command === 'ezekia') return reply(`👨‍💻 *BULL X DEVELOPER* 👑🔥\n\n👤 *Name:* ${DEV_NAME}\n📞 *Dev Number:* +${DEV_NUMBER}\n💬 *WhatsApp:* wa.me/${DEV_NUMBER}\n🤖 *Bot:* BULL X V28\n👑 *Current Owner (Scanned QR):* +${ownerNum}\n\n📢 *Channel:* ${CHANNEL_LINK}\n\nContact Dev for:\n✅ Bot Setup\n✅ New Features\n✅ Support & Fixes!`);
+        if (command === 'info') return reply(`🐂 *BULL X V28*\n\n👨‍💻 *Dev:* ${DEV_NAME}\n📞 *Dev Number:* +${DEV_NUMBER}\n💬 *Contact:* wa.me/${DEV_NUMBER}\n👑 *Owner (Scanned):* +${ownerNum}\n\nVersion: V28 Save + Casino + Real Games\nCommands: 270+\nStatus: Online ✅`);
         if (command === 'time') return reply('🕒 ' + new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' }));
         if (command === 'date') return reply('📅 ' + new Date().toLocaleDateString('en-KE', { timeZone: 'Africa/Nairobi', weekday:'long', year:'numeric', month:'long', day:'numeric' }));
         if (command === 'rules') return reply('📜 *GROUP RULES*\n1. No links\n2. No insults\n3. Respect admins\n4. No spam\n5. 3 Warns = Kick\n6. Have fun! 🐂');
         if (command === 'bull') return reply('🐂🔥 BULL X MODE ACTIVATED! 🔥🐂');
-        if (command === 'alive') return reply(`🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 220+ Commands\n✅ V22 Dynamic Owner + Dev 👑\n👨‍💻 Dev: ${DEV_NAME}\n👑 Owner: +${ownerNum}`);
+        if (command === 'alive') return reply(`🐂 *BULL X IS ALIVE!* 🔥\n✅ Online\n✅ 270+ Commands\n✅ V28 Save + Casino + Real Games 👑\n👨‍💻 Dev: ${DEV_NAME}\n👑 Owner: +${ownerNum}`);
         if (command === 'checkadmin') { try { const m = await sock.groupMetadata(from); const clean = (id) => (id||'').split(':')[0].split('@')[0]; return reply(`🔍 Bot PN: ${clean(sock.user.id)}\nBot LID: ${clean(sock.user.lid||'none')}\nOwner: +${ownerNum}\nDev: ${DEV_NAME} +${DEV_NUMBER}\nMembers: ${m.participants.length}`); } catch { return reply('Check failed'); } }
-        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V22\n👨‍💻 Dev: ${DEV_NAME}`); }
+        if (command === 'profile') { const bal = getBal(sender); const warns = (settings.warnings[from]||{})[sender]||0; return reply(`👤 *YOUR PROFILE* 👑\n\n📞 Number: @${sender.split('@')[0]}\n💰 Balance: ${bal.bal} coins\n🏦 Bank: ${bal.bank||0}\n⚠️ Warnings: ${warns}/3\n🏆 Rank: ${bal.bal>5000?'Billionaire 🤑':bal.bal>2000?'Rich 💰':'Hustler 💪'}\n🐂 Bot: BULL X V28\n👨‍💻 Dev: ${DEV_NAME}`); }
         if (command === 'afk') { settings.afk[sender] = text||'AFK'; saveSettings(); return reply(`😴 You are now AFK!\nReason: ${text||'AFK'}\nBot will tell anyone who tags you!`); }
         if (command === 'autotyping') { if (!await onlyOwner()) return; if (text==='on') { settings.autotyping=true; saveSettings(); return reply('✅ *AUTO-TYPING ON* ⌨️'); } if (text==='off') { settings.autotyping=false; saveSettings(); return reply('❌ Auto-Typing OFF'); } return reply('Use: .autotyping on/off'); }
         if (command === 'autorecording') { if (!await onlyOwner()) return; if (text==='on') { settings.autorecording=true; settings.autotyping=false; saveSettings(); return reply('✅ *AUTO-RECORDING ON* 🎙️'); } if (text==='off') { settings.autorecording=false; saveSettings(); return reply('❌ Auto-Recording OFF'); } return reply('Use: .autorecording on/off'); }
         if (command === 'autoviewstatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autoviewstatus=true; saveSettings(); return reply('✅ *AUTO-VIEW STATUS ON* 👀'); } if (text==='off') { settings.autoviewstatus=false; saveSettings(); return reply('❌ Auto-View Status OFF'); } return reply('Use: .autoviewstatus on/off'); }
         if (command === 'autolikestatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autolikestatus=true; saveSettings(); return reply('✅ *AUTO-LIKE STATUS ON* ❤️'); } if (text==='off') { settings.autolikestatus=false; saveSettings(); return reply('❌ Auto-Like Status OFF'); } return reply('Use: .autolikestatus on/off'); }
         if (command === 'autostatus') { if (!await onlyOwner()) return; if (text==='on') { settings.autotyping=true; settings.autorecording=false; settings.autoviewstatus=true; settings.autolikestatus=true; saveSettings(); return reply('✅ *ALL AUTO ON!* 👑'); } if (text==='off') { settings.autotyping=false; settings.autorecording=false; settings.autoviewstatus=false; settings.autolikestatus=false; saveSettings(); return reply('❌ All Auto OFF'); } return reply('Use: .autostatus on/off'); }
-        if (command === 'settings') return reply(`⚙️ *SETTINGS*\n\n👑 Owner (Scanned): +${ownerNum}\n👨‍💻 Dev: ${DEV_NAME} +${DEV_NUMBER}\n⌨️ Typing: ${settings.autotyping?'✅ ON':'❌ OFF'}\n🎙️ Recording: ${settings.autorecording?'✅ ON':'❌ OFF'}\n👀 View Status: ${settings.autoviewstatus?'✅ ON':'❌ OFF'}\n❤️ Like Status: ${settings.autolikestatus?'✅ ON':'❌ OFF'}\n🔗 Anti-Link: ${settings.antilink[from]?'✅ ON':'❌ OFF'}\n🚨 Anti-Delete: ${settings.antidelete[from]||settings.antidelete['GLOBAL']?'✅ ON':'❌ OFF'}`);
-        if (command === 'balance' || command === 'bal' || command === 'money') { const u = getBal(sender); return reply(`💰 *YOUR BALANCE*\n\nCoins: ${u.bal} 🪙\nRank: ${u.bal>5000?'Billionaire 🤑':u.bal>2000?'Rich 💰':'Hustler 💪'}`); }
+        if (command === 'settings') return reply(`⚙️ *SETTINGS*\n\n👑 Owner (Scanned): +${ownerNum}\n👨‍💻 Dev: ${DEV_NAME} +${DEV_NUMBER}\n⌨️ Typing: ${settings.autotyping?'✅ ON':'❌ OFF'}\n🎙️ Recording: ${settings.autorecording?'✅ ON':'❌ OFF'}\n👀 View Status: ${settings.autoviewstatus?'✅ ON':'❌ OFF'}\n❤️ Like Status: ${settings.autolikestatus?'✅ ON':'❌ OFF'}\n📥 Auto-Save Status: ${settings.autosavestatus?'✅ ON':'❌ OFF'}\n🔗 Anti-Link: ${settings.antilink[from]?'✅ ON':'❌ OFF'}\n🚨 Anti-Delete: ${settings.antidelete[from]||settings.antidelete['GLOBAL']?'✅ ON':'❌ OFF'}`);
+        if (command === 'balance' || command === 'bal' || command === 'money') { const u = getBal(sender); return reply(`💰 *YOUR BALANCE*\n\nCoins: ${u.bal} 🪙\n🏦 Bank: ${u.bank||0}\nRank: ${u.bal>5000?'Billionaire 🤑':u.bal>2000?'Rich 💰':'Hustler 💪'}`); }
         if (command === 'daily') { const u = getBal(sender); const now = Date.now(); if (now - u.lastDaily < 86400000) return reply(`⏳ You already claimed daily! Come back tomorrow! Balance: ${u.bal}`); u.lastDaily = now; u.bal += 500; saveSettings(); return reply(`🎁 *DAILY REWARD!*\n\n+500 coins! 🎉\nNew Balance: ${u.bal} 🪙`); }
         if (command === 'work') { const u = getBal(sender); const earn = Math.floor(Math.random()*400)+100; const jobs = ['Matatu Conductor 🚌','Farmer 🌾','Boda Boda 🏍️','Shopkeeper 🏪','Teacher 📚','DJ 🎧','Hustler 💪']; u.bal += earn; saveSettings(); return reply(`💼 *WORK*\n\nYou worked as ${pick(jobs)}!\nEarned: +${earn} coins!\nBalance: ${u.bal} 🪙`); }
         if (command === 'beg') { const u = getBal(sender); const earn = Math.floor(Math.random()*100)+10; u.bal += earn; saveSettings(); return reply(`🙏 Someone gave you ${earn} coins out of pity! 😂\nBalance: ${u.bal}`); }
@@ -535,14 +799,13 @@ async function startBot() {
         if (command === 'goku') return reply('🐉 *GOKU*\n\nKamehameha! Super Saiyan! 💪🔥');
         if (command === 'horoscope' || command === 'zodiac') { const sign = text.toLowerCase()||'leo'; return reply(`🔮 *HOROSCOPE - ${sign.toUpperCase()}*\n\n${HOROSCOPE[sign]||'Try: aries, taurus, gemini, cancer, leo, virgo, libra, scorpio, sagittarius, capricorn, aquarius, pisces'}`); }
         if (command === 'lyrics') {
-            if (!text) return reply('Use: .lyrics Komasava\n.lyrics Rush Ayra Starr\n.lyrics Single Again Harmonize');
+            if (!text) return reply('Use: .lyrics Komasava\n.lyrics Rush Ayra Starr');
             try {
                 await reply('🎵 *Searching lyrics for:* ' + text);
                 let lyrics = null; let artist = ''; let track = text;
                 try { const r = await fetch(`https://lrclib.net/api/search?track_name=${encodeURIComponent(text)}`); const d = await r.json(); if (d && d[0]?.plainLyrics) { lyrics = d[0].plainLyrics; track = d[0].trackName; artist = d[0].artistName; } } catch {}
                 if (!lyrics) { try { const parts = text.split(' - '); const art = parts[0] || 'Diamond Platnumz'; const song = parts[1] || text; const r = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(art)}/${encodeURIComponent(song)}`); const d = await r.json(); if (d.lyrics) lyrics = d.lyrics; } catch {} }
-                if (!lyrics) { try { const r = await fetch(`https://api.lyrics.ovh/v1/Diamond%20Platnumz/${encodeURIComponent(text)}`); const d = await r.json(); if (d.lyrics) lyrics = d.lyrics; } catch {} }
-                if (!lyrics) return reply(`❌ *Lyrics not found for "${text}"!*\n\nTry:\n.lyrics ${text} - Diamond\n.lyrics Komasava\n\nOr use .ai for lyrics:\n.ai Write lyrics of ${text}`);
+                if (!lyrics) return reply(`❌ *Lyrics not found for "${text}"!*\n\nTry:\n.lyrics ${text} - Diamond\n\nOr use .ai for lyrics:\n.ai Write lyrics of ${text}`);
                 return reply(`🎵 *LYRICS - ${track} ${artist ? '- ' + artist : ''}*\n\n${lyrics.slice(0, 2000)}\n\n---\nUse .play ${text} to listen!`);
             } catch (e) { return reply('Lyrics failed, try .ai lyrics of ' + text); }
         }
@@ -606,15 +869,15 @@ async function startBot() {
         if (command === 'age') { const y = parseInt(text); if (!y) return reply('Use: .age 2005'); return reply(`🎂 Born in ${y} = ${2026-y} years old!`); }
         if (command === 'kenya') return reply('🇰🇪 *KENYA*\nCapital: Nairobi\nFamous: Safaris, Runners, Ugali! 🐘🦁');
         if (command === 'nairobi') return reply('🏙️ *NAIROBI*\nCapital of Kenya! Green City in the Sun ☀️🌳');
-        if (command === 'kisii') return reply('🏔️ *KISII*\nLand of soapstone, bananas & hardworking people! 🍌💪');
+        if (command === 'kisii') return reply('🏔️ *KISII*\nLand of soapstone, bananas & hardworking people! 🍌```js
         if (command === 'antilink') { if (!await onlyOwner()) return; if (!isGroup) return reply('Groups only!'); if (text==='on') { settings.antilink[from]=true; saveSettings(); return reply('✅ Anti-Link ON'); } if (text==='off') { delete settings.antilink[from]; saveSettings(); return reply('❌ Anti-Link OFF'); } return reply('Use: .antilink on/off'); }
         if (command === 'antidelete') {
             if (!await onlyOwner()) return;
-            if (text === 'all' || text === 'global' || text === 'on all') { settings.antidelete['GLOBAL'] = true; saveSettings(); return reply('✅ *ANTI-DELETE GLOBAL ON!* 🌍🐂\n\nNow works in:\n✅ ALL Groups\n✅ ALL DMs / Private Chats\n✅ Everywhere!\n\nAnyone deletes -> Bot resends!'); }
+            if (text === 'all' || text === 'global' || text === 'on all') { settings.antidelete['GLOBAL'] = true; saveSettings(); return reply('✅ *ANTI-DELETE GLOBAL ON!* 🌍🐂\n\nNow works in:\n✅ ALL Groups\n✅ ALL DMs\n✅ Everywhere!'); }
             if (text === 'off all' || text === 'global off') { delete settings.antidelete['GLOBAL']; saveSettings(); return reply('❌ Anti-Delete GLOBAL OFF'); }
-            if (text === 'on') { settings.antidelete[from] = true; saveSettings(); return reply(`✅ *Anti-Delete ON!* 🐂\n\nChat: ${isGroup ? 'This Group' : 'This DM'}\n\nIf anyone deletes a message here, I will resend it!`); }
+            if (text === 'on') { settings.antidelete[from] = true; saveSettings(); return reply(`✅ *Anti-Delete ON!* 🐂\n\nChat: ${isGroup ? 'This Group' : 'This DM'}`); }
             if (text === 'off') { delete settings.antidelete[from]; saveSettings(); return reply('❌ Anti-Delete OFF for this chat'); }
-            if (text === 'status' || text === 'check') { const isGlobal = !!settings.antidelete['GLOBAL']; const isHere = !!settings.antidelete[from]; return reply(`🚨 *ANTI-DELETE STATUS*\n\n🌍 Global: ${isGlobal ? '✅ ON' : '❌ OFF'}\n💬 This Chat: ${isHere ? '✅ ON' : '❌ OFF'}\n\nUse:\n.antidelete on = This chat only\n.antidelete all = EVERYWHERE!\n.antidelete off = Turn off here`); }
+            if (text === 'status' || text === 'check') { const isGlobal = !!settings.antidelete['GLOBAL']; const isHere = !!settings.antidelete[from]; return reply(`🚨 *ANTI-DELETE STATUS*\n\n🌍 Global: ${isGlobal ? '✅ ON' : '❌ OFF'}\n💬 This Chat: ${isHere ? '✅ ON' : '❌ OFF'}\n\nUse:\n.antidelete on = This chat only\n.antidelete all = EVERYWHERE!`); }
             return reply('Use:\n.antidelete on = This chat\n.antidelete all = ALL DMs + Groups!\n.antidelete off = Turn off\n.antidelete status = Check');
         }
         if (command === 'tagall') { if (!isGroup) return reply('Groups only!'); try { const m = await sock.groupMetadata(from); const parts = m.participants.map(p=>p.id); let t='🐂 *TAGALL*\n\n'; for(let p of parts) t+='@'+p.split('@')[0]+' '; return sock.sendMessage(from, { text: t, mentions: parts }, { quoted: msg }); } catch { return reply('Failed'); } }
@@ -628,48 +891,18 @@ async function startBot() {
         if (command === 'play' || command === 'song') {
             if (!text) return reply('Use: .play Diamond Platnumz Komasava\n.play Harmonize Single Again\n.play Ayra Starr Rush');
             try {
-                await reply('🎵 *Searching:* ' + text + '\n\n⏳ Please wait 10-20 sec...');
-                let videoId = null; let title = text; let thumb = null;
-                const searchApis = [
-                    `https://api.siputzx.my.id/api/s/youtube?query=${encodeURIComponent(text)}`,
-                    `https://api.dreaded.site/api/ytsearch?query=${encodeURIComponent(text)}`,
-                    `https://api.zenzxz.my.id/api/search/youtube?query=${encodeURIComponent(text)}`
-                ];
-                for (let url of searchApis) {
-                    try {
-                        const r = await fetch(url); const d = await r.json();
-                        const v = d.data?.[0] || d.result?.[0] || d.results?.[0] || d[0];
-                        if (v) { videoId = v.videoId || v.id || v.url?.split('v=')[1]?.split('&')[0]; title = v.title || title; thumb = v.thumbnail || v.image; if (videoId) break; }
-                    } catch {}
-                }
-                if (!videoId) return reply(`❌ *Not found via API!*\n\nTry this:\n🔗 https://www.youtube.com/results?search_query=${encodeURIComponent(text)}\n\nOr try different spelling:\n.play ${text} official audio`);
+                await reply('🎵 *Searching:* ' + text + '\n\n⏳ Please wait...');
+                let videoId = null; let title = text;
+                const searchApis = [`https://api.siputzx.my.id/api/s/youtube?query=${encodeURIComponent(text)}`,`https://api.dreaded.site/api/ytsearch?query=${encodeURIComponent(text)}`,`https://api.zenzxz.my.id/api/search/youtube?query=${encodeURIComponent(text)}`];
+                for (let url of searchApis) { try { const r = await fetch(url); const d = await r.json(); const v = d.data?.[0] || d.result?.[0] || d.results?.[0] || d[0]; if (v) { videoId = v.videoId || v.id || v.url?.split('v=')[1]?.split('&')[0]; title = v.title || title; if (videoId) break; } } catch {} }
+                if (!videoId) return reply(`❌ *Not found!*\n\nTry:\n.play ${text} official audio`);
                 const videoUrl = `https://youtube.com/watch?v=${videoId}`;
-                await reply(`✅ *Found!*\n\n🎵 ${title}\n🔗 ${videoUrl}\n\n⏳ Downloading audio...`);
-                let audioUrl = null;
-                const dlApis = [
-                    `https://api.dreaded.site/api/ytdl?url=${encodeURIComponent(videoUrl)}&format=mp3`,
-                    `https://api.dreaded.site/api/ytdl-v2?url=${encodeURIComponent(videoUrl)}`,
-                    `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(videoUrl)}`,
-                    `https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(videoUrl)}`,
-                    `https://api.zenzxz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`,
-                    `https://api.yanzbotz.my.id/api/downloader/ytmp3?url=${encodeURIComponent(videoUrl)}`
-                ];
-                for (let u of dlApis) {
-                    try {
-                        const r = await fetch(u, { signal: AbortSignal.timeout(20000) });
-                        const d = await r.json();
-                        audioUrl = d.result?.download || d.result?.url || d.download || d.url || d.data?.dl || d.data?.url || d.result?.audio || d.audio;
-                        if (audioUrl && audioUrl.startsWith('http')) { console.log('Play success via:', u); break; } else audioUrl = null;
-                    } catch (e) { console.log('Play API failed:', u); continue; }
-                }
-                if (!audioUrl) return reply(`❌ *Music servers are busy!*\n\n🎵 ${title}\n🔗 ${videoUrl}\n\nTry again in 2 mins or try:\n.play ${text} lyrics\n\nTip: Use .lyrics ${text} to see lyrics!`);
-                try {
-                    await sock.sendMessage(from, { audio: { url: audioUrl }, mimetype: 'audio/mp4', fileName: title + '.mp3' }, { quoted: msg });
-                    return reply(`🎵 *Now Playing!* 🐂\n\n🎤 ${title}\n🔗 ${videoUrl}`);
-                } catch (e) {
-                    return reply(`✅ *Found but audio too big!*\n\n🎵 ${title}\n🔗 Listen here:\n${videoUrl}\n\nDirect MP3:\n${audioUrl}`);
-                }
-            } catch (e) { console.log('Play error:', e.message); return reply('❌ Play failed! Try again with exact song name:\n.play Komasava Diamond'); }
+                let previewUrl = null; let artwork = null; let artistName = '';
+                try { const r = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(text)}&media=music&limit=1`); const d = await r.json(); if (d.results && d.results[0]) { previewUrl = d.results[0].previewUrl; artwork = d.results[0].artworkUrl100?.replace('100x100', '600x600'); artistName = d.results[0].artistName || ''; title = d.results[0].trackName || title; } } catch {}
+                if (artwork) { await sock.sendMessage(from, { image: { url: artwork }, caption: `🎵 *FOUND!* 🐂\n\n🎤 *${title}*\n👤 ${artistName}\n🔗 ${videoUrl}\n\n👇 Tap link to listen full on YouTube` }, { quoted: msg }); } else { await reply(`✅ *Found!*\n\n🎵 ${title}\n🔗 ${videoUrl}`); }
+                if (previewUrl) { try { await sock.sendMessage(from, { audio: { url: previewUrl }, mimetype: 'audio/mp4', fileName: title + ' - Preview.mp3' }, { quoted: msg }); return reply(`🎵 *Preview Sent!* 🐂\n\n🎤 ${title}\n🔗 Full song on YouTube:\n${videoUrl}`); } catch {} }
+                return reply(`🎵 *Now Playing Info* 🐂\n\n🎤 ${title}\n🔗 Listen Full Here:\n${videoUrl}`);
+            } catch (e) { console.log('Play error:', e.message); return reply('❌ Play failed! Try:\n.play ' + text + ' official audio'); }
         }
         if (command === 'ai' || command === 'ask' || command === 'gpt') { if (!text) return reply('Ask me: .ai Who is best footballer?'); try { await reply('🤖 Thinking...'); let answer=null; try { const r=await fetch(`https://api.nekolabs.my.id/ai/chatgpt?text=${encodeURIComponent(text)}`); const d=await r.json(); answer=d.result||d.response; } catch {} if(!answer){ try{ const r=await fetch(`https://api.siputzx.my.id/api/ai/gpt-3?prompt=${encodeURIComponent(text)}`); const d=await r.json(); answer=d.data||d.result; } catch{} } if(!answer){ try{ const r=await fetch(`https://api.dreaded.site/api/chatgpt?query=${encodeURIComponent(text)}`); const d=await r.json(); answer=d.result||d.response||d.answer; } catch{} } if(!answer){ try{ const r=await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`); const t=await r.text(); if(!t.includes('Free limit')&&t.length>5) answer=t; } catch{} } if(!answer) return reply('AI busy, try again!'); return reply(`🐂 *BULL X AI*\n\n${answer}`); } catch { return reply('AI busy'); } }
         if (command === 'story') return reply(`📖 *STORY*\n\nOnce upon a time in Kisii... ${text||'A young hustler'} woke up and decided today is the day! He worked hard, prayed, and became a legend! The end! 🐂🔥`);
