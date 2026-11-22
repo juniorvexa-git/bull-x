@@ -868,10 +868,7 @@ async function startBot() {
         if (command === 'age') { const y = parseInt(text); if (!y) return reply('Use: .age 2005'); return reply(`🎂 Born in ${y} = ${2026-y} years old!`); }
         if (command === 'kenya') return reply('🇰🇪 *KENYA*\nCapital: Nairobi\nFamous: Safaris, Runners, Ugali! 🐘🦁');
         if (command === 'nairobi') return reply('🏙️ *NAIROBI*\nCapital of Kenya! Green City in the Sun ☀️🌳');
-        if (command === 'kisii') return reply('🏔️Continuing from where it stopped — paste this **RIGHT AFTER** the `.kisii` line to finish the file:
-
-```js
-if (command === 'kisii') return reply('🏔️ *KISII*\nLand of soapstone, bananas & hardworking people! 🍌💪');
+       if (command === 'kisii') return reply('KISII -Land of soapstone,bananas and hardworking people!');
         if (command === 'antilink') { if (!await onlyOwner()) return; if (!isGroup) return reply('Groups only!'); if (text==='on') { settings.antilink[from]=true; saveSettings(); return reply('✅ Anti-Link ON'); } if (text==='off') { delete settings.antilink[from]; saveSettings(); return reply('❌ Anti-Link OFF'); } return reply('Use: .antilink on/off'); }
         if (command === 'antidelete') {
             if (!await onlyOwner()) return;
