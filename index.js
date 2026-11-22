@@ -77,7 +77,6 @@ const getMenu = () => {
 ┃ ▸ .sv
 ┃ ▸ .autosave on
 ┃ ▸ .autosave off
-┃ ▸ .save = Save ANYTHING!
 ┃ ▸ .vv (View Once)
 
 ┏━━━━━━━━━━━━━━━━━━━━┓
@@ -721,7 +720,7 @@ async function startBot() {
         if (command === 'note' || command === 'notes' || command === 'mynotes') { if (!settings.notes) settings.notes = {}; if (!settings.notes[sender]) settings.notes[sender] = []; if (text) { settings.notes[sender].push(text); saveSettings(); return reply(`📝 Note saved!\nTotal: ${settings.notes[sender].length}`); } const list = settings.notes[sender] || []; if (!list.length) return reply('No notes! Use .note Buy milk'); return reply(`📝 *YOUR NOTES*\n\n${list.map((n,i)=>`${i+1}. ${n}`).join('\n')}`); }
         if (command === 'clearnotes') { if (settings.notes) settings.notes[sender] = []; saveSettings(); return reply('🗑️ Notes cleared!'); }
         if (command === 'ip' || command === 'myip') { return reply(`🌐 *YOUR INFO*\n\nIP: Hidden for privacy 🔒\nNumber: +${sender.split('@')[0]}\nLocation: Kenya 🇰🇪\nBot: BULL X V28`); }
-        if (command === 'whois' || command === 'domain') { if (!text) return reply('Use: .whois google.com'); return reply(`🌐 *DOMAIN: ${text}*\n\nCheck here:\nhttps://who.is/whois/${text}`); }
+        if (command === 'domain') { if (!text) return reply('Use: .domain google.com'); return reply(`🌐 *DOMAIN: ${text}*\n\nCheck here:\nhttps://who.is/whois/${text}`); }
         if (command === 'email' || command === 'mail') { if (!text) return reply('Use: .email Hello'); return reply(`📧 Email draft:\n\nTo: eze@example.com\nSubject: BULL X\nBody: ${text}`); }
         if (command === 'alarm' || command === 'wakeup') { return reply(`⏰ *ALARM SET!*\n\nUse .timer 10 for 10 sec timer!\nUse .reminder 5 Wake up!`); }
         if (command === 'speedtest' || command === 'internet') { return reply(`📶 *SPEED TEST*\n\nPing: ${Math.floor(Math.random()*100)+20}ms\nDownload: ${Math.floor(Math.random()*50)+10} Mbps\nUpload: ${Math.floor(Math.random()*20)+5} Mbps\n\nStatus: ${pick(['Excellent! 🔥','Good! ✅','Slow! 🐢'])}`); }
@@ -750,7 +749,7 @@ async function startBot() {
         if (command === 'poll' || command === 'vote') { if (!text) return reply('Use: .poll Best team? | Gor | AFC | Tusker'); const parts = text.split('|').map(s=>s.trim()); if (parts.length < 3) return reply('Use: .poll Question | Option1 | Option2'); try { return sock.sendMessage(from, { poll: { name: parts[0], values: parts.slice(1), selectableCount: 1 } }, { quoted: msg }); } catch { return reply('Poll failed'); } }
         if (command === 'welcome') { if (!await onlyOwner()) return; if (!isGroup) return reply('Groups only!'); if (text==='on') { if (!settings.welcome) settings.welcome={}; settings.welcome[from]=true; saveSettings(); return reply('✅ Welcome ON!'); } if (text==='off') { if (settings.welcome) delete settings.welcome[from]; saveSettings(); return reply('❌ Welcome OFF'); } return reply('Use: .welcome on/off'); }
         if (command === 'goodbye' || command === 'bye') { if (!await onlyOwner()) return; if (!isGroup) return reply('Groups only!'); if (text==='on') { if (!settings.goodbye) settings.goodbye={}; settings.goodbye[from]=true; saveSettings(); return reply('✅ Goodbye ON!'); } if (text==='off') { if (settings.goodbye) delete settings.goodbye[from]; saveSettings(); return reply('❌ Goodbye OFF'); } return reply('Use: .goodbye on/off'); }
-        if (command === 'vcard' || command === 'contact' || command === 'save') { const name = text||`BULL X ${targetName}`; try { return sock.sendMessage(from, { contacts: { displayName: name, contacts: [{ vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL;TYPE=CELL:${targetUser.split('@')[0]}\nEND:VCARD` }] } }, { quoted: msg }); } catch { return reply('VCard failed'); } }
+        if (command === 'vcard' || command === 'contact') { const name = text||`BULL X ${targetName}`; try { return sock.sendMessage(from, { contacts: { displayName: name, contacts: [{ vcard: `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL;TYPE=CELL:${targetUser.split('@')[0]}\nEND:VCARD` }] } }, { quoted: msg }); } catch { return reply('VCard failed'); } }
         if (command === 'getpp' || command === 'pp') { try { const url = await sock.profilePictureUrl(targetUser, 'image'); return sock.sendMessage(from, { image: { url }, caption: `🖼️ Profile pic of @${targetName}` }, { quoted: msg }); } catch { return reply('No profile pic or private!'); } }
         if (command === 'binary') { if (!text) return reply('Use: .binary hello'); return reply(`💻 Binary:\n${text.split('').map(c=>c.charCodeAt(0).toString(2).padStart(8,'0')).join(' ')}`); }
         if (command === 'morse') { if (!text) return reply('Use: .morse SOS'); const m = { a:'.-',b:'-...',c:'-.-.',d:'-..',e:'.',f:'..-.',g:'--.',h:'....',i:'..',j:'.---',k:'-.-',l:'.-..',m:'--',n:'-.',o:'---',p:'.--.',q:'--.-',r:'.-.',s:'...',t:'-',u:'..-',v:'...-',w:'.--',x:'-..-',y:'-.--',z:'--..',1:'.----',2:'..---',3:'...--',4:'....-',5:'.....',6:'-....',7:'--...',8:'---..',9:'----.',0:'-----',' ':'/' }; return reply(`📻 Morse:\n${text.toLowerCase().split('').map(c=>m[c]||c).join(' ')}`); }
@@ -869,7 +868,10 @@ async function startBot() {
         if (command === 'age') { const y = parseInt(text); if (!y) return reply('Use: .age 2005'); return reply(`🎂 Born in ${y} = ${2026-y} years old!`); }
         if (command === 'kenya') return reply('🇰🇪 *KENYA*\nCapital: Nairobi\nFamous: Safaris, Runners, Ugali! 🐘🦁');
         if (command === 'nairobi') return reply('🏙️ *NAIROBI*\nCapital of Kenya! Green City in the Sun ☀️🌳');
-        if (command === 'kisii') return reply('🏔️ *KISII*\nLand of soapstone, bananas & hardworking people! 🍌```js
+        if (command === 'kisii') return reply('🏔️Continuing from where it stopped — paste this **RIGHT AFTER** the `.kisii` line to finish the file:
+
+```js
+if (command === 'kisii') return reply('🏔️ *KISII*\nLand of soapstone, bananas & hardworking people! 🍌💪');
         if (command === 'antilink') { if (!await onlyOwner()) return; if (!isGroup) return reply('Groups only!'); if (text==='on') { settings.antilink[from]=true; saveSettings(); return reply('✅ Anti-Link ON'); } if (text==='off') { delete settings.antilink[from]; saveSettings(); return reply('❌ Anti-Link OFF'); } return reply('Use: .antilink on/off'); }
         if (command === 'antidelete') {
             if (!await onlyOwner()) return;
