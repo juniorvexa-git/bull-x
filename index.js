@@ -20,273 +20,279 @@ const RIDDLES=[{q:"I speak without a mouth and hear without ears. What am I?",a:
 const BIBLE=["John 3:16 - For God so loved the world...","Philippians 4:13 - I can do all things through Christ!","Jeremiah 29:11 - Plans to prosper you...","Psalm 23:1 - The Lord is my shepherd!"];
 const MOTIVATION=["Wake up! Dreams wont chase themselves!","No one is coming to save you. Save yourself!","Todays pain is tomorrows power!"];
 const HOROSCOPE={aries:"Aries - Today is your lucky day! Take a risk!",taurus:"Taurus - Money is coming!",gemini:"Gemini - Someone is thinking about you!",cancer:"Cancer - Family first today!",leo:"Leo - You will shine today!",virgo:"Virgo - Organize your life!",libra:"Libra - Love is in the air!",scorpio:"Scorpio - Keep your secrets safe!",sagittarius:"Sagittarius - Adventure awaits!",capricorn:"Capricorn - Hard work pays!",aquarius:"Aquarius - New idea = New money!",pisces:"Pisces - Trust your gut!"};
-const getMenu=()=>{const o=OWNER_NUMBER||'Not Connected';return `╔═══════════════════════╗
-   🐂  B U L L  X  V48  🐂
-   👑 PREMIUM EDITION 👑
-╚═══════════════════════╝
-┌─ 👤 OWNER INFO ─────────┐
-│ 👑 Owner : +${o}
-│ 🛠️ Dev    : ${DEV_NAME}
-│ ⚡ Status : ONLINE
-└─────────────────────────┘
-┌─ ⚡ GENERAL ─────────────┐
-│ .ping
-│ .speed
-│ .alive
-│ .info
-│ .time
-│ .date
-│ .rules
-│ .profile
-│ .afk
-│ .channel
-│ .owner
-└─────────────────────────┘
-┌─ 💾 SAVE STATUS ──────────┐
-│ .save
-│ .savestatus
-│ .vv
-│ .autosave
-└─────────────────────────┘
-┌─ 🤖 AUTO VIP ─────────────┐
-│ .autotyping
-│ .autorecording
-│ .autoviewstatus
-│ .autolikestatus
-│ .autoread
-│ .autoreact
-│ .autostatus
-│ .settings
-└─────────────────────────┘
-┌─ 🛡️ ANTI GROUP ───────────┐
-│ .antilink
-│ .antidelete
-│ .antimention
-│ .antiforeign
-│ .antibot
-│ .antispam
-└─────────────────────────┘
-┌─ 🎵 MUSIC & VIDEO ────────┐
-│ .play
-│ .song
-│ .songdl
-│ .lyrics
-│ .tiktok
-│ .ytsearch
-│ .spotify
-│ .igstalk
-│ .ytchannel
-└─────────────────────────┘
-┌─ 🎬 MOVIES & ANIME ───────┐
-│ .movie
-│ .moviedl
-│ .series
-│ .animedl
-│ .anime
-└─────────────────────────┘
-┌─ 🇰🇪 KENYA & SPORTS ───────┐
-│ .livescore
-│ .epl
-│ .kenyapremier
-│ .kenyanews
-│ .matatu
-│ .safaricom
-│ .quizke
-│ .bettingtips
-│ .fixtures
-│ .technews
-│ .space
-└─────────────────────────┘
-┌─ 🤖 AI TOOLS ─────────────┐
-│ .ai
-│ .ask
-│ .bible
-│ .motivate
-│ .story
-│ .poem
-│ .sheng
-│ .swahili
-│ .voice
-│ .airoast
-│ .aipickup
-│ .aihomework
-│ .aicode
-│ .aistory
-└─────────────────────────┘
-┌─ 😂 FUN ──────────────────┐
-│ .joke
-│ .fact
-│ .quote
-│ .meme
-│ .roast
-│ .compliment
-│ .insult
-│ .8ball
-│ .dice
-│ .coin
-│ .truth
-│ .dare
-│ .riddle
-│ .love
-│ .ship
-│ .howgay
-│ .howcool
-│ .howrich
-│ .kiss
-│ .hug
-│ .slap
-│ .kill
-│ .pickup
-│ .hack
-│ .fake
-│ .tweet
-│ .advice
-│ .quiz
-│ .chuck
-│ .recipe
-└─────────────────────────┘
-┌─ 🎮 GAMES ────────────────┐
-│ .rps
-│ .slot
-│ .lottery
-│ .ttt
-│ .wordle
-│ .guessword
-│ .hangman
-│ .mathquiz
-│ .bet
-│ .giveaway
-│ .duel
-│ .wordchain
-│ .guessflag
-└─────────────────────────┘
-┌─ 🐱 ANIMALS ──────────────┐
-│ .cat
-│ .dog
-│ .fox
-│ .panda
-│ .bird
-│ .waifu
-│ .neko
-│ .manga
-│ .naruto
-│ .luffy
-│ .goku
-└─────────────────────────┘
-┌─ 💰 ECONOMY & CASINO ─────┐
-│ .balance
-│ .daily
-│ .work
-│ .beg
-│ .gamble
-│ .rob
-│ .pay
-│ .shop
-│ .buy
-│ .leaderboard
-│ .bank
-│ .deposit
-│ .withdraw
-│ .roulette
-│ .blackjack
-│ .invest
-│ .loan
-│ .steal
-│ .rich
-│ .casino
-│ .gift
-│ .interest
-│ .stock
-│ .rank
-│ .level
-└─────────────────────────┘
-┌─ 🧰 TOOLS ────────────────┐
-│ .calc
-│ .qr
-│ .password
-│ .weather
-│ .define
-│ .reverse
-│ .shout
-│ .age
-│ .horoscope
-│ .kenya
-│ .nairobi
-│ .kisii
-│ .binary
-│ .morse
-│ .fancy
-│ .timer
-│ .base64
-│ .note
-│ .notes
-│ .ip
-│ .domain
-│ .emojify
-│ .count
-│ .pin
-│ .tomp3
-│ .tomp4
-│ .removebg
-│ .pdf
-│ .img
-│ .tts
-│ .screenshot
-│ .shortlink
-│ .news
-│ .crypto
-│ .currency
-│ .github
-│ .wallpaper
-│ .reminder
-│ .todo
-│ .todos
-│ .poll
-│ .vcard
-│ .getpp
-└─────────────────────────┘
-┌─ 🎨 STICKER ──────────────┐
-│ .sticker
-│ .s
-│ .toimg
-│ .vv
-└─────────────────────────┘
-┌─ 👑 ADMIN / OWNER ────────┐
-│ .warn
-│ .warnings
-│ .resetwarn
-│ .lock
-│ .unlock
-│ .mute
-│ .unmute
-│ .kick
-│ .promote
-│ .demote
-│ .hidetag
-│ .setname
-│ .setdesc
-│ .revoke
-│ .invite
-│ .setwelcome
-│ .groupstats
-│ .tagall
-│ .groupinfo
-│ .admins
-│ .members
-│ .welcome
-│ .goodbye
-│ .inactive
-└─────────────────────────┘
-┌─ ❤️ LOVE ─────────────────┐
-│ .gf
-└─────────────────────────┘
-╔═══════════════════════╗
-  🐂 BULL X V48 🐂
-  👑 PREMIUM EDITION 👑
-  🛠️ Dev: ${DEV_NAME}
-  💎 Thank you for using BULL X!
-  🚀 Powered by EZEKIA DEV
-╚═══════════════════════╝`;};
+const getMenu=()=>{const o=OWNER_NUMBER||'Not Connected';return `╔══════════════════════════════════╗
+║   🐂  ✦  B U L L  X  ✦  🐂   ║
+║      👑  V 4 8  P R E M I U M  👑      ║
+║   💎  THE KING OF BOTS  💎   ║
+╚══════════════════════════════════╝
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃  👤  O W N E R  I N F O  👤  ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ 👑 Owner  : +${o} ┃
+┃ 🛠️ Dev    : ${DEV_NAME} ┃
+┃ ⚡ Status : 🟢 ONLINE ┃
+┃ 🔥 Version: V48 ULTRA ┃
+┃ 💎 Power  : 100% ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+╭─── ⚡ G E N E R A L ───╮
+│ ✦ .ping
+│ ✦ .speed
+│ ✦ .alive
+│ ✦ .info
+│ ✦ .time
+│ ✦ .date
+│ ✦ .rules
+│ ✦ .profile
+│ ✦ .afk
+│ ✦ .channel
+│ ✦ .owner
+╰───────────────────────╯
+╭─── 💾 S A V E  S T A T U S ───╮
+│ ✦ .save
+│ ✦ .savestatus
+│ ✦ .vv
+│ ✦ .autosave
+╰───────────────────────╯
+╭─── 🤖 A U T O  V I P ───╮
+│ ✦ .autotyping
+│ ✦ .autorecording
+│ ✦ .autoviewstatus
+│ ✦ .autolikestatus
+│ ✦ .autoread
+│ ✦ .autoreact
+│ ✦ .autostatus
+│ ✦ .settings
+╰───────────────────────╯
+╭─── 🛡️ A N T I  G R O U P ───╮
+│ ✦ .antilink
+│ ✦ .antidelete
+│ ✦ .antimention
+│ ✦ .antiforeign
+│ ✦ .antibot
+│ ✦ .antispam
+╰───────────────────────╯
+╭─── 🎵 M U S I C ───╮
+│ ✦ .play
+│ ✦ .song
+│ ✦ .songdl
+│ ✦ .lyrics
+│ ✦ .tiktok
+│ ✦ .ytsearch
+│ ✦ .spotify
+│ ✦ .igstalk
+│ ✦ .ytchannel
+╰───────────────────────╯
+╭─── 🎬 M O V I E S ───╮
+│ ✦ .movie
+│ ✦ .moviedl
+│ ✦ .series
+│ ✦ .animedl
+│ ✦ .anime
+╰───────────────────────╯
+╭─── 🇰🇪 K E N Y A ───╮
+│ ✦ .livescore
+│ ✦ .epl
+│ ✦ .kenyapremier
+│ ✦ .kenyanews
+│ ✦ .matatu
+│ ✦ .safaricom
+│ ✦ .quizke
+│ ✦ .bettingtips
+│ ✦ .fixtures
+│ ✦ .technews
+│ ✦ .space
+╰───────────────────────╯
+╭─── 🤖 A I  T O O L S ───╮
+│ ✦ .ai
+│ ✦ .ask
+│ ✦ .bible
+│ ✦ .motivate
+│ ✦ .story
+│ ✦ .poem
+│ ✦ .sheng
+│ ✦ .swahili
+│ ✦ .voice
+│ ✦ .airoast
+│ ✦ .aipickup
+│ ✦ .aihomework
+│ ✦ .aicode
+│ ✦ .aistory
+╰───────────────────────╯
+╭─── 😂 F U N ───╮
+│ ✦ .joke
+│ ✦ .fact
+│ ✦ .quote
+│ ✦ .meme
+│ ✦ .roast
+│ ✦ .compliment
+│ ✦ .insult
+│ ✦ .8ball
+│ ✦ .dice
+│ ✦ .coin
+│ ✦ .truth
+│ ✦ .dare
+│ ✦ .riddle
+│ ✦ .love
+│ ✦ .ship
+│ ✦ .howgay
+│ ✦ .howcool
+│ ✦ .howrich
+│ ✦ .kiss
+│ ✦ .hug
+│ ✦ .slap
+│ ✦ .kill
+│ ✦ .pickup
+│ ✦ .hack
+│ ✦ .fake
+│ ✦ .tweet
+│ ✦ .advice
+│ ✦ .quiz
+│ ✦ .chuck
+│ ✦ .recipe
+╰───────────────────────╯
+╭─── 🎮 G A M E S ───╮
+│ ✦ .rps
+│ ✦ .slot
+│ ✦ .lottery
+│ ✦ .ttt
+│ ✦ .wordle
+│ ✦ .guessword
+│ ✦ .hangman
+│ ✦ .mathquiz
+│ ✦ .bet
+│ ✦ .giveaway
+│ ✦ .duel
+│ ✦ .wordchain
+│ ✦ .guessflag
+╰───────────────────────╯
+╭─── 🐱 A N I M A L S ───╮
+│ ✦ .cat
+│ ✦ .dog
+│ ✦ .fox
+│ ✦ .panda
+│ ✦ .bird
+│ ✦ .waifu
+│ ✦ .neko
+│ ✦ .manga
+│ ✦ .naruto
+│ ✦ .luffy
+│ ✦ .goku
+╰───────────────────────╯
+╭─── 💰 E C O N O M Y ───╮
+│ ✦ .balance
+│ ✦ .daily
+│ ✦ .work
+│ ✦ .beg
+│ ✦ .gamble
+│ ✦ .rob
+│ ✦ .pay
+│ ✦ .shop
+│ ✦ .buy
+│ ✦ .leaderboard
+│ ✦ .bank
+│ ✦ .deposit
+│ ✦ .withdraw
+│ ✦ .roulette
+│ ✦ .blackjack
+│ ✦ .invest
+│ ✦ .loan
+│ ✦ .steal
+│ ✦ .rich
+│ ✦ .casino
+│ ✦ .gift
+│ ✦ .interest
+│ ✦ .stock
+│ ✦ .rank
+│ ✦ .level
+╰───────────────────────╯
+╭─── 🧰 T O O L S ───╮
+│ ✦ .calc
+│ ✦ .qr
+│ ✦ .password
+│ ✦ .weather
+│ ✦ .define
+│ ✦ .reverse
+│ ✦ .shout
+│ ✦ .age
+│ ✦ .horoscope
+│ ✦ .kenya
+│ ✦ .nairobi
+│ ✦ .kisii
+│ ✦ .binary
+│ ✦ .morse
+│ ✦ .fancy
+│ ✦ .timer
+│ ✦ .base64
+│ ✦ .note
+│ ✦ .notes
+│ ✦ .ip
+│ ✦ .domain
+│ ✦ .emojify
+│ ✦ .count
+│ ✦ .pin
+│ ✦ .tomp3
+│ ✦ .tomp4
+│ ✦ .removebg
+│ ✦ .pdf
+│ ✦ .img
+│ ✦ .tts
+│ ✦ .screenshot
+│ ✦ .shortlink
+│ ✦ .news
+│ ✦ .crypto
+│ ✦ .currency
+│ ✦ .github
+│ ✦ .wallpaper
+│ ✦ .reminder
+│ ✦ .todo
+│ ✦ .todos
+│ ✦ .poll
+│ ✦ .vcard
+│ ✦ .getpp
+╰───────────────────────╯
+╭─── 🎨 S T I C K E R ───╮
+│ ✦ .sticker
+│ ✦ .s
+│ ✦ .toimg
+│ ✦ .vv
+╰───────────────────────╯
+╭─── 👑 A D M I N ───╮
+│ ✦ .warn
+│ ✦ .warnings
+│ ✦ .resetwarn
+│ ✦ .lock
+│ ✦ .unlock
+│ ✦ .mute
+│ ✦ .unmute
+│ ✦ .kick
+│ ✦ .promote
+│ ✦ .demote
+│ ✦ .hidetag
+│ ✦ .setname
+│ ✦ .setdesc
+│ ✦ .revoke
+│ ✦ .invite
+│ ✦ .setwelcome
+│ ✦ .groupstats
+│ ✦ .tagall
+│ ✦ .groupinfo
+│ ✦ .admins
+│ ✦ .members
+│ ✦ .welcome
+│ ✦ .goodbye
+│ ✦ .inactive
+╰───────────────────────╯
+╭─── ❤️ L O V E ───╮
+│ ✦ .gf
+╰───────────────────────╯
+╔══════════════════════════════════╗
+║   🐂  BULL X V48  🐂   ║
+║   👑  PREMIUM EDITION  👑   ║
+║   🛠️  Dev: ${DEV_NAME}   ║
+║   💎  Thank you for using BULL X!  💎   ║
+║   🚀  Powered by EZEKIA DEV  🚀   ║
+║   ✨  Type .menu to see this again!  ✨   ║
+╚══════════════════════════════════╝`;};
 async function startBot(){
 const {state,saveCreds}=await useMultiFileAuthState('session');
 const sock=makeWASocket({logger:pino({level:'silent'}),printQRInTerminal:false,auth:state,browser:['BULL X','Chrome','1.0']});
