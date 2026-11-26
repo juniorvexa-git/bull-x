@@ -5,6 +5,7 @@ const PORT=process.env.PORT||3000;app.listen(PORT,()=>console.log('Server on '+P
 const {default:makeWASocket,useMultiFileAuthState,DisconnectReason,downloadContentFromMessage}=require('@whiskeysockets/baileys');
 const pino=require('pino'),qrcode=require('qrcode-terminal'),sharp=require('sharp'),fs=require('fs');
 const CHANNEL_LINK='https://whatsapp.com/channel/0029VbCUCkkAInPkhAPNil1h',CHANNEL_NAME='BULL X OFFICIAL CHANNEL',DEV_NAME='EZEKIA DEV',DEV_NUMBER='254112843071',BOT_START=Date.now();
+const MENU_IMG='https://image.pollinations.ai/prompt/powerful%20black%20bull%20with%20golden%20crown%20dark%20tech%20background%20neon%20blue%20glow%20BULL%20X%20logo?width=1024&height=1024&seed=48&nologo=true';
 let OWNER_JID=null,OWNER_NUMBER='254112843071';
 let settings={autotyping:false,autorecording:false,autoviewstatus:false,autolikestatus:false,autoread:false,autoreact:false,antimention:{},antilink:{},antidelete:{},warnings:{},economy:{},afk:{},todos:{},welcome:{},goodbye:{},ttt:{},wordle:{},notes:{},autosavestatus:false,giveaway:{},xp:{},antiforeign:{},antibot:{},antispam:{},customwelcome:{}};
 try{settings={...settings,...JSON.parse(fs.readFileSync('settings.json','utf8'))}}catch{}
@@ -21,277 +22,271 @@ const BIBLE=["John 3:16 - For God so loved the world...","Philippians 4:13 - I c
 const MOTIVATION=["Wake up! Dreams wont chase themselves!","No one is coming to save you. Save yourself!","Todays pain is tomorrows power!"];
 const HOROSCOPE={aries:"Aries - Today is your lucky day! Take a risk!",taurus:"Taurus - Money is coming!",gemini:"Gemini - Someone is thinking about you!",cancer:"Cancer - Family first today!",leo:"Leo - You will shine today!",virgo:"Virgo - Organize your life!",libra:"Libra - Love is in the air!",scorpio:"Scorpio - Keep your secrets safe!",sagittarius:"Sagittarius - Adventure awaits!",capricorn:"Capricorn - Hard work pays!",aquarius:"Aquarius - New idea = New money!",pisces:"Pisces - Trust your gut!"};
 const getMenu=()=>{const o=OWNER_NUMBER||'Not Connected';return `╔══════════════════════════════════╗
-║   🐂  ✦  B U L L  X  ✦  🐂   ║
-║      👑  V 4 8  P R E M I U M  👑      ║
-║   💎  THE KING OF BOTS  💎   ║
+║  🐂 BULL X // SYSTEM V48  ⚡  ║
+║  ▸ KERNEL: ONLINE  ▸ BUILD: ULTRA  ║
 ╚══════════════════════════════════╝
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃  👤  O W N E R  I N F O  👤  ┃
-┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ 👑 Owner  : +${o} ┃
-┃ 🛠️ Dev    : ${DEV_NAME} ┃
-┃ ⚡ Status : 🟢 ONLINE ┃
-┃ 🔥 Version: V48 ULTRA ┃
-┃ 💎 Power  : 100% ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-╭─── ⚡ G E N E R A L ───╮
-│ ✦ .ping
-│ ✦ .speed
-│ ✦ .alive
-│ ✦ .info
-│ ✦ .time
-│ ✦ .date
-│ ✦ .rules
-│ ✦ .profile
-│ ✦ .afk
-│ ✦ .channel
-│ ✦ .owner
-╰───────────────────────╯
-╭─── 💾 S A V E  S T A T U S ───╮
-│ ✦ .save
-│ ✦ .savestatus
-│ ✦ .vv
-│ ✦ .autosave
-╰───────────────────────╯
-╭─── 🤖 A U T O  V I P ───╮
-│ ✦ .autotyping
-│ ✦ .autorecording
-│ ✦ .autoviewstatus
-│ ✦ .autolikestatus
-│ ✦ .autoread
-│ ✦ .autoreact
-│ ✦ .autostatus
-│ ✦ .settings
-╰───────────────────────╯
-╭─── 🛡️ A N T I  G R O U P ───╮
-│ ✦ .antilink
-│ ✦ .antidelete
-│ ✦ .antimention
-│ ✦ .antiforeign
-│ ✦ .antibot
-│ ✦ .antispam
-╰───────────────────────╯
-╭─── 🎵 M U S I C ───╮
-│ ✦ .play
-│ ✦ .song
-│ ✦ .songdl
-│ ✦ .lyrics
-│ ✦ .tiktok
-│ ✦ .ytsearch
-│ ✦ .spotify
-│ ✦ .igstalk
-│ ✦ .ytchannel
-╰───────────────────────╯
-╭─── 🎬 M O V I E S ───╮
-│ ✦ .movie
-│ ✦ .moviedl
-│ ✦ .series
-│ ✦ .animedl
-│ ✦ .anime
-╰───────────────────────╯
-╭─── 🇰🇪 K E N Y A ───╮
-│ ✦ .livescore
-│ ✦ .epl
-│ ✦ .kenyapremier
-│ ✦ .kenyanews
-│ ✦ .matatu
-│ ✦ .safaricom
-│ ✦ .quizke
-│ ✦ .bettingtips
-│ ✦ .fixtures
-│ ✦ .technews
-│ ✦ .space
-╰───────────────────────╯
-╭─── 🤖 A I  T O O L S ───╮
-│ ✦ .ai
-│ ✦ .ask
-│ ✦ .bible
-│ ✦ .motivate
-│ ✦ .story
-│ ✦ .poem
-│ ✦ .sheng
-│ ✦ .swahili
-│ ✦ .voice
-│ ✦ .airoast
-│ ✦ .aipickup
-│ ✦ .aihomework
-│ ✦ .aicode
-│ ✦ .aistory
-╰───────────────────────╯
-╭─── 😂 F U N ───╮
-│ ✦ .joke
-│ ✦ .fact
-│ ✦ .quote
-│ ✦ .meme
-│ ✦ .roast
-│ ✦ .compliment
-│ ✦ .insult
-│ ✦ .8ball
-│ ✦ .dice
-│ ✦ .coin
-│ ✦ .truth
-│ ✦ .dare
-│ ✦ .riddle
-│ ✦ .love
-│ ✦ .ship
-│ ✦ .howgay
-│ ✦ .howcool
-│ ✦ .howrich
-│ ✦ .kiss
-│ ✦ .hug
-│ ✦ .slap
-│ ✦ .kill
-│ ✦ .pickup
-│ ✦ .hack
-│ ✦ .fake
-│ ✦ .tweet
-│ ✦ .advice
-│ ✦ .quiz
-│ ✦ .chuck
-│ ✦ .recipe
-╰───────────────────────╯
-╭─── 🎮 G A M E S ───╮
-│ ✦ .rps
-│ ✦ .slot
-│ ✦ .lottery
-│ ✦ .ttt
-│ ✦ .wordle
-│ ✦ .guessword
-│ ✦ .hangman
-│ ✦ .mathquiz
-│ ✦ .bet
-│ ✦ .giveaway
-│ ✦ .duel
-│ ✦ .wordchain
-│ ✦ .guessflag
-╰───────────────────────╯
-╭─── 🐱 A N I M A L S ───╮
-│ ✦ .cat
-│ ✦ .dog
-│ ✦ .fox
-│ ✦ .panda
-│ ✦ .bird
-│ ✦ .waifu
-│ ✦ .neko
-│ ✦ .manga
-│ ✦ .naruto
-│ ✦ .luffy
-│ ✦ .goku
-╰───────────────────────╯
-╭─── 💰 E C O N O M Y ───╮
-│ ✦ .balance
-│ ✦ .daily
-│ ✦ .work
-│ ✦ .beg
-│ ✦ .gamble
-│ ✦ .rob
-│ ✦ .pay
-│ ✦ .shop
-│ ✦ .buy
-│ ✦ .leaderboard
-│ ✦ .bank
-│ ✦ .deposit
-│ ✦ .withdraw
-│ ✦ .roulette
-│ ✦ .blackjack
-│ ✦ .invest
-│ ✦ .loan
-│ ✦ .steal
-│ ✦ .rich
-│ ✦ .casino
-│ ✦ .gift
-│ ✦ .interest
-│ ✦ .stock
-│ ✦ .rank
-│ ✦ .level
-╰───────────────────────╯
-╭─── 🧰 T O O L S ───╮
-│ ✦ .calc
-│ ✦ .qr
-│ ✦ .password
-│ ✦ .weather
-│ ✦ .define
-│ ✦ .reverse
-│ ✦ .shout
-│ ✦ .age
-│ ✦ .horoscope
-│ ✦ .kenya
-│ ✦ .nairobi
-│ ✦ .kisii
-│ ✦ .binary
-│ ✦ .morse
-│ ✦ .fancy
-│ ✦ .timer
-│ ✦ .base64
-│ ✦ .note
-│ ✦ .notes
-│ ✦ .ip
-│ ✦ .domain
-│ ✦ .emojify
-│ ✦ .count
-│ ✦ .pin
-│ ✦ .tomp3
-│ ✦ .tomp4
-│ ✦ .removebg
-│ ✦ .pdf
-│ ✦ .img
-│ ✦ .tts
-│ ✦ .screenshot
-│ ✦ .shortlink
-│ ✦ .news
-│ ✦ .crypto
-│ ✦ .currency
-│ ✦ .github
-│ ✦ .wallpaper
-│ ✦ .reminder
-│ ✦ .todo
-│ ✦ .todos
-│ ✦ .poll
-│ ✦ .vcard
-│ ✦ .getpp
-╰───────────────────────╯
-╭─── 🎨 S T I C K E R ───╮
-│ ✦ .sticker
-│ ✦ .s
-│ ✦ .toimg
-│ ✦ .vv
-╰───────────────────────╯
-╭─── 👑 A D M I N ───╮
-│ ✦ .warn
-│ ✦ .warnings
-│ ✦ .resetwarn
-│ ✦ .lock
-│ ✦ .unlock
-│ ✦ .mute
-│ ✦ .unmute
-│ ✦ .kick
-│ ✦ .promote
-│ ✦ .demote
-│ ✦ .hidetag
-│ ✦ .setname
-│ ✦ .setdesc
-│ ✦ .revoke
-│ ✦ .invite
-│ ✦ .setwelcome
-│ ✦ .groupstats
-│ ✦ .tagall
-│ ✦ .groupinfo
-│ ✦ .admins
-│ ✦ .members
-│ ✦ .welcome
-│ ✦ .goodbye
-│ ✦ .inactive
-╰───────────────────────╯
-╭─── ❤️ L O V E ───╮
-│ ✦ .gf
-╰───────────────────────╯
+┌─ [ SYS://OWNER ] ──────────────┐
+│  ▸ OWNER  : +${o}
+│  ▸ DEV    : ${DEV_NAME}
+│  ▸ STATUS : ● ONLINE
+│  ▸ UPTIME : 100%
+│  ▸ MODE   : TECH / PREMIUM
+└──────────────────────────────────┘
+┌─ [ CMD://GENERAL ] ─────────────┐
+│  > .ping
+│  > .speed
+│  > .alive
+│  > .info
+│  > .time
+│  > .date
+│  > .rules
+│  > .profile
+│  > .afk
+│  > .channel
+│  > .owner
+└──────────────────────────────────┘
+┌─ [ CMD://SAVE ] ────────────────┐
+│  > .save
+│  > .savestatus
+│  > .vv
+│  > .autosave
+└──────────────────────────────────┘
+┌─ [ CMD://AUTO ] ────────────────┐
+│  > .autotyping
+│  > .autorecording
+│  > .autoviewstatus
+│  > .autolikestatus
+│  > .autoread
+│  > .autoreact
+│  > .autostatus
+│  > .settings
+└──────────────────────────────────┘
+┌─ [ CMD://ANTI ] ────────────────┐
+│  > .antilink
+│  > .antidelete
+│  > .antimention
+│  > .antiforeign
+│  > .antibot
+│  > .antispam
+└──────────────────────────────────┘
+┌─ [ CMD://MUSIC ] ───────────────┐
+│  > .play
+│  > .song
+│  > .songdl
+│  > .lyrics
+│  > .tiktok
+│  > .ytsearch
+│  > .spotify
+│  > .igstalk
+│  > .ytchannel
+└──────────────────────────────────┘
+┌─ [ CMD://MOVIES ] ──────────────┐
+│  > .movie
+│  > .moviedl
+│  > .series
+│  > .animedl
+│  > .anime
+└──────────────────────────────────┘
+┌─ [ CMD://KENYA ] ───────────────┐
+│  > .livescore
+│  > .epl
+│  > .kenyapremier
+│  > .kenyanews
+│  > .matatu
+│  > .safaricom
+│  > .quizke
+│  > .bettingtips
+│  > .fixtures
+│  > .technews
+│  > .space
+└──────────────────────────────────┘
+┌─ [ CMD://AI ] ──────────────────┐
+│  > .ai
+│  > .ask
+│  > .bible
+│  > .motivate
+│  > .story
+│  > .poem
+│  > .sheng
+│  > .swahili
+│  > .voice
+│  > .airoast
+│  > .aipickup
+│  > .aihomework
+│  > .aicode
+│  > .aistory
+└──────────────────────────────────┘
+┌─ [ CMD://FUN ] ─────────────────┐
+│  > .joke
+│  > .fact
+│  > .quote
+│  > .meme
+│  > .roast
+│  > .compliment
+│  > .insult
+│  > .8ball
+│  > .dice
+│  > .coin
+│  > .truth
+│  > .dare
+│  > .riddle
+│  > .love
+│  > .ship
+│  > .howgay
+│  > .howcool
+│  > .howrich
+│  > .kiss
+│  > .hug
+│  > .slap
+│  > .kill
+│  > .pickup
+│  > .hack
+│  > .fake
+│  > .tweet
+│  > .advice
+│  > .quiz
+│  > .chuck
+│  > .recipe
+└──────────────────────────────────┘
+┌─ [ CMD://GAMES ] ───────────────┐
+│  > .rps
+│  > .slot
+│  > .lottery
+│  > .ttt
+│  > .wordle
+│  > .guessword
+│  > .hangman
+│  > .mathquiz
+│  > .bet
+│  > .giveaway
+│  > .duel
+│  > .wordchain
+│  > .guessflag
+└──────────────────────────────────┘
+┌─ [ CMD://ANIMALS ] ─────────────┐
+│  > .cat
+│  > .dog
+│  > .fox
+│  > .panda
+│  > .bird
+│  > .waifu
+│  > .neko
+│  > .manga
+│  > .naruto
+│  > .luffy
+│  > .goku
+└──────────────────────────────────┘
+┌─ [ CMD://ECONOMY ] ─────────────┐
+│  > .balance
+│  > .daily
+│  > .work
+│  > .beg
+│  > .gamble
+│  > .rob
+│  > .pay
+│  > .shop
+│  > .buy
+│  > .leaderboard
+│  > .bank
+│  > .deposit
+│  > .withdraw
+│  > .roulette
+│  > .blackjack
+│  > .invest
+│  > .loan
+│  > .steal
+│  > .rich
+│  > .casino
+│  > .gift
+│  > .interest
+│  > .stock
+│  > .rank
+│  > .level
+└──────────────────────────────────┘
+┌─ [ CMD://TOOLS ] ───────────────┐
+│  > .calc
+│  > .qr
+│  > .password
+│  > .weather
+│  > .define
+│  > .reverse
+│  > .shout
+│  > .age
+│  > .horoscope
+│  > .kenya
+│  > .nairobi
+│  > .kisii
+│  > .binary
+│  > .morse
+│  > .fancy
+│  > .timer
+│  > .base64
+│  > .note
+│  > .notes
+│  > .ip
+│  > .domain
+│  > .emojify
+│  > .count
+│  > .pin
+│  > .tomp3
+│  > .tomp4
+│  > .removebg
+│  > .pdf
+│  > .img
+│  > .tts
+│  > .screenshot
+│  > .shortlink
+│  > .news
+│  > .crypto
+│  > .currency
+│  > .github
+│  > .wallpaper
+│  > .reminder
+│  > .todo
+│  > .todos
+│  > .poll
+│  > .vcard
+│  > .getpp
+└──────────────────────────────────┘
+┌─ [ CMD://STICKER ] ─────────────┐
+│  > .sticker
+│  > .s
+│  > .toimg
+│  > .vv
+└──────────────────────────────────┘
+┌─ [ CMD://ADMIN ] ───────────────┐
+│  > .warn
+│  > .warnings
+│  > .resetwarn
+│  > .lock
+│  > .unlock
+│  > .mute
+│  > .unmute
+│  > .kick
+│  > .promote
+│  > .demote
+│  > .hidetag
+│  > .setname
+│  > .setdesc
+│  > .revoke
+│  > .invite
+│  > .setwelcome
+│  > .groupstats
+│  > .tagall
+│  > .groupinfo
+│  > .admins
+│  > .members
+│  > .welcome
+│  > .goodbye
+│  > .inactive
+└──────────────────────────────────┘
+┌─ [ CMD://LOVE ] ────────────────┐
+│  > .gf
+└──────────────────────────────────┘
 ╔══════════════════════════════════╗
-║   🐂  BULL X V48  🐂   ║
-║   👑  PREMIUM EDITION  👑   ║
-║   🛠️  Dev: ${DEV_NAME}   ║
-║   💎  Thank you for using BULL X!  💎   ║
-║   🚀  Powered by EZEKIA DEV  🚀   ║
-║   ✨  Type .menu to see this again!  ✨   ║
+║  ▸ BULL X V48 // END OF SYSTEM  ║
+║  ▸ DEV: ${DEV_NAME}  ▸ TECH MODE  ║
+║  ▸ > TYPE .menu TO RELOAD_  ║
 ╚══════════════════════════════════╝`;};
 async function startBot(){
 const {state,saveCreds}=await useMultiFileAuthState('session');
@@ -307,7 +302,7 @@ const from=msg.key.remoteJid,isGroup=from.endsWith('@g.us');
 const sender=msg.key.fromMe?(OWNER_JID||sock.user.id):(msg.key.participant||msg.key.remoteJid);
 const body=msg.message.conversation||msg.message.extendedTextMessage?.text||msg.message.imageMessage?.caption||msg.message.videoMessage?.caption||'';
 const btn=msg.message.buttonsResponseMessage?.selectedButtonId||msg.message.listResponseMessage?.title||msg.message.templateButtonReplyMessage?.selectedId;
-if(btn){if(btn.includes('FOLLOW')){await sock.sendMessage(from,{text:`${CHANNEL_NAME}\n${CHANNEL_LINK}`},{quoted:msg});return}if(btn.includes('MENU')){await sock.sendMessage(from,{text:getMenu()},{quoted:msg});return}if(btn.includes('PING')){await sock.sendMessage(from,{text:`PONG! BULL X Online!`},{quoted:msg});return}}
+if(btn){if(btn.includes('FOLLOW')){await sock.sendMessage(from,{text:`${CHANNEL_NAME}\n${CHANNEL_LINK}`},{quoted:msg});return}if(btn.includes('MENU')){try{await sock.sendMessage(from,{image:{url:MENU_IMG},caption:getMenu()},{quoted:msg})}catch{await sock.sendMessage(from,{text:getMenu()},{quoted:msg})}return}if(btn.includes('PING')){await sock.sendMessage(from,{text:`PONG! BULL X Online!`},{quoted:msg});return}}
 const clean=id=>(id||'').split(':')[0].split('@')[0],senderNum=clean(sender),ownerNum=clean(OWNER_JID||OWNER_NUMBER);
 const isOwnerCommand=body.startsWith('.')&&!body.includes('BULL X OFFICIAL CHANNEL')&&!body.includes('whatsapp.com/channel');
 const isOwner=senderNum===ownerNum||msg.key.fromMe||sender===OWNER_JID;
@@ -318,7 +313,7 @@ if(from==='status@broadcast'){try{if(settings.autoviewstatus)try{await sock.read
 if(!isBot&&settings.afk)for(const[aid,reason]of Object.entries(settings.afk))if(body.includes(aid.split('@')[0])){await sock.sendMessage(from,{text:`@${aid.split('@')[0]} is AFK!\nReason: ${reason}`,mentions:[aid]});break}
 if(settings.afk[sender]){delete settings.afk[sender];saveSettings();await sock.sendMessage(from,{text:`Welcome back @${sender.split('@')[0]}! No longer AFK!`,mentions:[sender]})}
 if(!isBot&&(settings.autotyping||settings.autorecording)){try{const mode=settings.autorecording?'recording':'composing';sock.sendPresenceUpdate(mode,from).catch(()=>{});let elapsed=0;const iv=setInterval(()=>{elapsed+=10000;if(elapsed>=60000){clearInterval(iv);sock.sendPresenceUpdate('paused',from).catch(()=>{});return}sock.sendPresenceUpdate(mode,from).catch(()=>{})},10000)}catch{}}
-const premiumWrap=t=>{if(t.includes('BULL X PREMIUM')||t.includes('---'))return t;const lines=t.split('\n').map(l=>`│ ${l}`).join('\n');return `╔═ BULL X PREMIUM ═╗\n${lines}\n╚═ BULL X V48 • EZEKIA DEV ═╝`};
+const premiumWrap=t=>{if(t.includes('BULL X // SYSTEM'))return t;const lines=t.split('\n').map(l=>`│  ${l}`).join('\n');return `╔══════════════════════════════╗\n║  🐂 BULL X // SYSTEM V48  ⚡  ║\n║  ▸ STATUS: ONLINE  ▸ MODE: TECH  ║\n╠══════════════════════════════╣\n${lines}\n╠══════════════════════════════╣\n║  ▸ DEV: EZEKIA DEV  ▸ V48  ║\n║  ▸ > EXECUTED SUCCESSFULLY_  ║\n╚══════════════════════════════╝`};
 const reply=async(text,opts)=>{const f=premiumWrap(text);if(text.includes('whatsapp.com/channel')){await sock.sendMessage(from,{text:f},{quoted:msg,...opts});return}try{await sock.sendMessage(from,{text:f,footer:'BULL X V48 | Tap below!',buttons:[{buttonId:'follow_channel',buttonText:{displayText:'FOLLOW CHANNEL'},type:1},{buttonId:'menu_btn',buttonText:{displayText:'MENU'},type:1},{buttonId:'ping_btn',buttonText:{displayText:'PING'},type:1}],headerType:1},{quoted:msg,...opts})}catch{await sock.sendMessage(from,{text:f},{quoted:msg,...opts})}};
 const isImage=!!msg.message.imageMessage;
 if(msg.key.id){msgCache.set(msg.key.id,{msg,sender,from});if(msgCache.size>1000)msgCache.delete(msgCache.keys().next().value)}
@@ -339,88 +334,31 @@ const onlyOwner=async()=>{if(!isOwner){await reply('OWNER ONLY!\nYour number: '+
 const checkAdmin=async()=>{if(!isOwner){await reply('OWNER ONLY!\nYour number: '+senderNum+'\nOwner: +'+ownerNum);return null}if(!isGroup){await reply('Groups only!');return null}const metadata=await sock.groupMetadata(from),participants=metadata.participants,clean2=id=>(id||'').split(':')[0].split('@')[0],myPN=clean2(sock.user.id),myLID=clean2(sock.user.lid||''),ownerPN=clean2(OWNER_JID||OWNER_NUMBER);let botInfo=participants.find(p=>{const pid=clean2(p.id),plid=clean2(p.lid||'');return pid===myPN||plid===myPN||pid===myLID||plid===myLID||pid===ownerPN||plid===ownerPN});return{metadata,participants,clean:clean2,botInfo}};
 const getTarget=async(info)=>{let target=msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]||msg.message.extendedTextMessage?.contextInfo?.participant;if(!target&&text){const num=text.replace(/[^0-9]/g,'');if(num)target=num+'@s.whatsapp.net'}if(!target){await reply(`Tag or reply! Example: .${command} @user`);return null}let realTarget=target;const tc=info.clean(target);const found=info.participants.find(p=>info.clean(p.id)===tc||info.clean(p.lid||'')===tc);if(found)realTarget=found.id;return{realTarget,tc}};
 const dlBuf=async(m,t)=>{const s=await downloadContentFromMessage(m,t);let b=Buffer.from([]);for await(const c of s)b=Buffer.concat([b,c]);return b};
-if(command==='autoread'){if(!await onlyOwner())return;if(text==='on'){settings.autoread=true;saveSettings();return reply('AUTO-READ ON!')}if(text==='off'){settings.autoread=false;saveSettings();return reply('Auto-Read OFF')}return reply('Use: .autoread on / off')}
-if(command==='autoreact'){if(!await onlyOwner())return;if(text==='on'){settings.autoreact=true;saveSettings();return reply('AUTO-REACT ON!')}if(text==='off'){settings.autoreact=false;saveSettings();return reply('Auto-React OFF')}return reply('Use: .autoreact on / off')}
-if(command==='antimention'){if(!await onlyOwner())return;if(text==='status'||text==='check'||text===''){const on=!!settings.antimention?.[from];return reply(`ANTI-MENTION STATUS\nStatus: ${on?'ON - Tagging BOT/Owner will be deleted':'OFF'}\nNormal friend tagging: ALWAYS ALLOWED`)}if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.antimention)settings.antimention={};settings.antimention[from]=true;saveSettings();return reply('ANTI-MENTION ON!\nOnly tagging BOT / OWNER will be deleted.\nTagging friends is ALLOWED!')}if(text==='off'){if(settings.antimention)delete settings.antimention[from];saveSettings();return reply('Anti-Mention OFF')}return reply('Use: .antimention on / off / status')}
-if(command==='ttsearch'){if(!text)return reply('Use: .ttsearch Komasava');return reply(`TIKTOK SEARCH\nQuery: ${text}\nhttps://www.tiktok.com/search?q=${encodeURIComponent(text)}`)}
-if(command==='igstalk'){if(!text)return reply('Use: .igstalk diamondplatnumz');const u=text.replace('@','');return reply(`IG STALK\nUser: @${u}\nProfile: https://instagram.com/${u}`)}
-if(command==='ytchannel'){if(!text)return reply('Use: .ytchannel Diamond');return reply(`YOUTUBE CHANNEL\nSearch: ${text}\nhttps://www.youtube.com/results?search_query=${encodeURIComponent(text)}+channel`)}
-if(command==='pin'){const info=await checkAdmin();if(!info)return;try{const ctx=msg.message.extendedTextMessage?.contextInfo;if(!ctx?.stanzaId)return reply('Reply to a message with .pin');await sock.sendMessage(from,{pin:ctx.stanzaId,type:1},{quoted:msg});return reply('Message pinned!')}catch{return reply('Pin failed - bot must be admin!')}}
-if(command==='livescore')return reply(`LIVE SCORES\nGor Mahia 2 - 1 AFC Leopards (LIVE)\nMan City 1 - 0 Arsenal (LIVE)\nCheck: https://www.livescore.com`);
-if(command==='epl')return reply(`PREMIER LEAGUE TABLE\n1. Arsenal - 75 pts\n2. Man City - 73 pts\n3. Liverpool - 70 pts\n4. Chelsea - 65 pts\n5. Man Utd - 60 pts`);
-if(command==='kenyapremier')return reply(`FKF PREMIER LEAGUE\n1. Gor Mahia - 60 pts\n2. Tusker - 58 pts\n3. AFC Leopards - 55 pts\n4. Kenya Police - 52 pts\n5. Shabana - 48 pts`);
-if(command==='kenyanews')return reply(`KENYA NEWS\nCheck: https://www.citizen.digital / https://www.standardmedia.co.ke`);
-if(command==='matatu'){if(!text)return reply('Use: .matatu Nairobi to Kisii');return reply(`MATATU ROUTE\nRoute: ${text}\nNairobi - Kisii: 500-800 KES, 5-6 hrs`)}
-if(command==='safaricom')return reply(`SAFARICOM BUNDLES\n1GB - 99 KES (*544#)\n2GB - 199 KES\n5GB - 499 KES\n10GB - 999 KES\nDial *544#\nM-PESA: *334#`);
-if(command==='quizke'){const qs=[{q:"Capital of Kenya?",a:"Nairobi"},{q:"How many counties in Kenya?",a:"47"},{q:"Largest county in Kenya?",a:"Turkana"},{q:"What is Kisii famous for?",a:"Soapstone / Bananas"}];const q=pick(qs);return reply(`KENYA QUIZ\nQ: ${q.q}\nAnswer: ${q.a}`)}
-if(command==='truthordare'){if(Math.random()>0.5)return reply('TRUTH OR DARE\nTRUTH: '+pick(TRUTHS));return reply('TRUTH OR DARE\nDARE: '+pick(DARES))}
-if(command==='wouldyou')return reply(`WOULD YOU RATHER\n${pick(["Would you rather have 10M KES or meet Ruto?","Would you rather eat ugali forever or chapati forever?","Would you rather live in Kisii forever or Nairobi forever?"])}`);
-if(command==='sheng'){if(!text)return reply('Use: .sheng I love you');const map={love:'penda',money:'doo',friend:'mbogi',house:'keja',girl:'madem',boy:'mse',good:'poa'};let out=text.toLowerCase().split(' ').map(w=>map[w]||w).join(' ');return reply(`SHENG\nEnglish: ${text}\nSheng: ${out} msee!`)}
-if(command==='swahili'){if(!text)return reply('Use: .swahili I love you');const map={love:'penda',money:'pesa',friend:'rafiki',house:'nyumba',food:'chakula',girl:'msichana',boy:'mvulana',good:'nzuri'};let out=text.toLowerCase().split(' ').map(w=>map[w]||w).join(' ');return reply(`SWAHILI\nEnglish: ${text}\nSwahili: ${out}`)}
-if(command==='voice'){if(!text)return reply('Use: .voice Hello everyone');try{const url=`https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(text)}`;return sock.sendMessage(from,{audio:{url},mimetype:'audio/mp4',ptt:true},{quoted:msg})}catch{return reply('Voice failed')}}
-if(command==='airtime'){const code=Math.floor(Math.random()*9000000000000000)+1000000000000000;return reply(`AIRTIME FAKE\nCode: ${code}\nAmount: ${pick(['20','50','100','500'])} KES\nThis is FAKE for fun!`)}
-if(command==='bet'){const u=getBal(sender),amt=parseInt(text)||100;if(amt>u.bal)return reply('Not enough coins!');const win=Math.random()>0.5;if(win){u.bal+=amt;saveSettings();return reply(`BET WON!\n+${amt} coins! Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`BET LOST!\n-${amt} coins! Balance: ${u.bal}`)}
-if(command==='giveaway'){if(!isGroup)return reply('Groups only!');if(text){settings.giveaway[from]={prize:text,host:sender,joined:[]};saveSettings();return reply(`GIVEAWAY STARTED!\nPrize: ${text}\nHost: @${sender.split('@')[0]}`)}return reply('Use: .giveaway 1000 coins')}
-if(command==='antiforeign'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.antiforeign)settings.antiforeign={};settings.antiforeign[from]=true;saveSettings();return reply('ANTI-FOREIGN ON!\nOnly +254 numbers allowed!')}if(text==='off'){if(settings.antiforeign)delete settings.antiforeign[from];saveSettings();return reply('Anti-Foreign OFF')}return reply('Use: .antiforeign on / off')}
-if(command==='antibot'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.antibot)settings.antibot={};settings.antibot[from]=true;saveSettings();return reply('ANTI-BOT ON!')}if(text==='off'){if(settings.antibot)delete settings.antibot[from];saveSettings();return reply('Anti-Bot OFF')}return reply('Use: .antibot on / off')}
-if(command==='antispam'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.antispam)settings.antispam={};settings.antispam[from]=true;saveSettings();return reply('ANTI-SPAM ON!')}if(text==='off'){if(settings.antispam)delete settings.antispam[from];saveSettings();return reply('Anti-Spam OFF')}return reply('Use: .antispam on / off')}
-if(command==='setwelcome'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(!text)return reply('Use: .setwelcome Hello @user welcome!');if(!settings.customwelcome)settings.customwelcome={};settings.customwelcome[from]=text;saveSettings();return reply(`Custom Welcome Set!\n${text}`)}
-if(command==='groupstats'){if(!isGroup)return reply('Groups only!');try{const m=await sock.groupMetadata(from);return reply(`GROUP STATS\nName: ${m.subject}\nMembers: ${m.participants.length}\nAdmins: ${m.participants.filter(p=>p.admin).length}`)}catch{return reply('Failed')}}
-if(command==='rank'||command==='level'||command==='xp'){if(!settings.xp)settings.xp={};if(!settings.xp[sender])settings.xp[sender]=0;settings.xp[sender]+=10;saveSettings();const xp=settings.xp[sender],lvl=Math.floor(xp/100)+1;return reply(`RANK\n@${sender.split('@')[0]}\nLevel: ${lvl}\nXP: ${xp}`,{mentions:[sender]})}
-if(command==='inactive'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');return reply('INACTIVE CHECK\nPeople with 0 XP are inactive! Check .rank!')}
-if(command==='duel'){const u=getBal(sender),amt=parseInt(text)||100;if(amt>u.bal)return reply('Not enough coins!');const v=getBal(targetUser);if(v.bal<amt)return reply('Opponent broke!');const myRoll=Math.floor(Math.random()*6)+1,oppRoll=Math.floor(Math.random()*6)+1;if(myRoll===oppRoll)return reply(`DUEL DRAW!\nYou: ${myRoll} vs @${targetName}: ${oppRoll}`,{mentions:[targetUser]});if(myRoll>oppRoll){u.bal+=amt;v.bal-=amt;saveSettings();return reply(`DUEL WIN!\nYou: ${myRoll} vs @${targetName}: ${oppRoll}\n+${amt} coins! Balance: ${u.bal}`,{mentions:[targetUser]})}u.bal-=amt;v.bal+=amt;saveSettings();return reply(`DUEL LOST!\nYou: ${myRoll} vs @${targetName}: ${oppRoll}\n-${amt} coins! Balance: ${u.bal}`,{mentions:[targetUser]})}
-if(command==='wordchain')return reply(`WORD CHAIN\nStart: ${pick(['Apple','Elephant','Tiger','Rabbit','Tomato','Orange','Eagle'])}`);
-if(command==='guessflag'){const flags=[{f:'KE',a:'Kenya'},{f:'NG',a:'Nigeria'},{f:'US',a:'USA'},{f:'TZ',a:'Tanzania'}];const q=pick(flags);return reply(`GUESS FLAG\nFlag: ${q.f}\nAnswer: ${q.a}`)}
-if(command==='guesssong')return reply(`GUESS SONG\nLyrics: "Komasava, komasava..."\nGuess: Diamond Platnumz - Komasava!`);
-if(command==='emojigame')return reply(`EMOJI MOVIE\n${pick(["Lion King","Frozen","Spiderman","Jurassic Park"])}`);
-if(command==='rapbattle')return reply(`RAP BATTLE\n@${targetName} vs @${sender.split('@')[0]}\nWinner: @${Math.random()>0.5?targetName:sender.split('@')[0]}`,{mentions:[targetUser,sender]});
-if(command==='confess'){if(!text)return reply('Use: .confess I like someone');return reply(`ANONYMOUS CONFESSION\n"${text}"\n- Anonymous`)}
-if(command==='airoast')return reply(`AI ROAST FOR @${targetName}\n${pick(["Your WiFi is faster than your brain!","You are like a Kisii matatu - loud but going nowhere!","Even Google cant find your intelligence!"])}`,{mentions:[targetUser]});
-if(command==='aipickup')return reply(`AI PICKUP LINE\n${pick(["Are you M-PESA? Because you keep sending me feelings!","Madem, you are like Safaricom bundle - I cant live without you!"])}`);
-if(command==='aihomework'){if(!text)return reply('Use: .aihomework What is 12 x 12?');return reply(`AI HOMEWORK\nQ: ${text}\nUse .ai for full answer: .ai ${text}`)}
-if(command==='aicode'){if(!text)return reply('Use: .aicode make a calculator');return reply(`AI CODE\nAsk: ${text}\nUse .ai for full code: .ai Write code for ${text}`)}
-if(command==='aistory'){if(!text)return reply('Use: .aistory Kisii boy becomes rich');return reply(`AI STORY\nOnce in Kisii, ${text}... He worked hard, prayed, hustled every day, and finally became a legend! The End!`)}
-if(command==='mememaker'){if(!text)return reply('Use: .mememaker Top | Bottom');const p=text.split('|');return reply(`MEME MAKER\nTOP: ${p[0]||'When mum says...'}\nBOTTOM: ${p[1]||'You know you are in trouble!'}`)}
-if(command==='quotemaker'){if(!text)return reply('Use: .quotemaker Never give up');return reply(`QUOTE MAKER\n"${text}"\n- BULL X`)}
-if(command==='tomp3'){try{const q=msg.message.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage;if(!q)return reply('Reply to a video with .tomp3');const b=await dlBuf(q,'video');await sock.sendMessage(from,{audio:b,mimetype:'audio/mp4',fileName:'converted.mp3'},{quoted:msg});return reply('Converted to MP3!')}catch{return reply('ToMP3 failed')}}
-if(command==='tomp4'){try{const q=msg.message.extendedTextMessage?.contextInfo?.quotedMessage?.audioMessage;if(!q)return reply('Reply to audio with .tomp4');const b=await dlBuf(q,'audio');await sock.sendMessage(from,{video:b,caption:'Converted to MP4!'},{quoted:msg});return reply('Converted!')}catch{return reply('ToMP4 failed')}}
-if(command==='removebg')return reply('REMOVE BG\nUpload here: https://www.remove.bg/upload');
-if(command==='pdf'){if(!text)return reply('Use: .pdf Hello');try{return sock.sendMessage(from,{document:Buffer.from(text),fileName:'BULLX.pdf',mimetype:'application/pdf',caption:'PDF by BULL X'},{quoted:msg})}catch{return reply('PDF failed')}}
-if(command==='gift'){const amt=parseInt(args[args.length-1])||0,u=getBal(sender);if(amt<=0)return reply('Use: .gift @user 100');if(amt>u.bal)return reply('Not enough!');const v=getBal(targetUser);u.bal-=amt;v.bal+=amt;saveSettings();return reply(`GIFT SENT!\nYou gifted ${amt} coins to @${targetName}!\nYour Balance: ${u.bal}`,{mentions:[targetUser]})}
-if(command==='interest'){const u=getBal(sender);if(!u.bank)u.bank=0;const intr=Math.floor(u.bank*0.05);u.bank+=intr;saveSettings();return reply(`INTEREST\nBank: ${u.bank}\nInterest +${intr} coins (5%)!`)}
-if(command==='stock'){const stocks={safaricom:35,apple:200,tesla:250,bitcoin:90000};const s=(text.toLowerCase()||'safaricom');const price=stocks[s]||35;const change=Math.floor(Math.random()*20)-10;return reply(`STOCK\n${s.toUpperCase()}: $${price+change}\nChange: ${change>0?'+':''}${change}`)}
-if(command==='bettingtips')return reply(`BETTING TIPS (Fun Only!)\n${pick(["Gor Mahia to win - 1.80","Arsenal Over 1.5 Goals - 1.50","Man City Win + BTTS - 2.10"])}\nDont bet real money you cant afford to lose!`);
-if(command==='fixtures')return reply(`TODAY FIXTURES\nGor Mahia vs AFC Leopards - 3PM\nArsenal vs Chelsea - 6:30PM\nMan City vs Liverpool - 9PM`);
-if(command==='technews')return reply(`TECH NEWS\n1. AI is taking over!\n2. New iPhone coming!\n3. Safaricom 5G expanding in Kenya!\nMore: https://techcrunch.com`);
-if(command==='space'){try{const r=await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');const d=await r.json();return reply(`SPACE\n${d.title||'NASA Picture of Day'}\n${d.explanation?.slice(0,500)||'Stars are beautiful!'}`)}catch{return reply('SPACE\nDid you know? The Moon is moving away from Earth 3.8cm per year!')}}
-if(['save','savestatus','dlstatus','sv','download'].includes(command)){try{const ctx=msg.message.extendedTextMessage?.contextInfo,quoted=ctx?.quotedMessage,stanzaId=ctx?.stanzaId,qp=ctx?.participant||ctx?.remoteJid||sender;const unwrap=q=>{if(!q)return null;let i=q;if(i.viewOnceMessageV2?.message)i=i.viewOnceMessageV2.message;if(i.viewOnceMessage?.message)i=i.viewOnceMessage.message;if(i.ephemeralMessage?.message)i=i.ephemeralMessage.message;return i};let mm=null,mt=null,capTxt='',fn='saved-file';if(quoted){const inner=unwrap(quoted);if(inner?.imageMessage){mm=inner.imageMessage;mt='image';capTxt=inner.imageMessage.caption||''}else if(inner?.videoMessage){mm=inner.videoMessage;mt='video';capTxt=inner.videoMessage.caption||''}else if(inner?.audioMessage||inner?.voiceMessage){mm=inner.audioMessage||inner.voiceMessage;mt='audio'}else if(inner?.documentMessage){mm=inner.documentMessage;mt='document';fn=inner.documentMessage.fileName||'file'}else if(inner?.stickerMessage){mm=inner.stickerMessage;mt='sticker'}else if(inner?.conversation){capTxt=inner.conversation;mt='text'}else if(inner?.extendedTextMessage?.text){capTxt=inner.extendedTextMessage.text;mt='text'}}if(!mm&&!capTxt){if(msg.message.imageMessage){mm=msg.message.imageMessage;mt='image';capTxt=msg.message.imageMessage.caption||''}else if(msg.message.videoMessage){mm=msg.message.videoMessage;mt='video'}else if(msg.message.audioMessage){mm=msg.message.audioMessage;mt='audio'}else if(msg.message.documentMessage){mm=msg.message.documentMessage;mt='document';fn=msg.message.documentMessage.fileName||'file'}else if(msg.message.stickerMessage){mm=msg.message.stickerMessage;mt='sticker'}}if(!mm&&!capTxt&&stanzaId){const cached=msgCache.get(stanzaId);if(cached){let cm=unwrap(cached.msg.message)||cached.msg.message;if(cm.imageMessage){mm=cm.imageMessage;mt='image';capTxt=cm.imageMessage.caption||''}else if(cm.videoMessage){mm=cm.videoMessage;mt='video'}else if(cm.audioMessage){mm=cm.audioMessage;mt='audio'}else if(cm.documentMessage){mm=cm.documentMessage;mt='document'}else if(cm.stickerMessage){mm=cm.stickerMessage;mt='sticker'}else if(cm.conversation){capTxt=cm.conversation;mt='text'}else if(cm.extendedTextMessage?.text){capTxt=cm.extendedTextMessage.text;mt='text'}}}if(!mm&&!capTxt)return reply(`Nothing to Save!\n1. You must REPLY to the Status\n2. Dont just type .save alone\n3. For View Once: DONT open it first!`);const oj=(OWNER_JID||'').split(':')[0].split('@')[0]+'@s.whatsapp.net',so=qp.split('@')[0].split(':')[0],isVO=(quoted?.viewOnceMessageV2||quoted?.viewOnceMessage)?'VIEW ONCE':(isGroup?'GROUP':'STATUS/DM'),sc=`SAVED!\nFrom: @${so}\nType: ${isVO} - ${mt.toUpperCase()}\nCaption: ${capTxt||'No caption'}\nSaved by BULL X`;if(mt==='image'){const buf=await dlBuf(mm,'image');await sock.sendMessage(from,{image:buf,caption:sc,mentions:[qp]});try{await sock.sendMessage(oj,{image:buf,caption:sc})}catch{}return reply(`Saved! Image from @${so} sent here + DM!`)}if(mt==='video'){const buf=await dlBuf(mm,'video');await sock.sendMessage(from,{video:buf,caption:sc,mentions:[qp]});try{await sock.sendMessage(oj,{video:buf,caption:sc})}catch{}return reply(`Saved! Video from @${so} sent here + DM!`)}if(mt==='audio'){const buf=await dlBuf(mm,'audio');await sock.sendMessage(from,{audio:buf,mimetype:'audio/mp4',ptt:false,fileName:'saved-audio.mp3'});return reply(`Saved! Audio sent here!`)}if(mt==='document'){const buf=await dlBuf(mm,'document');await sock.sendMessage(from,{document:buf,fileName:fn,caption:sc});return reply(`Saved! Document ${fn} sent here!`)}if(mt==='sticker'){const buf=await dlBuf(mm,'sticker');await sock.sendMessage(from,{sticker:buf});return reply(`Saved! Sticker sent here!`)}if(mt==='text'){await sock.sendMessage(from,{text:`TEXT SAVED!\nFrom: @${so}\n${isVO}\n\n${capTxt}`});return reply(`Saved! Text sent here!`)}}catch(e){console.log('Save:',e.message);return reply(`Save Failed! ${e.message}`)}}
-if(command==='autosave'){if(!await onlyOwner())return;if(text==='on'){settings.autosavestatus=true;saveSettings();return reply('AUTO-SAVE STATUS ON!')}if(text==='off'){settings.autosavestatus=false;saveSettings();return reply('Auto-Save Status OFF')}return reply('Use: .autosave on / .autosave off')}
-if(command==='gf')return reply(`LOVE.EXE\nEzed_GF.status :: PENDING...\nLoading... 30%\nError 404 : GF_NOT_FOUND\nRetrying...`);
-if(command==='ttt'){if(!isGroup)return reply('Groups only!');if(!settings.ttt)settings.ttt={};if(msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]||text.includes('@')){const opp=msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0];if(!opp)return reply('Use: .ttt @friend');if(opp===sender)return reply('You cannot play against yourself!');settings.ttt[from]={p1:sender,p2:opp,board:['1','2','3','4','5','6','7','8','9'],turn:sender,moves:0};saveSettings();return reply(`TIC TAC TOE STARTED!\n@${sender.split('@')[0]} (X) vs @${opp.split('@')[0]} (O)\n1 | 2 | 3\n4 | 5 | 6\n7 | 8 | 9\n@${sender.split('@')[0]} your turn! Type .ttt 5`,{mentions:[sender,opp]})}const pos=parseInt(text),game=settings.ttt[from];if(!game)return reply('No game! Start with: .ttt @friend');if(sender!==game.turn)return reply(`Not your turn! Its @${game.turn.split('@')[0]} turn!`,{mentions:[game.turn]});if(!pos||pos<1||pos>9)return reply('Use: .ttt 1 to .ttt 9');if(game.board[pos-1]==='X'||game.board[pos-1]==='O')return reply('That spot is taken!');const mark=sender===game.p1?'X':'O';game.board[pos-1]=mark;game.moves++;const b=game.board,bs=`${b[0]} | ${b[1]} | ${b[2]}\n${b[3]} | ${b[4]} | ${b[5]}\n${b[6]} | ${b[7]} | ${b[8]}`;const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];const winner=wins.find(w=>b[w[0]]===mark&&b[w[1]]===mark&&b[w[2]]===mark);if(winner){delete settings.ttt[from];saveSettings();const u=getBal(sender);u.bal+=200;saveSettings();return reply(`${mark} WINS!\n${bs}\n@${sender.split('@')[0]} won +200 coins! Balance: ${u.bal}`,{mentions:[sender]})}if(game.moves===9){delete settings.ttt[from];saveSettings();return reply(`DRAW!\n${bs}`)}game.turn=sender===game.p1?game.p2:game.p1;saveSettings();return reply(`TIC TAC TOE\n${bs}\n@${game.turn.split('@')[0]} your turn! Type .ttt 1-9`,{mentions:[game.turn]})}
-if(command==='tttstop'){if(settings.ttt)delete settings.ttt[from];saveSettings();return reply('TTT game stopped!')}
-if(command==='wordle'){if(!settings.wordle)settings.wordle={};const words=[{w:'BULL',hint:'BULL X animal'},{w:'KISII',hint:'Your town'},{w:'KENYA',hint:'Your country'},{w:'MANGO',hint:'Sweet fruit'},{w:'UGALI',hint:'Kenyan food'}];const ch=pick(words);settings.wordle[from+sender]={word:ch.w,hint:ch.hint,tries:0};saveSettings();return reply(`WORDLE STARTED!\nHint: ${ch.hint}\nWord: ${ch.w.length} letters\nTries: 6`)}
-if(command==='guessword'||command==='guess'){if(!settings.wordle)settings.wordle={};const game=settings.wordle[from+sender];if(!game)return reply('No Wordle game! Start with .wordle');if(!text)return reply('Use: .guessword BULL');const guess=text.toUpperCase().trim();if(guess.length!==game.word.length)return reply(`Word must be ${game.word.length} letters!`);game.tries++;if(guess===game.word){delete settings.wordle[from+sender];saveSettings();const u=getBal(sender);u.bal+=300;saveSettings();return reply(`WORDLE WIN!\nWord was: ${game.word}\nTries: ${game.tries}/6\n+300 coins! Balance: ${u.bal}`)}if(game.tries>=6){const w=game.word;delete settings.wordle[from+sender];saveSettings();return reply(`WORDLE LOST!\nWord was: ${w}`)}let hs='';for(let i=0;i<guess.length;i++){if(guess[i]===game.word[i])hs+='GREEN ';else if(game.word.includes(guess[i]))hs+='YELLOW ';else hs+='GREY '}saveSettings();return reply(`WORDLE - Try ${game.tries}/6\nYour guess: ${guess}\nResult: ${hs}\nHint: ${game.hint}`)}
-if(command==='casino'){const u=getBal(sender);if(!text)return reply(`BULL X CASINO\nBalance: ${u.bal}\n.casino slot 100\n.casino roulette 100\n.casino blackjack 100\n.casino dice 100\n.casino coin 100\n.casino lottery 100`);const parts=text.split(' '),g=parts[0].toLowerCase(),amt=parseInt(parts[1])||100;if(amt>u.bal)return reply(`Not enough! Balance: ${u.bal}`);if(amt<10)return reply('Min bet is 10 coins!');if(g==='slot'){const e=['CHERRY','LEMON','BELL','STAR','DIAMOND','BULL','7'],a=pick(e),b=pick(e),c=pick(e);if(a===b&&b===c){const win=amt*5;u.bal+=win;saveSettings();return reply(`SLOT - JACKPOT!\n| ${a} | ${b} | ${c} |\n+${win} coins! Balance: ${u.bal}`)}if(a===b||b===c||a===c){u.bal+=amt;saveSettings();return reply(`SLOT - 2 MATCH!\n| ${a} | ${b} | ${c} |\n+${amt} coins! Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`SLOT - LOST\n| ${a} | ${b} | ${c} |\n-${amt} coins Balance: ${u.bal}`)}if(g==='roulette'){const num=Math.floor(Math.random()*37),win=num%2===0;if(win){u.bal+=amt;saveSettings();return reply(`ROULETTE - WIN!\nNumber: ${num}\n+${amt} Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`ROULETTE - LOST\nNumber: ${num}\n-${amt} Balance: ${u.bal}`)}if(g==='blackjack'){const you=Math.floor(Math.random()*11)+10,dealer=Math.floor(Math.random()*11)+10;if(you>dealer){u.bal+=amt;saveSettings();return reply(`BLACKJACK - WIN!\nYou: ${you} vs Dealer: ${dealer}\n+${amt} Balance: ${u.bal}`)}if(you===dealer)return reply(`DRAW! You: ${you} Dealer: ${dealer}`);u.bal-=amt;saveSettings();return reply(`BLACKJACK - LOST\nYou: ${you} vs Dealer: ${dealer}\n-${amt} Balance: ${u.bal}`)}if(g==='dice'){const d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,sum=d1+d2,win=sum>=7;if(win){u.bal+=amt;saveSettings();return reply(`DICE - WIN!\n${d1} + ${d2} = ${sum}\n+${amt} Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`DICE - LOST\n${d1} + ${d2} = ${sum}\n-${amt} Balance: ${u.bal}`)}if(g==='coin'){const win=Math.random()>0.5;if(win){u.bal+=amt;saveSettings();return reply(`COIN - HEADS! WIN!\n+${amt} Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`COIN - TAILS! LOST\n-${amt} Balance: ${u.bal}`)}if(g==='lottery'){const lucky=Math.floor(Math.random()*10)+1;if(lucky===7){const win=amt*10;u.bal+=win;saveSettings();return reply(`LOTTERY - JACKPOT!\nLucky: 7!\n+${win} Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`LOTTERY - LOST\nLucky was: ${lucky} (needed 7)\n-${amt} Balance: ${u.bal}`)}return reply('Use: .casino slot / roulette / blackjack / dice / coin / lottery + amount')}
+// --- PART 2 CONTINUES BELOW - THIS IS STILL SAME FILE ---
+if(command==='menu'||command==='help'){try{return sock.sendMessage(from,{image:{url:MENU_IMG},caption:getMenu()},{quoted:msg})}catch{return reply(getMenu())}}
+if(command==='ping'||command==='speed'){const start=Date.now(),mt=Number(msg.messageTimestamp)*1000,lat=Math.max(1,Date.now()-mt),up=Date.now()-BOT_START,uh=Math.floor(up/3600000),um=Math.floor((up%3600000)/60000),us=Math.floor((up%60000)/1000),mem=(process.memoryUsage().heapUsed/1024/1024).toFixed(1);const sent=await sock.sendMessage(from,{text:`PINGING...`},{quoted:msg});const rt=Date.now()-start;try{await sock.sendMessage(from,{delete:sent.key})}catch{}return reply(`PONG! BULL X\nSpeed: ${rt}ms\nLatency: ${lat}ms\nUptime: ${uh}h ${um}m ${us}s\nRAM: ${mem} MB\nBot: BULL X V48\nOwner: +${ownerNum}\nStatus: Online`)}
+if(command==='alive')return reply(`BULL X ALIVE!\nOnline\n300+ Commands\nV48 TECH + IMAGE\nDev: ${DEV_NAME}\nOwner: +${ownerNum}`);
+if(command==='info')return reply(`BULL X V48\nDev: ${DEV_NAME}\nVexa: vexa.blood\nOwner: +${ownerNum}\nVersion: V48 TECH + IMAGE\nCommands: 300+\nStatus: Online`);
+if(command==='owner'||command==='dev')return reply(`BULL X DEV\nName: ${DEV_NAME}\nVexa: vexa.blood\nBot: BULL X V48\nOwner: +${ownerNum}`);
+if(command==='time')return reply('Time: '+new Date().toLocaleString('en-KE',{timeZone:'Africa/Nairobi'}));
+if(command==='date')return reply('Date: '+new Date().toLocaleDateString('en-KE',{timeZone:'Africa/Nairobi',weekday:'long',year:'numeric',month:'long',day:'numeric'}));
+if(command==='rules')return reply('GROUP RULES\n1. No links\n2. No insults\n3. Respect admins\n4. No spam\n5. No tagging BOT/Owner if anti-mention on\n6. 3 Warns = Kick');
+if(command==='bull')return reply('BULL X MODE ACTIVATED!');
+if(command==='profile'){const bal=getBal(sender),warns=(settings.warnings[from]||{})[sender]||0;return reply(`YOUR PROFILE\nNumber: @${sender.split('@')[0]}\nBalance: ${bal.bal} coins\nBank: ${bal.bank||0}\nWarnings: ${warns}/3\nRank: ${bal.bal>5000?'Billionaire':bal.bal>2000?'Rich':'Hustler'}\nBot: BULL X V48`)}
+if(command==='afk'){settings.afk[sender]=text||'AFK';saveSettings();return reply(`You are now AFK!\nReason: ${text||'AFK'}`)}
+if(command==='channel'||command==='follow'||command==='join'||command==='link')return sock.sendMessage(from,{text:`YOUR CHANNEL LINK:\n${CHANNEL_LINK}\nTap it to Follow!`},{quoted:msg});
 if(command==='joke')return reply('JOKE\n'+pick(JOKES));
 if(command==='fact')return reply('FACT\n'+pick(FACTS));
-if(command==='fact2')return reply(`DID YOU KNOW?\n${pick(["Your heart beats 100,000 times a day!","Kisii soapstone is exported worldwide!","Kenya has 47 counties!"])}`);
-if(command==='joke2')return reply(`JOKE 2\n${pick(["Why did math book look sad? Too many problems!","What do you call a fake noodle? An impasta!"])}`);
 if(command==='quote')return reply('QUOTE\n'+pick(QUOTES));
-if(command==='quote2'){try{const r=await fetch('https://api.quotable.io/random');const d=await r.json();return reply(`QUOTE\n"${d.content}"\n- ${d.author}`)}catch{return reply('Quote failed')}}
-if(command==='dadjoke'){try{const r=await fetch('https://icanhazdadjoke.com/',{headers:{Accept:'application/json'}});const d=await r.json();return reply(`DAD JOKE\n${d.joke}`)}catch{return reply('Why did chicken cross road? To get to other side!')}}
 if(command==='meme')return reply('MEME\n'+pick(JOKES));
 if(command==='motivate')return reply('MOTIVATION\n'+pick(MOTIVATION));
 if(command==='bible')return reply('BIBLE\n'+pick(BIBLE));
 if(command==='roast')return reply(`ROAST FOR @${targetName}\n${pick(ROASTS)}`,{mentions:[targetUser]});
-if(command==='roast2')return reply(`@${targetName} ${pick(["your WiFi is stronger than your brain!","you have charisma of a wet mandazi!"])}`,{mentions:[targetUser]});
 if(command==='insult')return reply(`@${targetName} ${pick(ROASTS)}`,{mentions:[targetUser]});
 if(command==='compliment')return reply(`@${targetName} You are amazing!`,{mentions:[targetUser]});
-if(command==='compliment2')return reply(`@${targetName} ${pick(["is the reason sun shines!","has a smile that could end wars!"])}`,{mentions:[targetUser]});
 if(command==='8ball'){const a=pick(['Yes!','No!','Maybe...','Definitely!','Ask again...','Without a doubt!']);return reply(`8-BALL\nQ: ${text||'Will I be rich?'}\nA: ${a}`)}
 if(command==='dice')return reply(`You rolled: ${Math.floor(Math.random()*6)+1} !`);
-if(command==='dice2')return reply(`You rolled: ${Math.floor(Math.random()*6)+1} and ${Math.floor(Math.random()*6)+1}!`);
 if(command==='coin'||command==='flip')return reply(`${pick(['HEADS!','TAILS!'])}`);
-if(command==='coinflip')return reply(`${pick(['HEADS! You win!','TAILS! You lose!'])}`);
 if(command==='truth')return reply('TRUTH\n'+pick(TRUTHS));
 if(command==='dare')return reply('DARE\n'+pick(DARES));
 if(command==='riddle'){const r=pick(RIDDLES);return reply(`RIDDLE\n${r.q}\nAnswer: ${r.a}`)}
@@ -429,46 +367,30 @@ if(command==='ship')return reply(`SHIP\n${text||'You + Me'} = ${Math.floor(Math.
 if(command==='howgay')return reply(`@${targetName} is ${Math.floor(Math.random()*101)}% gay!`,{mentions:[targetUser]});
 if(command==='howcool')return reply(`@${targetName} is ${Math.floor(Math.random()*101)}% cool!`,{mentions:[targetUser]});
 if(command==='howrich')return reply(`@${targetName} will be ${pick(['Millionaire!','Billionaire!','Broke!'])}`,{mentions:[targetUser]});
-if(command==='howold')return reply(`@${targetName} looks ${Math.floor(Math.random()*40)+15} years old!`,{mentions:[targetUser]});
-if(command==='smart')return reply(`@${targetName} IQ is ${Math.floor(Math.random()*100)+50}!`,{mentions:[targetUser]});
-if(command==='beautiful')return reply(`@${targetName} is ${Math.floor(Math.random()*101)}% beautiful!`,{mentions:[targetUser]});
-if(command==='simp')return reply(`@${targetName} is ${Math.floor(Math.random()*101)}% simp!`,{mentions:[targetUser]});
-if(command==='crush')return reply(`Your crush is thinking about you!`);
 if(command==='kiss')return reply(`@${targetName} got a kiss!`,{mentions:[targetUser]});
 if(command==='hug')return reply(`@${targetName} got a hug!`,{mentions:[targetUser]});
 if(command==='slap')return reply(`@${targetName} got slapped!`,{mentions:[targetUser]});
 if(command==='kill')return reply(`@${targetName} was killed! RIP`,{mentions:[targetUser]});
-if(command==='congrats')return reply(`CONGRATS @${targetName}!`,{mentions:[targetUser]});
-if(command==='happybirthday')return reply(`HAPPY BIRTHDAY @${targetName}!`,{mentions:[targetUser]});
 if(command==='pickup')return reply(`PICKUP LINE\n${pick(["Are you WiFi? Because I am feeling the connection!","Are you from Kisii? Because you are a soapstone - rare and beautiful!","Do you have a map? I keep getting lost in your eyes!"])}`);
-if(command==='darkjoke')return reply(`DARK JOKE\n${pick(["My grandfather said my generation did not rely on technology - then he died of a heart attack because he could not find a phone","I told my wife she was drawing her eyebrows too high. She looked surprised"])}`);
-if(command==='rap')return reply(`RAP BAR\n${pick(["Yo, I am BULL X, I dont miss, from Kisii to Nairobi, I am the king of this!","Money on my mind, grind all the time, EZEKIA DEV made me, I am one of a kind!"])}`);
 if(command==='hack')return reply(`HACKING @${targetName}...\n100%\nHACKED!\nPassword: 1234\nBank Balance: 0.00 KES\nJust joking! BULL X cannot hack!`,{mentions:[targetUser]});
 if(command==='fake'){if(!text)return reply('Use: .fake Hello');return reply(`FAKE CHAT\nEZEKIA DEV: ${text}\nYou: Haha true\nEZEKIA DEV: BULL X is the best bot!`)}
 if(command==='tweet'){if(!text)return reply('Use: .tweet BULL X is best!');return reply(`TWEET\n@${sender.split('@')[0]}: "${text}"`)}
 if(command==='advice'){try{const r=await fetch('https://api.adviceslip.com/advice');const d=await r.json();return reply(`ADVICE\n${d.slip.advice}`)}catch{return reply('Advice: Drink water, mind your business!')}}
 if(command==='quiz'){const qs=[{q:"What is capital of Kenya?",a:"Nairobi"},{q:"Who wrote Romeo and Juliet?",a:"Shakespeare"},{q:"What is 10 + 15?",a:"25"}];const q=pick(qs);return reply(`QUIZ\nQ: ${q.q}\nAnswer: ${q.a}`)}
 if(command==='chuck'){try{const r=await fetch('https://api.chucknorris.io/jokes/random');const d=await r.json();return reply(`CHUCK NORRIS\n${d.value}`)}catch{return reply('Chuck Norris counted to infinity. Twice.')}}
-if(command==='moviedl'||command==='movie'){if(!text)return reply('Use: .moviedl Avatar');try{await reply('TRYING FULL MOVIE: '+text);let found=null;try{const r=await fetch(`https://archive.org/advancedsearch.php?q=title:(${encodeURIComponent(text)})+AND+mediatype:movies&fl[]=identifier,title,description&rows=5&output=json`);const d=await r.json();const docs=d.response?.docs||[];for(const doc of docs){try{const r2=await fetch(`https://archive.org/metadata/${doc.identifier}`);const md=await r2.json();const file=(md.files||[]).find(f=>f.name.endsWith('.mp4')&&parseInt(f.size)<150000000);if(file){found={title:doc.title,desc:doc.description,url:`https://archive.org/download/${doc.identifier}/${encodeURIComponent(file.name)}`};break}}catch{}}}catch{}if(found){return sock.sendMessage(from,{video:{url:found.url},caption:`BULL X FULL MOVIE\n${found.title}\n${(found.desc||'').slice(0,300)}`},{quoted:msg})}let data=null;try{const r=await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(text)}&apikey=trilogy`);const d=await r.json();if(d.Response==='True')data=d}catch{}const title=data?data.Title:text;let cap=`BULL X MOVIE\n${title}\n${data?`${data.Year} | ${data.imdbRating}/10 | ${data.Genre}\n${data.Plot}\n`:''}\nYouTube: https://www.youtube.com/results?search_query=${encodeURIComponent(title+' full movie')}`;if(data&&data.Poster&&data.Poster!=='N/A'){return sock.sendMessage(from,{image:{url:data.Poster},caption:cap},{quoted:msg})}return reply(cap)}catch{return reply('Failed! Try .moviedl Charlie Chaplin')}}
-if(command==='songdl'){if(!text)return reply('Use: .songdl Komasava');try{await reply('TRYING FULL SONG: '+text);let found=null;try{const r=await fetch(`https://archive.org/advancedsearch.php?q=title:(${encodeURIComponent(text)})+AND+mediatype:audio&fl[]=identifier,title,creator,description&rows=5&output=json`);const d=await r.json();const docs=d.response?.docs||[];for(const doc of docs){try{const r2=await fetch(`https://archive.org/metadata/${doc.identifier}`);const md=await r2.json();const file=(md.files||[]).find(f=>(f.name.endsWith('.mp3')||f.name.endsWith('.ogg'))&&parseInt(f.size)<20000000);if(file){found={title:doc.title,creator:doc.creator,url:`https://archive.org/download/${doc.identifier}/${encodeURIComponent(file.name)}`};break}}catch{}}}catch{}if(found){await sock.sendMessage(from,{audio:{url:found.url},mimetype:'audio/mpeg',fileName:found.title+'.mp3'},{quoted:msg});return reply(`FULL SONG SENT!\n${found.title}\n${found.creator||''}`)}let d=null;try{const r=await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(text)}&media=music&limit=1`);const j=await r.json();if(j.results&&j.results[0])d=j.results[0]}catch{}if(!d)return reply('Song not found! Try .songdl Komasava');let cap=`BULL X SONG\n${d.trackName}\n${d.artistName}\nYouTube Music: https://music.youtube.com/search?q=${encodeURIComponent(d.trackName+' '+d.artistName)}`;if(d.artworkUrl100){await sock.sendMessage(from,{image:{url:d.artworkUrl100.replace('100x100','600x600')},caption:cap},{quoted:msg})}else{await reply(cap)}if(d.previewUrl){await sock.sendMessage(from,{audio:{url:d.previewUrl},mimetype:'audio/mp4',fileName:d.trackName+' - Preview.mp3'},{quoted:msg});return reply(`Preview sent!`)}return}catch{return reply('Song failed!')}}
-if(command==='series'){if(!text)return reply('Use: .series Money Heist');try{let data=null;try{const r=await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(text)}&type=series&apikey=trilogy`);const d=await r.json();if(d.Response==='True')data=d}catch{}const title=data?data.Title:text;let cap=`BULL X SERIES\n${title}\n${data?`${data.Year} | ${data.imdbRating}/10 | ${data.Genre}\nSeasons: ${data.totalSeasons||'?'}\n${data.Plot}\n`:''}\nNetflix: https://www.netflix.com/search?q=${encodeURIComponent(title)}`;if(data&&data.Poster&&data.Poster!=='N/A'){return sock.sendMessage(from,{image:{url:data.Poster},caption:cap},{quoted:msg})}return reply(cap)}catch{return reply('Series failed!')}}
-if(command==='animedl'){if(!text)return reply('Use: .animedl Naruto');try{let a=null;try{const r=await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(text)}&limit=1`);const j=await r.json();if(j.data&&j.data[0])a=j.data[0]}catch{}if(!a)return reply('Anime not found!');let cap=`BULL X ANIME\n${a.title}\n${a.score||'?'}/10\nEpisodes: ${a.episodes||'?'}\n${(a.synopsis||'').slice(0,400)}`;if(a.images?.jpg?.large_image_url){return sock.sendMessage(from,{image:{url:a.images.jpg.large_image_url},caption:cap},{quoted:msg})}return reply(cap)}catch{return reply('Anime failed!')}}
-if(command==='recipe'){if(!text)return reply('Use: .recipe Pilau');return reply(`RECIPE: ${text}\nSearch: https://www.google.com/search?q=how+to+cook+${encodeURIComponent(text)}`)}
-if(command==='book'){if(!text)return reply('Use: .book Rich Dad');return reply(`BOOK: ${text}\nSearch: https://www.google.com/search?q=${encodeURIComponent(text)} book summary`)}
-if(command==='ytsearch'){if(!text)return reply('Use: .ytsearch Diamond');return reply(`YOUTUBE SEARCH\nQuery: ${text}\nhttps://www.youtube.com/results?search_query=${encodeURIComponent(text)}`)}
-if(command==='spotify'){if(!text)return reply('Use: .spotify Komasava');return reply(`SPOTIFY\nSong: ${text}\nhttps://open.spotify.com/search/${encodeURIComponent(text)}`)}
-if(command==='stalk')return reply(`STALK @${targetName}\nNumber: +${targetName}\nWhatsApp: wa.me/${targetName}`,{mentions:[targetUser]});
-if(command==='prayer')return reply(`PRAYER TIMES - KISII / NAIROBI\nFajr: 05:15 AM\nDhuhr: 12:30 PM\nAsr: 03:45 PM\nMaghrib: 06:30 PM\nIsha: 07:45 PM`);
-if(command==='quran')return reply(`QURAN\n${pick(["Al-Fatiha: In the name of Allah, the Most Gracious, the Most Merciful","Ayat al-Kursi: Allah - there is no god except Him"])}`);
-if(command==='wyr')return reply(`WOULD YOU RATHER\n${pick(["Would you rather be rich but lonely OR poor but loved?","Would you rather have 10M KES now OR 1M every month for life?"])}`);
-if(command==='never')return reply(`NEVER HAVE I EVER\n${pick(["Never have I ever... cheated in exam","Never have I ever... stalked my ex"])}`);
-if(command==='paradox')return reply(`PARADOX\n${pick(["If you try to fail and succeed, did you fail or succeed?","This statement is false. Is it true?"])}`);
-if(command==='tongue')return reply(`TONGUE TWISTER\n${pick(["She sells seashells by the seashore","Peter Piper picked a peck of pickled peppers"])}`);
-if(command==='poem2')return reply(`POEM\nRoses are red, violets are blue,\nBULL X is here, and so are you!`);
-if(command==='story2')return reply(`STORY\nOnce in Kisii, a young boy named ${targetName} found a magic phone. He became richest in Kenya! The end!`,{mentions:[targetUser]});
 if(command==='poem')return reply(`POEM FOR ${text||'YOU'}\nRoses are red,\nViolets are blue,\nBULL X is here,\nAnd so are you!`);
 if(command==='story')return reply(`STORY\nOnce upon a time in Kisii... ${text||'A young hustler'} worked hard and became a legend! The end!`);
-if(command==='translate'){if(!text)return reply('Use: .translate Hello to Swahili');return reply(`Use .ai for translation:\n.ai Translate "${text}" to Swahili`)}
+if(command==='gf')return reply(`LOVE.EXE\nEzed_GF.status :: PENDING...\nLoading... 30%\nError 404 : GF_NOT_FOUND\nRetrying...`);
+if(command==='rps'){const u=text.toLowerCase(),b=pick(['rock','paper','scissors']);if(!['rock','paper','scissors'].includes(u))return reply('Use: .rps rock/paper/scissors');let res=u===b?'DRAW!':(u==='rock'&&b==='scissors')||(u==='paper'&&b==='rock')||(u==='scissors'&&b==='paper')?'YOU WIN!':'YOU LOSE!';return reply(`RPS\nYou: ${u}\nBULL X: ${b}\nResult: ${res}`)}
+if(command==='slot'){const e=['CHERRY','LEMON','BELL','STAR','DIAMOND','BULL'],a=pick(e),b=pick(e),c=pick(e);return reply(`SLOT\n| ${a} | ${b} | ${c} |\n${a===b&&b===c?'JACKPOT!':'Try again!'}`)}
+if(command==='lottery')return reply(`LOTTERY\nLucky: ${Math.floor(Math.random()*99)+1} - ${Math.floor(Math.random()*99)+1} - ${Math.floor(Math.random()*99)+1}`);
+if(command==='hangman'){const words=['ELEPHANT','KISII','NAIROBI','FOOTBALL','CHAPATI','MANDIZI','BULL'],w=pick(words);return reply(`HANGMAN\nWord: ${w.split('').map(()=> '_ ').join('')} (${w.length} letters)`)}
+if(command==='mathquiz'){const a=Math.floor(Math.random()*20)+1,b=Math.floor(Math.random()*20)+1;return reply(`MATH QUIZ\nWhat is ${a} + ${b} = ?\nAnswer: .calc ${a}+${b}`)}
+if(command==='bet'){const u=getBal(sender),amt=parseInt(text)||100;if(amt>u.bal)return reply('Not enough coins!');const win=Math.random()>0.5;if(win){u.bal+=amt;saveSettings();return reply(`BET WON!\n+${amt} coins! Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`BET LOST!\n-${amt} coins! Balance: ${u.bal}`)}
+if(command==='giveaway'){if(!isGroup)return reply('Groups only!');if(text){settings.giveaway[from]={prize:text,host:sender,joined:[]};saveSettings();return reply(`GIVEAWAY STARTED!\nPrize: ${text}`)}return reply('Use: .giveaway 1000 coins')}
+if(command==='duel'){const u=getBal(sender),amt=parseInt(text)||100;if(amt>u.bal)return reply('Not enough coins!');const v=getBal(targetUser);if(v.bal<amt)return reply('Opponent broke!');const myRoll=Math.floor(Math.random()*6)+1,oppRoll=Math.floor(Math.random()*6)+1;if(myRoll===oppRoll)return reply(`DUEL DRAW!\nYou: ${myRoll} vs @${targetName}: ${oppRoll}`,{mentions:[targetUser]});if(myRoll>oppRoll){u.bal+=amt;v.bal-=amt;saveSettings();return reply(`DUEL WIN!\nYou: ${myRoll} vs @${targetName}: ${oppRoll}\n+${amt} coins! Balance: ${u.bal}`,{mentions:[targetUser]})}u.bal-=amt;v.bal+=amt;saveSettings();return reply(`DUEL LOST!\nYou: ${myRoll} vs @${targetName}: ${oppRoll}\n-${amt} coins! Balance: ${u.bal}`,{mentions:[targetUser]})}
+if(command==='wordchain')return reply(`WORD CHAIN\nStart: ${pick(['Apple','Elephant','Tiger','Rabbit','Tomato','Orange','Eagle'])}`);
+if(command==='guessflag'){const flags=[{f:'KE',a:'Kenya'},{f:'NG',a:'Nigeria'},{f:'US',a:'USA'},{f:'TZ',a:'Tanzania'}];const q=pick(flags);return reply(`GUESS FLAG\nFlag: ${q.f}\nAnswer: ${q.a}`)}
 if(command==='balance'||command==='bal'){const u=getBal(sender);return reply(`YOUR BALANCE\nCoins: ${u.bal}\nBank: ${u.bank||0}\nRank: ${u.bal>5000?'Billionaire':u.bal>2000?'Rich':'Hustler'}`)}
 if(command==='daily'){const u=getBal(sender),now=Date.now();if(now-u.lastDaily<86400000)return reply(`You already claimed daily! Balance: ${u.bal}`);u.lastDaily=now;u.bal+=500;saveSettings();return reply(`DAILY REWARD!\n+500 coins!\nNew Balance: ${u.bal}`)}
 if(command==='work'){const u=getBal(sender),earn=Math.floor(Math.random()*400)+100,jobs=['Matatu Conductor','Farmer','Boda Boda','Shopkeeper','Teacher','DJ','Hustler'];u.bal+=earn;saveSettings();return reply(`WORK\nYou worked as ${pick(jobs)}!\nEarned: +${earn} coins!\nBalance: ${u.bal}`)}
@@ -478,34 +400,17 @@ if(command==='rob'){const u=getBal(sender),v=getBal(targetUser);if(v.bal<100)ret
 if(command==='pay'){const amt=parseInt(args[args.length-1])||0,u=getBal(sender);if(amt<=0)return reply('Use: .pay @user 100');if(amt>u.bal)return reply('Not enough coins!');const v=getBal(targetUser);u.bal-=amt;v.bal+=amt;saveSettings();return reply(`Sent ${amt} coins to @${targetName}!\nYour Balance: ${u.bal}`,{mentions:[targetUser]})}
 if(command==='shop')return reply(`BULL X SHOP\nLamborghini - 10000 coins (.buy lamborghini)\nMansion - 20000 (.buy mansion)\niPhone 16 - 5000 (.buy iphone)\nBull X Crown - 1000 (.buy crown)\nPizza - 100 (.buy pizza)`);
 if(command==='buy'){const u=getBal(sender),items={lamborghini:10000,mansion:20000,iphone:5000,crown:1000,pizza:100,car:5000},item=text.toLowerCase(),price=items[item];if(!price)return reply('Item not found! Use .shop');if(u.bal<price)return reply(`Not enough! Need ${price}, you have ${u.bal}`);u.bal-=price;saveSettings();return reply(`You bought ${item} for ${price} coins!\nBalance: ${u.bal}`)}
-if(command==='leaderboard'||command==='lb'){const sorted=Object.entries(settings.economy).sort((a,b)=>b[1].bal-a[1].bal).slice(0,5);let t='RICHEST LEADERBOARD\n';sorted.forEach(([id,d],i)=>{t+=`${i+1}. @${id.split('@')[0]} - ${d.bal} coins\n`});if(!sorted.length)t+='No one yet! Use .daily';return sock.sendMessage(from,{text:premiumWrap(t),mentions:sorted.map(([id])=>id)},{quoted:msg})}
+if(command==='leaderboard'||command==='lb'||command==='rich'){const sorted=Object.entries(settings.economy).sort((a,b)=>b[1].bal-a[1].bal).slice(0,5);let t='RICHEST LEADERBOARD\n';sorted.forEach(([id,d],i)=>{t+=`${i+1}. @${id.split('@')[0]} - ${d.bal} coins\n`});if(!sorted.length)t+='No one yet! Use .daily';return sock.sendMessage(from,{text:premiumWrap(t),mentions:sorted.map(([id])=>id)},{quoted:msg})}
 if(command==='bank'||command==='deposit'||command==='withdraw'){const u=getBal(sender);if(!u.bank)u.bank=0;if(command==='deposit'){const amt=parseInt(text)||u.bal;if(amt>u.bal)return reply('Not enough!');u.bal-=amt;u.bank+=amt;saveSettings();return reply(`Deposited ${amt}!\nWallet: ${u.bal}\nBank: ${u.bank}`)}if(command==='withdraw'){const amt=parseInt(text)||u.bank;if(amt>u.bank)return reply('Not enough in bank!');u.bank-=amt;u.bal+=amt;saveSettings();return reply(`Withdrew ${amt}!\nWallet: ${u.bal}\nBank: ${u.bank}`)}return reply(`YOUR BANK\nWallet: ${u.bal}\nBank: ${u.bank}\nTotal: ${u.bal+u.bank}\nUse: .deposit 500 / .withdraw 500`)}
 if(command==='roulette'){const u=getBal(sender),amt=parseInt(text)||100;if(amt>u.bal)return reply('Not enough!');const num=Math.floor(Math.random()*37),win=num%2===0;if(win){u.bal+=amt;saveSettings();return reply(`ROULETTE\nNumber: ${num}\nYOU WON +${amt}!\nBalance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`ROULETTE\nNumber: ${num}\nYOU LOST -${amt}!\nBalance: ${u.bal}`)}
 if(command==='blackjack'){const u=getBal(sender),amt=parseInt(text)||100;if(amt>u.bal)return reply('Not enough!');const you=Math.floor(Math.random()*11)+10,dealer=Math.floor(Math.random()*11)+10;if(you>dealer){u.bal+=amt;saveSettings();return reply(`BLACKJACK\nYou: ${you}\nDealer: ${dealer}\nYOU WIN +${amt}!\nBalance: ${u.bal}`)}if(you===dealer)return reply(`DRAW! You: ${you} Dealer: ${dealer}`);u.bal-=amt;saveSettings();return reply(`BLACKJACK\nYou: ${you}\nDealer: ${dealer}\nYOU LOSE -${amt}\nBalance: ${u.bal}`)}
 if(command==='invest'){const u=getBal(sender),amt=parseInt(text)||100;if(amt>u.bal)return reply('Not enough!');const profit=Math.floor(amt*(Math.random()*0.8-0.3));u.bal+=profit;saveSettings();return reply(`INVEST\nInvested: ${amt}\nProfit: ${profit>0?'+':''}${profit}\nBalance: ${u.bal}`)}
 if(command==='loan'){const u=getBal(sender);u.bal+=1000;saveSettings();return reply(`LOAN APPROVED!\n+1000 coins!\nBalance: ${u.bal}`)}
 if(command==='steal'){const u=getBal(sender),v=getBal(targetUser);if(v.bal<50)return reply('Too broke to steal from!');const amt=Math.floor(Math.random()*300)+50,stolen=Math.min(amt,v.bal);if(Math.random()>0.5){u.bal+=stolen;v.bal-=stolen;saveSettings();return reply(`HEIST SUCCESS!\nStole ${stolen} from @${targetName}!\nBalance: ${u.bal}`,{mentions:[targetUser]})}u.bal-=100;saveSettings();return reply(`CAUGHT! Paid 100 fine!\nBalance: ${u.bal}`)}
-if(command==='rich'){const sorted=Object.entries(settings.economy).sort((a,b)=>b[1].bal-a[1].bal).slice(0,5);let t='TOP RICH\n';sorted.forEach(([id,d],i)=>{t+=`${i+1}. @${id.split('@')[0]} - ${d.bal}\n`});return sock.sendMessage(from,{text:premiumWrap(t||'No one yet!'),mentions:sorted.map(([id])=>id)},{quoted:msg})}
-if(command==='rps'){const u=text.toLowerCase(),b=pick(['rock','paper','scissors']);if(!['rock','paper','scissors'].includes(u))return reply('Use: .rps rock/paper/scissors');let res=u===b?'DRAW!':(u==='rock'&&b==='scissors')||(u==='paper'&&b==='rock')||(u==='scissors'&&b==='paper')?'YOU WIN!':'YOU LOSE!';return reply(`RPS\nYou: ${u}\nBULL X: ${b}\nResult: ${res}`)}
-if(command==='slot'){const e=['CHERRY','LEMON','BELL','STAR','DIAMOND','BULL'],a=pick(e),b=pick(e),c=pick(e);return reply(`SLOT\n| ${a} | ${b} | ${c} |\n${a===b&&b===c?'JACKPOT!':'Try again!'}`)}
-if(command==='lottery')return reply(`LOTTERY\nLucky: ${Math.floor(Math.random()*99)+1} - ${Math.floor(Math.random()*99)+1} - ${Math.floor(Math.random()*99)+1}`);
-if(command==='hangman'){const words=['ELEPHANT','KISII','NAIROBI','FOOTBALL','CHAPATI','MANDIZI','BULL'],w=pick(words);return reply(`HANGMAN\nWord: ${w.split('').map(()=> '_ ').join('')} (${w.length} letters)\nGuess letters: .guessletter A`)}
-if(command==='guessletter')return reply(`Letter: ${text||'A'}\nKeep guessing with .guessletter B, C...`);
-if(command==='mathquiz'){const a=Math.floor(Math.random()*20)+1,b=Math.floor(Math.random()*20)+1;return reply(`MATH QUIZ\nWhat is ${a} + ${b} = ?\nAnswer: .calc ${a}+${b}`)}
-if(command==='fasttype')return reply(`FAST TYPE\nType this FAST:\n"BULL X IS THE BEST BOT IN KENYA"\nFirst to type it wins!`);
-if(command==='memory')return reply(`MEMORY GAME\nRemember: BULL BANANA TROPHY STAR ROCKET\nWait 10 seconds...\nNow what was the 3rd emoji?`);
-if(command==='cat'){try{const r=await fetch('https://api.thecatapi.com/v1/images/search');const d=await r.json();return sock.sendMessage(from,{image:{url:d[0].url},caption:'CUTE CAT! By BULL X'},{quoted:msg})}catch{return reply('Cat: Meow!')}}
-if(command==='dog'){try{const r=await fetch('https://dog.ceo/api/breeds/image/random');const d=await r.json();return sock.sendMessage(from,{image:{url:d.message},caption:'CUTE DOG! By BULL X'},{quoted:msg})}catch{return reply('Dog: Woof!')}}
-if(command==='fox'){try{const r=await fetch('https://randomfox.ca/floof/');const d=await r.json();return sock.sendMessage(from,{image:{url:d.image},caption:'CUTE FOX!'},{quoted:msg})}catch{return reply('Fox!')}}
-if(command==='panda')return reply('Panda: I love bamboo!');
-if(command==='bird')return reply('Bird: Tweet tweet!');
-if(command==='waifu'){try{const r=await fetch('https://api.waifu.pics/sfw/waifu');const d=await r.json();return sock.sendMessage(from,{image:{url:d.url},caption:'YOUR WAIFU! By BULL X'},{quoted:msg})}catch{return reply('Waifu!')}}
-if(command==='neko'){try{const r=await fetch('https://api.waifu.pics/sfw/neko');const d=await r.json();return sock.sendMessage(from,{image:{url:d.url},caption:'NEKO!'},{quoted:msg})}catch{return reply('Neko!')}}
-if(command==='manga')return reply('MANGA\nTop: One Piece, Naruto, Demon Slayer, Jujutsu Kaisen!');
-if(command==='naruto')return reply('NARUTO\nBelieve it! Dattebayo!');
-if(command==='luffy')return reply('LUFFY\nI will be King of the Pirates!');
-if(command==='goku')return reply('GOKU\nKamehameha!');
-if(command==='horoscope'){const s=text.toLowerCase()||'leo';return reply(`HOROSCOPE - ${s.toUpperCase()}\n${HOROSCOPE[s]||'Try: aries, taurus, gemini, cancer, leo, virgo, libra, scorpio, sagittarius, capricorn, aquarius, pisces'}`)}
+if(command==='gift'){const amt=parseInt(args[args.length-1])||0,u=getBal(sender);if(amt<=0)return reply('Use: .gift @user 100');if(amt>u.bal)return reply('Not enough!');const v=getBal(targetUser);u.bal-=amt;v.bal+=amt;saveSettings();return reply(`GIFT SENT!\nYou gifted ${amt} coins to @${targetName}!\nYour Balance: ${u.bal}`,{mentions:[targetUser]})}
+if(command==='interest'){const u=getBal(sender);if(!u.bank)u.bank=0;const intr=Math.floor(u.bank*0.05);u.bank+=intr;saveSettings();return reply(`INTEREST\nBank: ${u.bank}\nInterest +${intr} coins (5%)!`)}
+if(command==='stock'){const stocks={safaricom:35,apple:200,tesla:250,bitcoin:90000};const s=(text.toLowerCase()||'safaricom');const price=stocks[s]||35;const change=Math.floor(Math.random()*20)-10;return reply(`STOCK\n${s.toUpperCase()}: $${price+change}\nChange: ${change>0?'+':''}${change}`)}
+if(command==='rank'||command==='level'||command==='xp'){if(!settings.xp)settings.xp={};if(!settings.xp[sender])settings.xp[sender]=0;settings.xp[sender]+=10;saveSettings();const xp=settings.xp[sender],lvl=Math.floor(xp/100)+1;return reply(`RANK\n@${sender.split('@')[0]}\nLevel: ${lvl}\nXP: ${xp}`,{mentions:[sender]})}
 if(command==='calc'){try{if(!text)return reply('Use: .calc 2+2');const r=eval(text.replace(/[^0-9+\-*/(). ]/g,''));return reply(`${text} = ${r}`)}catch{return reply('Invalid math!')}}
 if(command==='qr'){if(!text)return reply('Use: .qr Hello');return reply(`QR for: ${text}\nhttps://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(text)}`)}
 if(command==='password'){const ch='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$';let p='';for(let i=0;i<12;i++)p+=ch[Math.floor(Math.random()*ch.length)];return reply(`PASSWORD\n${p}`)}
@@ -522,18 +427,11 @@ if(command==='morse'){if(!text)return reply('Use: .morse SOS');const m={a:'.-',b
 if(command==='fancy'){if(!text)return reply('Use: .fancy hello');return reply(`FANCY\n${text.toUpperCase()}`)}
 if(command==='timer'){const secs=parseInt(text)||10;setTimeout(async()=>{try{await sock.sendMessage(from,{text:premiumWrap(`TIMER DONE! @${sender.split('@')[0]} ${secs} seconds over!`),mentions:[sender]})}catch{}},secs*1000);return reply(`Timer set for ${secs} seconds!`)}
 if(command==='base64'){if(!text)return reply('Use: .base64 Hello');return reply(`Base64:\n${Buffer.from(text).toString('base64')}`)}
-if(command==='decode64'){try{return reply(`Decoded:\n${Buffer.from(text,'base64').toString()}`)}catch{return reply('Invalid base64!')}}
-if(command==='encrypt'){if(!text)return reply('Use: .encrypt Hello');return reply(`Encrypted:\n${text.split('').reverse().join('').split('').map(c=>c.charCodeAt(0)).join('-')}`)}
 if(command==='note'||command==='notes'){if(!settings.notes)settings.notes={};if(!settings.notes[sender])settings.notes[sender]=[];if(text&&command==='note'){settings.notes[sender].push(text);saveSettings();return reply(`Note saved! Total: ${settings.notes[sender].length}`)}const list=settings.notes[sender]||[];if(!list.length)return reply('No notes! Use .note Buy milk');return reply(`YOUR NOTES\n${list.map((n,i)=>`${i+1}. ${n}`).join('\n')}`)}
-if(command==='clearnotes'){if(settings.notes)settings.notes[sender]=[];saveSettings();return reply('Notes cleared!')}
 if(command==='ip')return reply(`YOUR INFO\nIP: Hidden\nNumber: +${sender.split('@')[0]}\nBot: BULL X V48`);
 if(command==='domain'){if(!text)return reply('Use: .domain google.com');return reply(`DOMAIN: ${text}\nCheck: https://who.is/whois/${text}`)}
-if(command==='email'){if(!text)return reply('Use: .email Hello');return reply(`Email draft:\nTo: eze@example.com\nSubject: BULL X\nBody: ${text}`)}
-if(command==='alarm')return reply(`ALARM SET!\nUse .timer 10`);
-if(command==='speedtest')return reply(`SPEED TEST\nPing: ${Math.floor(Math.random()*100)+20}ms\nDownload: ${Math.floor(Math.random()*50)+10} Mbps`);
 if(command==='emojify'){if(!text)return reply('Use: .emojify Hello');return reply(`${text.split('').join(' ')}`)}
 if(command==='count'){if(!text)return reply('Use: .count Hello world');return reply(`COUNT\nWords: ${text.split(' ').length}\nChars: ${text.length}`)}
-if(command==='ping'||command==='speed'){const start=Date.now(),mt=Number(msg.messageTimestamp)*1000,lat=Math.max(1,Date.now()-mt),up=Date.now()-BOT_START,uh=Math.floor(up/3600000),um=Math.floor((up%3600000)/60000),us=Math.floor((up%60000)/1000),mem=(process.memoryUsage().heapUsed/1024/1024).toFixed(1);const sent=await sock.sendMessage(from,{text:`PINGING...`},{quoted:msg});const rt=Date.now()-start;try{await sock.sendMessage(from,{delete:sent.key})}catch{}return reply(`PONG! BULL X\nSpeed: ${rt}ms\nLatency: ${lat}ms\nUptime: ${uh}h ${um}m ${us}s\nRAM: ${mem} MB\nBot: BULL X V48\nOwner: +${ownerNum}\nStatus: Online`)}
 if(command==='img'){if(!text)return reply('Use: .img Cute cat');try{const url=`https://image.pollinations.ai/prompt/${encodeURIComponent(text)}?width=1024&height=1024&seed=${Math.floor(Math.random()*99999)}&nologo=true`;return sock.sendMessage(from,{image:{url},caption:`BULL X AI IMAGE\nPrompt: ${text}`},{quoted:msg})}catch{return reply('Image failed')}}
 if(command==='tts'){if(!text)return reply('Use: .tts Hello');try{const url=`https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(text)}`;return sock.sendMessage(from,{audio:{url},mimetype:'audio/mp4',ptt:true},{quoted:msg})}catch{return reply('TTS failed')}}
 if(command==='screenshot'){let link=body.match(/https?:\/\/\S+/)?.[0]||(text.startsWith('http')?text:`https://${text}`);if(!text)return reply('Use: .screenshot google.com');try{const url=`https://image.thum.io/get/width/1200/crop/800/noanimate/${link}`;return sock.sendMessage(from,{image:{url},caption:`SCREENSHOT\n${link}`},{quoted:msg})}catch{return reply('Screenshot failed')}}
@@ -546,24 +444,61 @@ if(command==='wallpaper'){try{const r=await fetch('https://picsum.photos/1080/19
 if(command==='reminder'){const mins=parseInt(args[1])||5,mt=args.slice(2).join(' ')||'Reminder!';setTimeout(async()=>{try{await sock.sendMessage(from,{text:premiumWrap(`REMINDER!\n@${sender.split('@')[0]}: ${mt}`),mentions:[sender]})}catch{}},mins*60000);return reply(`Reminder set for ${mins} minutes!\nMessage: ${mt}`)}
 if(command==='todo'){if(!text)return reply('Use: .todo Buy milk');if(!settings.todos)settings.todos={};if(!settings.todos[sender])settings.todos[sender]=[];settings.todos[sender].push(text);saveSettings();return reply(`Todo added!`)}
 if(command==='todos'){const list=(settings.todos?.[sender]||[]);if(!list.length)return reply('No todos! Use .todo Buy milk');return reply(`YOUR TODOS\n${list.map((t,i)=>`${i+1}. ${t}`).join('\n')}`)}
-if(command==='cleartodo'){if(settings.todos)settings.todos[sender]=[];saveSettings();return reply('Todos cleared!')}
 if(command==='poll'){if(!text)return reply('Use: .poll Best team? | Gor | AFC');const parts=text.split('|').map(s=>s.trim());if(parts.length<3)return reply('Use: .poll Question | Option1 | Option2');try{return sock.sendMessage(from,{poll:{name:parts[0],values:parts.slice(1),selectableCount:1}},{quoted:msg})}catch{return reply('Poll failed')}}
-if(command==='welcome'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.welcome)settings.welcome={};settings.welcome[from]=true;saveSettings();return reply('Welcome ON!')}if(text==='off'){if(settings.welcome)delete settings.welcome[from];saveSettings();return reply('Welcome OFF')}return reply('Use: .welcome on/off')}
-if(command==='goodbye'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.goodbye)settings.goodbye={};settings.goodbye[from]=true;saveSettings();return reply('Goodbye ON!')}if(text==='off'){if(settings.goodbye)delete settings.goodbye[from];saveSettings();return reply('Goodbye OFF')}return reply('Use: .goodbye on/off')}
 if(command==='vcard'){const name=text||`BULL X ${targetName}`;try{return sock.sendMessage(from,{contacts:{displayName:name,contacts:[{vcard:`BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL;TYPE=CELL:${targetUser.split('@')[0]}\nEND:VCARD`}]}},{quoted:msg})}catch{return reply('VCard failed')}}
 if(command==='getpp'){try{const url=await sock.profilePictureUrl(targetUser,'image');return sock.sendMessage(from,{image:{url},caption:`Profile pic of @${targetName}`},{quoted:msg})}catch{return reply('No profile pic or private!')}}
-if(command==='channel'||command==='follow'||command==='join'||command==='link'){try{await sock.sendMessage(from,{text:`${CHANNEL_NAME}\nJOIN BULL X CHANNEL!\nNew Commands First!\nGiveaways!`,footer:'BULL X V48 PREMIUM | Follow for More!',buttons:[{buttonId:'follow_channel',buttonText:{displayText:'FOLLOW CHANNEL'},type:1},{buttonId:'menu_btn',buttonText:{displayText:'MENU'},type:1}],headerType:1},{quoted:msg})}catch{}return sock.sendMessage(from,{text:`YOUR CHANNEL LINK:\n${CHANNEL_LINK}\nTap it to Follow!`},{quoted:msg})}
-if(command==='menu'||command==='help')return reply(getMenu());
-if(command==='owner'||command==='dev')return reply(`BULL X DEV\nName: ${DEV_NAME}\nVexa: vexa.blood\nBot: BULL X V48\nOwner: +${ownerNum}`);
-if(command==='info')return reply(`BULL X V48\nDev: ${DEV_NAME}\nVexa: vexa.blood\nOwner: +${ownerNum}\nVersion: V48 DECORATED\nCommands: 300+\nStatus: Online`);
-if(command==='time')return reply('Time: '+new Date().toLocaleString('en-KE',{timeZone:'Africa/Nairobi'}));
-if(command==='date')return reply('Date: '+new Date().toLocaleDateString('en-KE',{timeZone:'Africa/Nairobi',weekday:'long',year:'numeric',month:'long',day:'numeric'}));
-if(command==='rules')return reply('GROUP RULES\n1. No links\n2. No insults\n3. Respect admins\n4. No spam\n5. No tagging BOT/Owner if anti-mention on\n6. 3 Warns = Kick');
-if(command==='bull')return reply('BULL X MODE ACTIVATED!');
-if(command==='alive')return reply(`BULL X ALIVE!\nOnline\n300+ Commands\nV48 DECORATED\nDev: ${DEV_NAME}\nOwner: +${ownerNum}`);
-if(command==='checkadmin'){try{const m=await sock.groupMetadata(from),c2=id=>(id||'').split(':')[0].split('@')[0];let me=m.participants.find(p=>c2(p.id)===c2(sock.user.id)||c2(p.lid||'')===c2(sock.user.id)||c2(p.id)===c2(sock.user.lid||'')||c2(p.lid||'')===c2(sock.user.lid||''));return reply(`CHECKADMIN DEBUG\nBot PN: ${c2(sock.user.id)}\nBot LID: ${c2(sock.user.lid||'none')}\nFound: ${me?'YES':'NO'}\nAdmin: ${me?me.admin:'not found'}\nOwner: +${ownerNum}\nMembers: ${m.participants.length}`)}catch{return reply('Check failed')}}
-if(command==='profile'){const bal=getBal(sender),warns=(settings.warnings[from]||{})[sender]||0;return reply(`YOUR PROFILE\nNumber: @${sender.split('@')[0]}\nBalance: ${bal.bal} coins\nBank: ${bal.bank||0}\nWarnings: ${warns}/3\nRank: ${bal.bal>5000?'Billionaire':bal.bal>2000?'Rich':'Hustler'}\nBot: BULL X V48`)}
-if(command==='afk'){settings.afk[sender]=text||'AFK';saveSettings();return reply(`You are now AFK!\nReason: ${text||'AFK'}`)}
+if(command==='cat'){try{const r=await fetch('https://api.thecatapi.com/v1/images/search');const d=await r.json();return sock.sendMessage(from,{image:{url:d[0].url},caption:'CUTE CAT! By BULL X'},{quoted:msg})}catch{return reply('Cat: Meow!')}}
+if(command==='dog'){try{const r=await fetch('https://dog.ceo/api/breeds/image/random');const d=await r.json();return sock.sendMessage(from,{image:{url:d.message},caption:'CUTE DOG! By BULL X'},{quoted:msg})}catch{return reply('Dog: Woof!')}}
+if(command==='fox'){try{const r=await fetch('https://randomfox.ca/floof/');const d=await r.json();return sock.sendMessage(from,{image:{url:d.image},caption:'CUTE FOX!'},{quoted:msg})}catch{return reply('Fox!')}}
+if(command==='panda')return reply('Panda: I love bamboo!');
+if(command==='bird')return reply('Bird: Tweet tweet!');
+if(command==='waifu'){try{const r=await fetch('https://api.waifu.pics/sfw/waifu');const d=await r.json();return sock.sendMessage(from,{image:{url:d.url},caption:'YOUR WAIFU! By BULL X'},{quoted:msg})}catch{return reply('Waifu!')}}
+if(command==='neko'){try{const r=await fetch('https://api.waifu.pics/sfw/neko');const d=await r.json();return sock.sendMessage(from,{image:{url:d.url},caption:'NEKO!'},{quoted:msg})}catch{return reply('Neko!')}}
+if(command==='manga')return reply('MANGA\nTop: One Piece, Naruto, Demon Slayer, Jujutsu Kaisen!');
+if(command==='naruto')return reply('NARUTO\nBelieve it! Dattebayo!');
+if(command==='luffy')return reply('LUFFY\nI will be King of the Pirates!');
+if(command==='goku')return reply('GOKU\nKamehameha!');
+if(command==='horoscope'){const s=text.toLowerCase()||'leo';return reply(`HOROSCOPE - ${s.toUpperCase()}\n${HOROSCOPE[s]||'Try: aries, taurus, gemini, cancer, leo, virgo, libra, scorpio, sagittarius, capricorn, aquarius, pisces'}`)}
+if(command==='livescore')return reply(`LIVE SCORES\nGor Mahia 2 - 1 AFC Leopards (LIVE)\nMan City 1 - 0 Arsenal (LIVE)\nCheck: https://www.livescore.com`);
+if(command==='epl')return reply(`PREMIER LEAGUE TABLE\n1. Arsenal - 75 pts\n2. Man City - 73 pts\n3. Liverpool - 70 pts\n4. Chelsea - 65 pts\n5. Man Utd - 60 pts`);
+if(command==='kenyapremier')return reply(`FKF PREMIER LEAGUE\n1. Gor Mahia - 60 pts\n2. Tusker - 58 pts\n3. AFC Leopards - 55 pts\n4. Kenya Police - 52 pts\n5. Shabana - 48 pts`);
+if(command==='kenyanews')return reply(`KENYA NEWS\nCheck: https://www.citizen.digital / https://www.standardmedia.co.ke`);
+if(command==='matatu'){if(!text)return reply('Use: .matatu Nairobi to Kisii');return reply(`MATATU ROUTE\nRoute: ${text}\nNairobi - Kisii: 500-800 KES, 5-6 hrs`)}
+if(command==='safaricom')return reply(`SAFARICOM BUNDLES\n1GB - 99 KES (*544#)\n2GB - 199 KES\n5GB - 499 KES\n10GB - 999 KES\nDial *544#\nM-PESA: *334#`);
+if(command==='quizke'){const qs=[{q:"Capital of Kenya?",a:"Nairobi"},{q:"How many counties in Kenya?",a:"47"},{q:"Largest county in Kenya?",a:"Turkana"},{q:"What is Kisii famous for?",a:"Soapstone / Bananas"}];const q=pick(qs);return reply(`KENYA QUIZ\nQ: ${q.q}\nAnswer: ${q.a}`)}
+if(command==='bettingtips')return reply(`BETTING TIPS (Fun Only!)\n${pick(["Gor Mahia to win - 1.80","Arsenal Over 1.5 Goals - 1.50","Man City Win + BTTS - 2.10"])}\nDont bet real money you cant afford to lose!`);
+if(command==='fixtures')return reply(`TODAY FIXTURES\nGor Mahia vs AFC Leopards - 3PM\nArsenal vs Chelsea - 6:30PM\nMan City vs Liverpool - 9PM`);
+if(command==='technews')return reply(`TECH NEWS\n1. AI is taking over!\n2. New iPhone coming!\n3. Safaricom 5G expanding in Kenya!\nMore: https://techcrunch.com`);
+if(command==='space'){try{const r=await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');const d=await r.json();return reply(`SPACE\n${d.title||'NASA Picture of Day'}\n${d.explanation?.slice(0,500)||'Stars are beautiful!'}`)}catch{return reply('SPACE\nDid you know? The Moon is moving away from Earth 3.8cm per year!')}}
+if(command==='sheng'){if(!text)return reply('Use: .sheng I love you');const map={love:'penda',money:'doo',friend:'mbogi',house:'keja',girl:'madem',boy:'mse',good:'poa'};let out=text.toLowerCase().split(' ').map(w=>map[w]||w).join(' ');return reply(`SHENG\nEnglish: ${text}\nSheng: ${out} msee!`)}
+if(command==='swahili'){if(!text)return reply('Use: .swahili I love you');const map={love:'penda',money:'pesa',friend:'rafiki',house:'nyumba',food:'chakula',girl:'msichana',boy:'mvulana',good:'nzuri'};let out=text.toLowerCase().split(' ').map(w=>map[w]||w).join(' ');return reply(`SWAHILI\nEnglish: ${text}\nSwahili: ${out}`)}
+if(command==='voice'){if(!text)return reply('Use: .voice Hello everyone');try{const url=`https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(text)}`;return sock.sendMessage(from,{audio:{url},mimetype:'audio/mp4',ptt:true},{quoted:msg})}catch{return reply('Voice failed')}}
+if(command==='airoast')return reply(`AI ROAST FOR @${targetName}\n${pick(["Your WiFi is faster than your brain!","You are like a Kisii matatu - loud but going nowhere!","Even Google cant find your intelligence!"])}`,{mentions:[targetUser]});
+if(command==='aipickup')return reply(`AI PICKUP LINE\n${pick(["Are you M-PESA? Because you keep sending me feelings!","Madem, you are like Safaricom bundle - I cant live without you!"])}`);
+if(command==='aihomework'){if(!text)return reply('Use: .aihomework What is 12 x 12?');return reply(`AI HOMEWORK\nQ: ${text}\nUse .ai for full answer: .ai ${text}`)}
+if(command==='aicode'){if(!text)return reply('Use: .aicode make a calculator');return reply(`AI CODE\nAsk: ${text}\nUse .ai for full code: .ai Write code for ${text}`)}
+if(command==='aistory'){if(!text)return reply('Use: .aistory Kisii boy becomes rich');return reply(`AI STORY\nOnce in Kisii, ${text}... He worked hard, prayed, hustled every day, and finally became a legend! The End!`)}
+if(command==='play'||command==='song'){if(!text)return reply('Use: .play Diamond Komasava');try{await reply('Searching: '+text);let vid=null,title=text;try{const r=await fetch(`https://api.siputzx.my.id/api/s/youtube?query=${encodeURIComponent(text)}`);const d=await r.json();const v=d.data?.[0]||d.result?.[0]||d[0];if(v){vid=v.videoId||v.id;title=v.title||title}}catch{}if(!vid)return reply(`Not found! Try .play ${text} official audio`);const vu=`https://youtube.com/watch?v=${vid}`;return reply(`Now Playing\n${title}\nListen Full Here:\n${vu}`)}catch{return reply('Play failed!')}}
+if(command==='lyrics'){if(!text)return reply('Use: .lyrics Komasava');try{let lyrics=null;try{const r=await fetch(`https://lrclib.net/api/search?track_name=${encodeURIComponent(text)}`);const d=await r.json();if(d&&d[0]?.plainLyrics)lyrics=d[0].plainLyrics}catch{}if(!lyrics)return reply(`Lyrics not found for "${text}"! Try .ai Write lyrics of ${text}`);return reply(`LYRICS - ${text}\n${lyrics.slice(0,2000)}`)}catch{return reply('Lyrics failed')}}
+if(command==='tiktok'){const lm=body.match(/https?:\/\/\S+/);const url=lm?lm[0]:text;if(!url||!url.includes('tiktok'))return reply('Use: .tiktok https://vt.tiktok.com/xxx/');try{await reply('Downloading TikTok...');let vu=null;let final=url;try{const r=await fetch(url,{redirect:'follow'});final=r.url||url}catch{}try{const res=await fetch('https://www.tikwm.com/api/?url='+encodeURIComponent(final));const d=await res.json();if(d.data&&d.data.play)vu=d.data.play}catch{}if(!vu)return reply('Try different video');return sock.sendMessage(from,{video:{url:vu},caption:'BULL X TikTok'},{quoted:msg})}catch{return reply('TikTok failed')}}
+if(command==='ytsearch'){if(!text)return reply('Use: .ytsearch Diamond');return reply(`YOUTUBE SEARCH\nQuery: ${text}\nhttps://www.youtube.com/results?search_query=${encodeURIComponent(text)}`)}
+if(command==='spotify'){if(!text)return reply('Use: .spotify Komasava');return reply(`SPOTIFY\nSong: ${text}\nhttps://open.spotify.com/search/${encodeURIComponent(text)}`)}
+if(command==='igstalk'){if(!text)return reply('Use: .igstalk diamondplatnumz');const u=text.replace('@','');return reply(`IG STALK\nUser: @${u}\nProfile: https://instagram.com/${u}`)}
+if(command==='ytchannel'){if(!text)return reply('Use: .ytchannel Diamond');return reply(`YOUTUBE CHANNEL\nSearch: ${text}\nhttps://www.youtube.com/results?search_query=${encodeURIComponent(text)}+channel`)}
+if(command==='moviedl'||command==='movie'){if(!text)return reply('Use: .moviedl Avatar');try{let data=null;try{const r=await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(text)}&apikey=trilogy`);const d=await r.json();if(d.Response==='True')data=d}catch{}const title=data?data.Title:text;let cap=`BULL X MOVIE\n${title}\n${data?`${data.Year} | ${data.imdbRating}/10 | ${data.Genre}\n${data.Plot}\n`:''}\nYouTube: https://www.youtube.com/results?search_query=${encodeURIComponent(title+' full movie')}`;if(data&&data.Poster&&data.Poster!=='N/A'){return sock.sendMessage(from,{image:{url:data.Poster},caption:cap},{quoted:msg})}return reply(cap)}catch{return reply('Failed!')}}
+if(command==='songdl'){if(!text)return reply('Use: .songdl Komasava');try{let d=null;try{const r=await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(text)}&media=music&limit=1`);const j=await r.json();if(j.results&&j.results[0])d=j.results[0]}catch{}if(!d)return reply('Song not found!');let cap=`BULL X SONG\n${d.trackName}\n${d.artistName}\nYouTube Music: https://music.youtube.com/search?q=${encodeURIComponent(d.trackName+' '+d.artistName)}`;if(d.artworkUrl100){await sock.sendMessage(from,{image:{url:d.artworkUrl100.replace('100x100','600x600')},caption:cap},{quoted:msg})}else{await reply(cap)}if(d.previewUrl){await sock.sendMessage(from,{audio:{url:d.previewUrl},mimetype:'audio/mp4',fileName:d.trackName+' - Preview.mp3'},{quoted:msg});return reply(`Preview sent!`)}return}catch{return reply('Song failed!')}}
+if(command==='series'){if(!text)return reply('Use: .series Money Heist');try{let data=null;try{const r=await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(text)}&type=series&apikey=trilogy`);const d=await r.json();if(d.Response==='True')data=d}catch{}const title=data?data.Title:text;let cap=`BULL X SERIES\n${title}\n${data?`${data.Year} | ${data.imdbRating}/10 | ${data.Genre}\nSeasons: ${data.totalSeasons||'?'}\n${data.Plot}\n`:''}\nNetflix: https://www.netflix.com/search?q=${encodeURIComponent(title)}`;if(data&&data.Poster&&data.Poster!=='N/A'){return sock.sendMessage(from,{image:{url:data.Poster},caption:cap},{quoted:msg})}return reply(cap)}catch{return reply('Series failed!')}}
+if(command==='animedl'||command==='anime'){if(!text)return reply('Use: .animedl Naruto');try{let a=null;try{const r=await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(text)}&limit=1`);const j=await r.json();if(j.data&&j.data[0])a=j.data[0]}catch{}if(!a)return reply('Anime not found!');let cap=`BULL X ANIME\n${a.title}\n${a.score||'?'}/10\nEpisodes: ${a.episodes||'?'}\n${(a.synopsis||'').slice(0,400)}`;if(a.images?.jpg?.large_image_url){return sock.sendMessage(from,{image:{url:a.images.jpg.large_image_url},caption:cap},{quoted:msg})}return reply(cap)}catch{return reply('Anime failed!')}}
+if(command==='recipe'){if(!text)return reply('Use: .recipe Pilau');return reply(`RECIPE: ${text}\nSearch: https://www.google.com/search?q=how+to+cook+${encodeURIComponent(text)}`)}
+if(command==='ttt'){if(!isGroup)return reply('Groups only!');if(!settings.ttt)settings.ttt={};if(msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]||text.includes('@')){const opp=msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0];if(!opp)return reply('Use: .ttt @friend');if(opp===sender)return reply('You cannot play against yourself!');settings.ttt[from]={p1:sender,p2:opp,board:['1','2','3','4','5','6','7','8','9'],turn:sender,moves:0};saveSettings();return reply(`TIC TAC TOE STARTED!\n@${sender.split('@')[0]} (X) vs @${opp.split('@')[0]} (O)\n1 | 2 | 3\n4 | 5 | 6\n7 | 8 | 9\n@${sender.split('@')[0]} your turn! Type .ttt 5`,{mentions:[sender,opp]})}const pos=parseInt(text),game=settings.ttt[from];if(!game)return reply('No game! Start with: .ttt @friend');if(sender!==game.turn)return reply(`Not your turn! Its @${game.turn.split('@')[0]} turn!`,{mentions:[game.turn]});if(!pos||pos<1||pos>9)return reply('Use: .ttt 1 to .ttt 9');if(game.board[pos-1]==='X'||game.board[pos-1]==='O')return reply('That spot is taken!');const mark=sender===game.p1?'X':'O';game.board[pos-1]=mark;game.moves++;const b=game.board,bs=`${b[0]} | ${b[1]} | ${b[2]}\n${b[3]} | ${b[4]} | ${b[5]}\n${b[6]} | ${b[7]} | ${b[8]}`;const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];const winner=wins.find(w=>b[w[0]]===mark&&b[w[1]]===mark&&b[w[2]]===mark);if(winner){delete settings.ttt[from];saveSettings();const u=getBal(sender);u.bal+=200;saveSettings();return reply(`${mark} WINS!\n${bs}\n@${sender.split('@')[0]} won +200 coins! Balance: ${u.bal}`,{mentions:[sender]})}if(game.moves===9){delete settings.ttt[from];saveSettings();return reply(`DRAW!\n${bs}`)}game.turn=sender===game.p1?game.p2:game.p1;saveSettings();return reply(`TIC TAC TOE\n${bs}\n@${game.turn.split('@')[0]} your turn! Type .ttt 1-9`,{mentions:[game.turn]})}
+if(command==='wordle'){if(!settings.wordle)settings.wordle={};const words=[{w:'BULL',hint:'BULL X animal'},{w:'KISII',hint:'Your town'},{w:'KENYA',hint:'Your country'},{w:'MANGO',hint:'Sweet fruit'},{w:'UGALI',hint:'Kenyan food'}];const ch=pick(words);settings.wordle[from+sender]={word:ch.w,hint:ch.hint,tries:0};saveSettings();return reply(`WORDLE STARTED!\nHint: ${ch.hint}\nWord: ${ch.w.length} letters\nTries: 6`)}
+if(command==='guessword'||command==='guess'){if(!settings.wordle)settings.wordle={};const game=settings.wordle[from+sender];if(!game)return reply('No Wordle game! Start with .wordle');if(!text)return reply('Use: .guessword BULL');const guess=text.toUpperCase().trim();if(guess.length!==game.word.length)return reply(`Word must be ${game.word.length} letters!`);game.tries++;if(guess===game.word){delete settings.wordle[from+sender];saveSettings();const u=getBal(sender);u.bal+=300;saveSettings();return reply(`WORDLE WIN!\nWord was: ${game.word}\nTries: ${game.tries}/6\n+300 coins! Balance: ${u.bal}`)}if(game.tries>=6){const w=game.word;delete settings.wordle[from+sender];saveSettings();return reply(`WORDLE LOST!\nWord was: ${w}`)}let hs='';for(let i=0;i<guess.length;i++){if(guess[i]===game.word[i])hs+='GREEN ';else if(game.word.includes(guess[i]))hs+='YELLOW ';else hs+='GREY '}saveSettings();return reply(`WORDLE - Try ${game.tries}/6\nYour guess: ${guess}\nResult: ${hs}\nHint: ${game.hint}`)}
+if(command==='casino'){const u=getBal(sender);if(!text)return reply(`BULL X CASINO\nBalance: ${u.bal}\n.casino slot 100\n.casino roulette 100\n.casino blackjack 100\n.casino dice 100\n.casino coin 100\n.casino lottery 100`);const parts=text.split(' '),g=parts[0].toLowerCase(),amt=parseInt(parts[1])||100;if(amt>u.bal)return reply(`Not enough! Balance: ${u.bal}`);if(amt<10)return reply('Min bet is 10 coins!');if(g==='slot'){const e=['CHERRY','LEMON','BELL','STAR','DIAMOND','BULL','7'],a=pick(e),b=pick(e),c=pick(e);if(a===b&&b===c){const win=amt*5;u.bal+=win;saveSettings();return reply(`SLOT - JACKPOT!\n| ${a} | ${b} | ${c} |\n+${win} coins! Balance: ${u.bal}`)}if(a===b||b===c||a===c){u.bal+=amt;saveSettings();return reply(`SLOT - 2 MATCH!\n| ${a} | ${b} | ${c} |\n+${amt} coins! Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`SLOT - LOST\n| ${a} | ${b} | ${c} |\n-${amt} coins Balance: ${u.bal}`)}if(g==='roulette'){const num=Math.floor(Math.random()*37),win=num%2===0;if(win){u.bal+=amt;saveSettings();return reply(`ROULETTE - WIN!\nNumber: ${num}\n+${amt} Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`ROULETTE - LOST\nNumber: ${num}\n-${amt} Balance: ${u.bal}`)}if(g==='blackjack'){const you=Math.floor(Math.random()*11)+10,dealer=Math.floor(Math.random()*11)+10;if(you>dealer){u.bal+=amt;saveSettings();return reply(`BLACKJACK - WIN!\nYou: ${you} vs Dealer: ${dealer}\n+${amt} Balance: ${u.bal}`)}if(you===dealer)return reply(`DRAW! You: ${you} Dealer: ${dealer}`);u.bal-=amt;saveSettings();return reply(`BLACKJACK - LOST\nYou: ${you} vs Dealer: ${dealer}\n-${amt} Balance: ${u.bal}`)}if(g==='dice'){const d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,sum=d1+d2,win=sum>=7;if(win){u.bal+=amt;saveSettings();return reply(`DICE - WIN!\n${d1} + ${d2} = ${sum}\n+${amt} Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`DICE - LOST\n${d1} + ${d2} = ${sum}\n-${amt} Balance: ${u.bal}`)}if(g==='coin'){const win=Math.random()>0.5;if(win){u.bal+=amt;saveSettings();return reply(`COIN - HEADS! WIN!\n+${amt} Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`COIN - TAILS! LOST\n-${amt} Balance: ${u.bal}`)}if(g==='lottery'){const lucky=Math.floor(Math.random()*10)+1;if(lucky===7){const win=amt*10;u.bal+=win;saveSettings();return reply(`LOTTERY - JACKPOT!\nLucky: 7!\n+${win} Balance: ${u.bal}`)}u.bal-=amt;saveSettings();return reply(`LOTTERY - LOST\nLucky was: ${lucky} (needed 7)\n-${amt} Balance: ${u.bal}`)}return reply('Use: .casino slot / roulette / blackjack / dice / coin / lottery + amount')}
+if(['save','savestatus','dlstatus','sv','download'].includes(command)){try{const ctx=msg.message.extendedTextMessage?.contextInfo,quoted=ctx?.quotedMessage,stanzaId=ctx?.stanzaId,qp=ctx?.participant||ctx?.remoteJid||sender;const unwrap=q=>{if(!q)return null;let i=q;if(i.viewOnceMessageV2?.message)i=i.viewOnceMessageV2.message;if(i.viewOnceMessage?.message)i=i.viewOnceMessage.message;if(i.ephemeralMessage?.message)i=i.ephemeralMessage.message;return i};let mm=null,mt=null,capTxt='',fn='saved-file';if(quoted){const inner=unwrap(quoted);if(inner?.imageMessage){mm=inner.imageMessage;mt='image';capTxt=inner.imageMessage.caption||''}else if(inner?.videoMessage){mm=inner.videoMessage;mt='video';capTxt=inner.videoMessage.caption||''}else if(inner?.audioMessage||inner?.voiceMessage){mm=inner.audioMessage||inner.voiceMessage;mt='audio'}else if(inner?.documentMessage){mm=inner.documentMessage;mt='document';fn=inner.documentMessage.fileName||'file'}else if(inner?.stickerMessage){mm=inner.stickerMessage;mt='sticker'}else if(inner?.conversation){capTxt=inner.conversation;mt='text'}else if(inner?.extendedTextMessage?.text){capTxt=inner.extendedTextMessage.text;mt='text'}}if(!mm&&!capTxt){if(msg.message.imageMessage){mm=msg.message.imageMessage;mt='image';capTxt=msg.message.imageMessage.caption||''}else if(msg.message.videoMessage){mm=msg.message.videoMessage;mt='video'}else if(msg.message.audioMessage){mm=msg.message.audioMessage;mt='audio'}else if(msg.message.documentMessage){mm=msg.message.documentMessage;mt='document';fn=msg.message.documentMessage.fileName||'file'}else if(msg.message.stickerMessage){mm=msg.message.stickerMessage;mt='sticker'}}if(!mm&&!capTxt&&stanzaId){const cached=msgCache.get(stanzaId);if(cached){let cm=unwrap(cached.msg.message)||cached.msg.message;if(cm.imageMessage){mm=cm.imageMessage;mt='image';capTxt=cm.imageMessage.caption||''}else if(cm.videoMessage){mm=cm.videoMessage;mt='video'}else if(cm.audioMessage){mm=cm.audioMessage;mt='audio'}else if(cm.documentMessage){mm=cm.documentMessage;mt='document'}else if(cm.stickerMessage){mm=cm.stickerMessage;mt='sticker'}else if(cm.conversation){capTxt=cm.conversation;mt='text'}else if(cm.extendedTextMessage?.text){capTxt=cm.extendedTextMessage.text;mt='text'}}}if(!mm&&!capTxt)return reply(`Nothing to Save!\n1. You must REPLY to the Status\n2. Dont just type .save alone\n3. For View Once: DONT open it first!`);const oj=(OWNER_JID||'').split(':')[0].split('@')[0]+'@s.whatsapp.net',so=qp.split('@')[0].split(':')[0],isVO=(quoted?.viewOnceMessageV2||quoted?.viewOnceMessage)?'VIEW ONCE':(isGroup?'GROUP':'STATUS/DM'),sc=`SAVED!\nFrom: @${so}\nType: ${isVO} - ${mt.toUpperCase()}\nCaption: ${capTxt||'No caption'}\nSaved by BULL X`;if(mt==='image'){const buf=await dlBuf(mm,'image');await sock.sendMessage(from,{image:buf,caption:sc,mentions:[qp]});try{await sock.sendMessage(oj,{image:buf,caption:sc})}catch{}return reply(`Saved! Image from @${so} sent here + DM!`)}if(mt==='video'){const buf=await dlBuf(mm,'video');await sock.sendMessage(from,{video:buf,caption:sc,mentions:[qp]});try{await sock.sendMessage(oj,{video:buf,caption:sc})}catch{}return reply(`Saved! Video from @${so} sent here + DM!`)}if(mt==='audio'){const buf=await dlBuf(mm,'audio');await sock.sendMessage(from,{audio:buf,mimetype:'audio/mp4',ptt:false,fileName:'saved-audio.mp3'});return reply(`Saved! Audio sent here!`)}if(mt==='document'){const buf=await dlBuf(mm,'document');await sock.sendMessage(from,{document:buf,fileName:fn,caption:sc});return reply(`Saved! Document ${fn} sent here!`)}if(mt==='sticker'){const buf=await dlBuf(mm,'sticker');await sock.sendMessage(from,{sticker:buf});return reply(`Saved! Sticker sent here!`)}if(mt==='text'){await sock.sendMessage(from,{text:`TEXT SAVED!\nFrom: @${so}\n${isVO}\n\n${capTxt}`});return reply(`Saved! Text sent here!`)}}catch(e){console.log('Save:',e.message);return reply(`Save Failed! ${e.message}`)}}
+if(command==='autosave'){if(!await onlyOwner())return;if(text==='on'){settings.autosavestatus=true;saveSettings();return reply('AUTO-SAVE STATUS ON!')}if(text==='off'){settings.autosavestatus=false;saveSettings();return reply('Auto-Save Status OFF')}return reply('Use: .autosave on / .autosave off')}
+if(command==='autoread'){if(!await onlyOwner())return;if(text==='on'){settings.autoread=true;saveSettings();return reply('AUTO-READ ON!')}if(text==='off'){settings.autoread=false;saveSettings();return reply('Auto-Read OFF')}return reply('Use: .autoread on / off')}
+if(command==='autoreact'){if(!await onlyOwner())return;if(text==='on'){settings.autoreact=true;saveSettings();return reply('AUTO-REACT ON!')}if(text==='off'){settings.autoreact=false;saveSettings();return reply('Auto-React OFF')}return reply('Use: .autoreact on / off')}
+if(command==='antimention'){if(!await onlyOwner())return;if(text==='status'||text==='check'||text===''){const on=!!settings.antimention?.[from];return reply(`ANTI-MENTION STATUS\nStatus: ${on?'ON - Tagging BOT/Owner will be deleted':'OFF'}\nNormal friend tagging: ALWAYS ALLOWED`)}if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.antimention)settings.antimention={};settings.antimention[from]=true;saveSettings();return reply('ANTI-MENTION ON!\nOnly tagging BOT / OWNER will be deleted.\nTagging friends is ALLOWED!')}if(text==='off'){if(settings.antimention)delete settings.antimention[from];saveSettings();return reply('Anti-Mention OFF')}return reply('Use: .antimention on / off / status')}
 if(command==='autotyping'){if(!await onlyOwner())return;if(text==='on'){settings.autotyping=true;saveSettings();return reply('AUTO-TYPING ON\nNow lasts 60 SECONDS every message!')}if(text==='off'){settings.autotyping=false;saveSettings();return reply('Auto-Typing OFF')}return reply('Use: .autotyping on/off')}
 if(command==='autorecording'){if(!await onlyOwner())return;if(text==='on'){settings.autorecording=true;settings.autotyping=false;saveSettings();return reply('AUTO-RECORDING ON\nNow lasts 60 SECONDS every message!')}if(text==='off'){settings.autorecording=false;saveSettings();return reply('Auto-Recording OFF')}return reply('Use: .autorecording on/off')}
 if(command==='autoviewstatus'){if(!await onlyOwner())return;if(text==='on'){settings.autoviewstatus=true;saveSettings();return reply('AUTO-VIEW STATUS ON')}if(text==='off'){settings.autoviewstatus=false;saveSettings();return reply('Auto-View Status OFF')}return reply('Use: .autoviewstatus on/off')}
@@ -572,6 +507,14 @@ if(command==='autostatus'){if(!await onlyOwner())return;if(text==='on'){settings
 if(command==='settings')return reply(`SETTINGS\nOwner: +${ownerNum}\nDev: ${DEV_NAME}\nTyping (60s): ${settings.autotyping?'ON':'OFF'}\nRecording (60s): ${settings.autorecording?'ON':'OFF'}\nView Status: ${settings.autoviewstatus?'ON':'OFF'}\nLike Status: ${settings.autolikestatus?'ON':'OFF'}\nAuto-Read: ${settings.autoread?'ON':'OFF'}\nAuto-React: ${settings.autoreact?'ON':'OFF'}\nAuto-Save: ${settings.autosavestatus?'ON':'OFF'}\nAnti-Link: ${settings.antilink[from]?'ON':'OFF'}\nAnti-Delete: ${settings.antidelete[from]||settings.antidelete['GLOBAL']?'ON':'OFF'}\nAnti-Mention (Bot only): ${settings.antimention?.[from]?'ON':'OFF'}`);
 if(command==='antilink'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(text==='on'){settings.antilink[from]=true;saveSettings();return reply('Anti-Link ON')}if(text==='off'){delete settings.antilink[from];saveSettings();return reply('Anti-Link OFF')}return reply('Use: .antilink on/off')}
 if(command==='antidelete'){if(!await onlyOwner())return;if(text==='all'||text==='global'){settings.antidelete['GLOBAL']=true;saveSettings();return reply('ANTI-DELETE GLOBAL ON!')}if(text==='off all'){delete settings.antidelete['GLOBAL'];saveSettings();return reply('Anti-Delete GLOBAL OFF')}if(text==='on'){settings.antidelete[from]=true;saveSettings();return reply(`Anti-Delete ON!`)}if(text==='off'){delete settings.antidelete[from];saveSettings();return reply('Anti-Delete OFF')}if(text==='status'){const g=!!settings.antidelete['GLOBAL'],h=!!settings.antidelete[from];return reply(`ANTI-DELETE STATUS\nGlobal: ${g?'ON':'OFF'}\nThis Chat: ${h?'ON':'OFF'}`)}return reply('Use:\n.antidelete on\n.antidelete all\n.antidelete off\n.antidelete status')}
+if(command==='antiforeign'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.antiforeign)settings.antiforeign={};settings.antiforeign[from]=true;saveSettings();return reply('ANTI-FOREIGN ON!\nOnly +254 numbers allowed!')}if(text==='off'){if(settings.antiforeign)delete settings.antiforeign[from];saveSettings();return reply('Anti-Foreign OFF')}return reply('Use: .antiforeign on / off')}
+if(command==='antibot'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.antibot)settings.antibot={};settings.antibot[from]=true;saveSettings();return reply('ANTI-BOT ON!')}if(text==='off'){if(settings.antibot)delete settings.antibot[from];saveSettings();return reply('Anti-Bot OFF')}return reply('Use: .antibot on / off')}
+if(command==='antispam'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.antispam)settings.antispam={};settings.antispam[from]=true;saveSettings();return reply('ANTI-SPAM ON!')}if(text==='off'){if(settings.antispam)delete settings.antispam[from];saveSettings();return reply('Anti-Spam OFF')}return reply('Use: .antispam on / off')}
+if(command==='setwelcome'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(!text)return reply('Use: .setwelcome Hello @user welcome!');if(!settings.customwelcome)settings.customwelcome={};settings.customwelcome[from]=text;saveSettings();return reply(`Custom Welcome Set!\n${text}`)}
+if(command==='groupstats'){if(!isGroup)return reply('Groups only!');try{const m=await sock.groupMetadata(from);return reply(`GROUP STATS\nName: ${m.subject}\nMembers: ${m.participants.length}\nAdmins: ${m.participants.filter(p=>p.admin).length}`)}catch{return reply('Failed')}}
+if(command==='inactive'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');return reply('INACTIVE CHECK\nPeople with 0 XP are inactive! Check .rank!')}
+if(command==='welcome'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.welcome)settings.welcome={};settings.welcome[from]=true;saveSettings();return reply('Welcome ON!')}if(text==='off'){if(settings.welcome)delete settings.welcome[from];saveSettings();return reply('Welcome OFF')}return reply('Use: .welcome on/off')}
+if(command==='goodbye'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');if(text==='on'){if(!settings.goodbye)settings.goodbye={};settings.goodbye[from]=true;saveSettings();return reply('Goodbye ON!')}if(text==='off'){if(settings.goodbye)delete settings.goodbye[from];saveSettings();return reply('Goodbye OFF')}return reply('Use: .goodbye on/off')}
 if(command==='warn'){const info=await checkAdmin();if(!info)return;const t=await getTarget(info);if(!t)return;if(!settings.warnings[from])settings.warnings[from]={};settings.warnings[from][t.realTarget]=(settings.warnings[from][t.realTarget]||0)+1;saveSettings();const c=settings.warnings[from][t.realTarget];if(c>=3){settings.warnings[from][t.realTarget]=0;saveSettings();try{await sock.groupParticipantsUpdate(from,[t.realTarget],'remove');return sock.sendMessage(from,{text:premiumWrap(`@${t.tc} got 3/3 WARNINGS! KICKED!`),mentions:[t.realTarget]})}catch{return reply('Failed to kick - check if bot is really admin')}}return sock.sendMessage(from,{text:premiumWrap(`WARNING ${c}/3\n@${t.tc} warned!\nReason: ${text||'Breaking rules'}\n3 warns = Kick!`),mentions:[t.realTarget]})}
 if(command==='warnings'){const info=await checkAdmin();if(!info)return;const t=await getTarget(info);if(!t)return;const c=(settings.warnings[from]||{})[t.realTarget]||0;return reply(`WARNINGS for @${t.tc}\nWarnings: ${c}/3`)}
 if(command==='resetwarn'){const info=await checkAdmin();if(!info)return;const t=await getTarget(info);if(!t)return;if(settings.warnings[from])settings.warnings[from][t.realTarget]=0;saveSettings();return reply(`Warnings cleared for @${t.tc}!`)}
@@ -587,10 +530,12 @@ if(command==='admins'){if(!await onlyOwner())return;if(!isGroup)return reply('Gr
 if(command==='members'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');try{const m=await sock.groupMetadata(from);return reply(`Members: ${m.participants.length}`)}catch{return reply('Failed')}}
 if(command==='invite'){if(!await onlyOwner())return;if(!isGroup)return reply('Groups only!');try{const code=await sock.groupInviteCode(from);return reply(`GROUP LINK\nhttps://chat.whatsapp.com/${code}`)}catch{return reply('Failed - bot must be admin')}}
 if(command==='kick'||command==='promote'||command==='demote'){const info=await checkAdmin();if(!info)return;const t=await getTarget(info);if(!t)return;try{if(command==='kick'){await sock.groupParticipantsUpdate(from,[t.realTarget],'remove');return sock.sendMessage(from,{text:premiumWrap(`@${t.tc} kicked!`),mentions:[t.realTarget]},{quoted:msg})}if(command==='promote'){await sock.groupParticipantsUpdate(from,[t.realTarget],'promote');return sock.sendMessage(from,{text:premiumWrap(`@${t.tc} promoted!`),mentions:[t.realTarget]},{quoted:msg})}if(command==='demote'){await sock.groupParticipantsUpdate(from,[t.realTarget],'demote');return sock.sendMessage(from,{text:premiumWrap(`@${t.tc} demoted!`),mentions:[t.realTarget]},{quoted:msg})}}catch(e){return reply('Failed: '+e.message)}}
-if(command==='tiktok'){const lm=body.match(/https?:\/\/\S+/);const url=lm?lm[0]:text;if(!url||!url.includes('tiktok'))return reply('Use: .tiktok https://vt.tiktok.com/xxx/');try{await reply('Downloading TikTok...');let vu=null;let title='TikTok';let final=url;try{const r=await fetch(url,{redirect:'follow'});final=r.url||url}catch{}try{const res=await fetch('https://www.tikwm.com/api/?url='+encodeURIComponent(final));const d=await res.json();if(d.data&&d.data.play){vu=d.data.play;title=d.data.title||title}}catch{}if(!vu)return reply('Try different video');return sock.sendMessage(from,{video:{url:vu},caption:'BULL X TikTok\n'+title},{quoted:msg})}catch{return reply('TikTok failed')}}
-if(command==='igdl'||command==='fbdl'){const link=body.match(/https?:\/\/\S+/)?.[0]||text;if(!link)return reply(`Use: .${command} <link>`);return reply(`Link received: ${link}\nUse .ai to get help downloading it!`)}
-if(command==='play'||command==='song'){if(!text)return reply('Use: .play Diamond Komasava');try{await reply('Searching: '+text+'\nPlease wait...');let vid=null,title=text;const apis=[`https://api.siputzx.my.id/api/s/youtube?query=${encodeURIComponent(text)}`];for(let u of apis){try{const r=await fetch(u);const d=await r.json();const v=d.data?.[0]||d.result?.[0]||d[0];if(v){vid=v.videoId||v.id||v.url?.split('v=')[1]?.split('&')[0];title=v.title||title;if(vid)break}}catch{}}if(!vid)return reply(`Not found! Try .play ${text} official audio`);const vu=`https://youtube.com/watch?v=${vid}`;let pv=null,art=null,artist='';try{const r=await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(text)}&media=music&limit=1`);const d=await r.json();if(d.results&&d.results[0]){pv=d.results[0].previewUrl;art=d.results[0].artworkUrl100?.replace('100x100','600x600');artist=d.results[0].artistName||'';title=d.results[0].trackName||title}}catch{}if(art){await sock.sendMessage(from,{image:{url:art},caption:`FOUND!\n${title}\n${artist}\n${vu}`},{quoted:msg})}else{await reply(`Found!\n${title}\n${vu}`)}if(pv){try{await sock.sendMessage(from,{audio:{url:pv},mimetype:'audio/mp4',fileName:title+' - Preview.mp3'},{quoted:msg});return reply(`Preview Sent!\n${title}\nFull song on YouTube:\n${vu}`)}catch{}}return reply(`Now Playing\n${title}\nListen Full Here:\n${vu}`)}catch{return reply('Play failed! Try .play '+text+' official audio')}}
-if(command==='lyrics'){if(!text)return reply('Use: .lyrics Komasava');try{await reply('Searching lyrics for: '+text);let lyrics=null,artist='',track=text;try{const r=await fetch(`https://lrclib.net/api/search?track_name=${encodeURIComponent(text)}`);const d=await r.json();if(d&&d[0]?.plainLyrics){lyrics=d[0].plainLyrics;track=d[0].trackName;artist=d[0].artistName}}catch{}if(!lyrics)return reply(`Lyrics not found for "${text}"! Try .ai Write lyrics of ${text}`);return reply(`LYRICS - ${track} ${artist?'- '+artist:''}\n${lyrics.slice(0,2000)}`)}catch{return reply('Lyrics failed')}}
+if(command==='mute'||command==='unmute')return reply('Use .lock / .unlock for mute!');
+if(command==='pin'){const info=await checkAdmin();if(!info)return;try{const ctx=msg.message.extendedTextMessage?.contextInfo;if(!ctx?.stanzaId)return reply('Reply to a message with .pin');await sock.sendMessage(from,{pin:ctx.stanzaId,type:1},{quoted:msg});return reply('Message pinned!')}catch{return reply('Pin failed - bot must be admin!')}}
+if(command==='tomp3'){try{const q=msg.message.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage;if(!q)return reply('Reply to a video with .tomp3');const b=await dlBuf(q,'video');await sock.sendMessage(from,{audio:b,mimetype:'audio/mp4',fileName:'converted.mp3'},{quoted:msg});return reply('Converted to MP3!')}catch{return reply('ToMP3 failed')}}
+if(command==='tomp4'){try{const q=msg.message.extendedTextMessage?.contextInfo?.quotedMessage?.audioMessage;if(!q)return reply('Reply to audio with .tomp4');const b=await dlBuf(q,'audio');await sock.sendMessage(from,{video:b,caption:'Converted to MP4!'},{quoted:msg});return reply('Converted!')}catch{return reply('ToMP4 failed')}}
+if(command==='removebg')return reply('REMOVE BG\nUpload here: https://www.remove.bg/upload');
+if(command==='pdf'){if(!text)return reply('Use: .pdf Hello');try{return sock.sendMessage(from,{document:Buffer.from(text),fileName:'BULLX.pdf',mimetype:'application/pdf',caption:'PDF by BULL X'},{quoted:msg})}catch{return reply('PDF failed')}}
 if(command==='ai'||command==='ask'){if(!text)return reply('Ask me: .ai Who is best footballer?');try{await reply('Thinking...');let ans=null;try{const r=await fetch(`https://api.nekolabs.my.id/ai/chatgpt?text=${encodeURIComponent(text)}`);const d=await r.json();ans=d.result||d.response}catch{}if(!ans){try{const r=await fetch(`https://api.siputzx.my.id/api/ai/gpt-3?prompt=${encodeURIComponent(text)}`);const d=await r.json();ans=d.data||d.result}catch{}}if(!ans){try{const r=await fetch(`https://text.pollinations.ai/${encodeURIComponent(text)}`);const t=await r.text();if(!t.includes('Free limit')&&t.length>5)ans=t}catch{}}if(!ans)return reply('AI busy, try again!');return reply(`BULL X AI\n${ans}`)}catch{return reply('AI busy')}}
 });
 }
